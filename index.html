@@ -195,9 +195,12 @@ var RELS=[
 ];
 
 /* ===== STATE ===== */
-var DEFAULTS={sid:"1e08eCYdjwyiVGWIy8Fv3Sjv_n_0xYpbS",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BICzwlukfl4",weburl:"https://script.google.com/macros/s/AKfycbyg1R-xvfC4b_QGeCH0cRYqwAAykkpAI9ce3zC74abxbz_h4w84IdCAL4R5rMk0lCqu/exec"};
+var DEFAULTS={sid:"1e08eCYdjwyiVGWIy8Fv3Sjv_n_0xYpbS",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwlukfl4",weburl:"https://script.google.com/macros/s/AKfycbyg1R-xvfC4b_QGeCH0cRYqwAAykkpAI9ce3zC74abxbz_h4w84IdCAL4R5rMk0lCqu/exec"};
+var DEFAULTS={sid:"1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwIukfI4"};
 var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,lastSync:null,dirty:{}};
 try{S.cfg=JSON.parse(localStorage.getItem("secfg4")||"{}")}catch(e){S.cfg={}}
+if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
+if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
 if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
 if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
 if(!S.cfg.weburl)S.cfg.weburl=DEFAULTS.weburl;
