@@ -136,6 +136,15 @@ tr:hover td{background:var(--b3)}
 <div id="authGate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--b1);display:flex;align-items:center;justify-content:center;z-index:9999">
   <div style="background:var(--b2);border:1px solid var(--bd);border-radius:12px;padding:40px 36px;width:340px;text-align:center">
     <div style="margin-bottom:20px">
+      
+/* Global Search */
+.gs-results{display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:var(--b2);border:1px solid var(--bd);border-radius:8px;max-height:400px;overflow-y:auto;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.gs-results.open{display:block}
+.gs-cat{padding:6px 12px;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);font-weight:600;border-bottom:1px solid var(--bd);background:var(--b3)}
+.gs-item{padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;border-bottom:1px solid rgba(42,42,58,.3);transition:background .1s}
+.gs-item:hover,.gs-item.gs-active{background:var(--b3)}
+.gs-hl{background:rgba(61,220,132,.25);color:var(--grn);border-radius:2px;padding:0 1px}
+.gs-empty{padding:16px;text-align:center;font-size:12px;color:var(--t3)}
       <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#3DCC4A"/><text x="50" y="58" text-anchor="middle" font-size="34" font-weight="700" fill="#fff" font-family="Arial,sans-serif">SE</text></svg>
     </div>
     <div style="font-size:18px;font-weight:700;color:var(--t1);margin-bottom:4px">Command Center</div>
@@ -147,6 +156,14 @@ tr:hover td{background:var(--b3)}
 </div>
 <div id="app" style="display:none">
   <div id="sb"></div>
+    <div id="gs-bar" style="display:none;position:sticky;top:0;z-index:50;background:var(--b1);border-bottom:1px solid var(--bd);padding:8px 20px">
+          <div style="position:relative;max-width:600px;margin:0 auto">
+                  <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none">🔍</span>
+                  <input id="gs-input" type="text" placeholder="Search contacts, updates, plays, competitors…" style="width:100%;padding:8px 36px 8px 34px;border-radius:8px;background:var(--b3);border:1px solid var(--bd);color:var(--t1);font-size:12px" autocomplete="off">
+                  <kbd id="gs-hint" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--t3);background:var(--b2);border:1px solid var(--bd);border-radius:3px;padding:1px 5px;pointer-events:none">/</kbd>
+                  <div id="gs-results" class="gs-results"></div>
+                </div>
+        </div>
   <div id="mn"></div>
   <div id="pbg" class="pbg"></div>
   <div id="pn" class="pn"></div>
@@ -196,7 +213,7 @@ var RELS=[
 
 /* ===== STATE ===== */
 var DEFAULTS={sid:"1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwIukfI4",weburl:"https://script.google.com/macros/s/AKfycbxr4q1cfHBBYnrJ-oBPJIdH8JeVtpbTHDNiIh2THs5EB54poXcuF76vb93WIGXeHos/exec"};
-var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,pendingWrites:0,lastSync:null,dirty:{},sheetData:{}};
+var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,pendingWrites:0,lastSync:null,dirty:{},sheetData:{},gsQuery:"",gsActiveIdx:-1,_gsFlat:[]};
 try{S.cfg=JSON.parse(localStorage.getItem("secfg4")||"{}")}catch(e){S.cfg={}}
 if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
 if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
@@ -206,12 +223,20 @@ if(!S.cfg.weburl)S.cfg.weburl=DEFAULTS.weburl;
 
 function saveCfg(){localStorage.setItem("secfg4",JSON.stringify(S.cfg))}
 function jsonpFetch(url){return new Promise(function(resolve,reject){var cb='_secc_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);window[cb]=function(data){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);resolve(data)};var s=document.createElement('script');s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+cb;s.onerror=function(){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP failed'))};document.body.appendChild(s);setTimeout(function(){if(window[cb]){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP timeout'))}},15000)})} function setTab(t){S.tab=t;render()}
-function openPanel(c){S.sel=c;S.panel=true;renderPanel();$("pbg").classList.add("sh");$("pn").classList.add("sh")}
+/* ===== GLOBAL SEARCH ===== */
+var _gsTimer=null;
+function gsHighlight(text,q){if(!q||!text)return esc(text||"");var safe=esc(text),sq=q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");return safe.replace(new RegExp("("+sq+")","gi"),'<span class="gs-hl">$1</span>')}
+function globalSearch(q){if(!q||q.length<2)return[];var ql=q.toLowerCase(),results=[];S.contacts.forEach(function(c){var fields=[c.name,c.title,c.init,c.play,c.tier,c.loc,c.status,c.role,c.notes||""];if(fields.some(function(f){return(f||"").toLowerCase().indexOf(ql)>=0}))results.push({cat:"Contacts",label:c.name,sub:c.title+" \u2022 "+c.play+" \u2022 "+c.status,icon:avH(c.name,22,8),action:function(){openPanel(c);clearGS()}})});[{t:"15 new SAP S/4HANA roles posted on LinkedIn",type:"Job Posting"},{t:"Q4 2025 earnings: CEO doubles down on digital transformation",type:"Earnings Signal"},{t:"Schneider announces expanded Azure AI partnership",type:"News"},{t:"New VP of Digital Workplace hired from Siemens",type:"New Hire"},{t:"Charise Le keynote: Building the Workforce of 2030",type:"YouTube"},{t:"Schneider India team posts about successful SAP EWM go-live",type:"Testimonial"},{t:"3 CSRD/ESG Data Engineer roles posted",type:"Job Posting"},{t:"Schneider named #1 Most Sustainable Company for 3rd year",type:"News"}].forEach(function(ai){if(ai.t.toLowerCase().indexOf(ql)>=0||ai.type.toLowerCase().indexOf(ql)>=0)results.push({cat:"AI Updates",label:ai.t,sub:ai.type,icon:'<span style="font-size:14px">\uD83E\uDD16</span>',action:function(){setTab("aiupdates");clearGS()}})});["SAP","AI","Advisory","Digital","Sustainability"].forEach(function(pl){if(pl.toLowerCase().indexOf(ql)>=0){var cnt=S.contacts.filter(function(c){return c.play===pl}).length;results.push({cat:"Plays",label:pl+" Play",sub:cnt+" contacts",icon:'<span style="font-size:14px;color:'+PCOL[pl]+'">\u25CF</span>',action:function(){setTab("stratmap");clearGS()}})}});COMPS.forEach(function(cp){if(cp.n.toLowerCase().indexOf(ql)>=0||cp.w.toLowerCase().indexOf(ql)>=0)results.push({cat:"Competitors",label:cp.n,sub:"Embedded: "+cp.w,icon:'<span style="font-size:14px">\u2694</span>',action:function(){setTab("competitive");clearGS()}})});[{l:"Dashboard",id:"dashboard"},{l:"Our Strategy",id:"strategy"},{l:"AI Updates",id:"aiupdates"},{l:"This Week",id:"thisweek"},{l:"Pipeline",id:"pipeline"},{l:"Contacts",id:"contacts"},{l:"Unified Framework",id:"framework"},{l:"Org Chart",id:"orgchart"},{l:"Strategy Map",id:"stratmap"},{l:"Win Themes",id:"winthemes"},{l:"Competitive",id:"competitive"},{l:"Relationships",id:"relations"},{l:"Risks",id:"risks"},{l:"Settings",id:"settings"}].forEach(function(pg){if(pg.l.toLowerCase().indexOf(ql)>=0)results.push({cat:"Pages",label:pg.l,sub:"Navigate to page",icon:'<span style="font-size:14px">\uD83D\uDCC4</span>',action:function(){setTab(pg.id);clearGS()}})});return results}
+  function renderGSResults(results){var el=$("gs-results");if(!el)return;if(!results.length){el.innerHTML='<div class="gs-empty">No results found</div>';el.classList.add("open");return}var cats={},order=[];results.forEach(function(r){if(!cats[r.cat]){cats[r.cat]=[];order.push(r.cat)}cats[r.cat].push(r)});var o="",idx=0;order.forEach(function(cat){o+='<div class="gs-cat">'+esc(cat)+' ('+cats[cat].length+')</div>';cats[cat].forEach(function(r){var q=S.gsQuery||"";o+='<div class="gs-item'+(idx===S.gsActiveIdx?' gs-active':'')+' " data-gs-idx="'+idx+'">'+(r.icon||'')+' <div style="flex:1;min-width:0"><div style="font-weight:600">'+gsHighlight(r.label,q)+'</div><div style="font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+gsHighlight(r.sub,q)+'</div></div></div>';idx++})});el.innerHTML=o;el.classList.add("open");var flat=[];order.forEach(function(cat){flat=flat.concat(cats[cat])});el.querySelectorAll(".gs-item").forEach(function(item){var i=parseInt(item.dataset.gsIdx);item.onclick=function(){if(flat[i]&&flat[i].action)flat[i].action()}});S._gsFlat=flat}
+function clearGS(){var inp=$("gs-input"),res=$("gs-results"),hint=$("gs-hint");if(inp)inp.value="";if(res){res.innerHTML="";res.classList.remove("open")}if(hint)hint.style.display="";S.gsQuery="";S.gsActiveIdx=-1;S._gsFlat=[]}
+function initGlobalSearch(){var bar=$("gs-bar");if(bar)bar.style.display="";var inp=$("gs-input"),hint=$("gs-hint");if(!inp)return;var debounce=null;inp.addEventListener("input",function(){S.gsQuery=inp.value;S.gsActiveIdx=-1;if(hint)hint.style.display=inp.value?"none":"";clearTimeout(debounce);debounce=setTimeout(function(){if(inp.value.length>=2){renderGSResults(globalSearch(inp.value))}else{var el=$("gs-results");if(el){el.innerHTML="";el.classList.remove("open")}}},200)});inp.addEventListener("keydown",function(e){var flat=S._gsFlat||[];if(e.key==="ArrowDown"){e.preventDefault();S.gsActiveIdx=Math.min(S.gsActiveIdx+1,flat.length-1);renderGSResults(globalSearch(S.gsQuery))}else if(e.key==="ArrowUp"){e.preventDefault();S.gsActiveIdx=Math.max(S.gsActiveIdx-1,-1);renderGSResults(globalSearch(S.gsQuery))}else if(e.key==="Enter"&&S.gsActiveIdx>=0&&flat[S.gsActiveIdx]){e.preventDefault();flat[S.gsActiveIdx].action()}else if(e.key==="Escape"){clearGS();inp.blur()}});document.addEventListener("keydown",function(e){if(e.key==="/"&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA"&&document.activeElement.tagName!=="SELECT"){e.preventDefault();inp.focus()}});document.addEventListener("click",function(e){if(!e.target.closest("#gs-bar")){var res=$("gs-results");if(res)res.classList.remove("open")}})}
+  function openPanel(c){S.sel=c;S.panel=true;renderPanel();$("pbg").classList.add("sh");$("pn").classList.add("sh")}
 function closePanel(){S.panel=false;$("pbg").classList.remove("sh");$("pn").classList.remove("sh")}
 function updStatus(id,st){S.contacts=S.contacts.map(function(c){return c.id===id?Object.assign({},c,{status:st}):c});writeBack(id,{status:st});render()}
 
 function updContact(id,fields){
   S.contacts=S.contacts.map(function(c){return c.id===id?Object.assign({},c,fields):c});
+  
   writeBack(id,fields);
   if(S.sel&&S.sel.id===id)S.sel=S.contacts.find(function(c){return c.id===id});
 }
@@ -1685,6 +1710,7 @@ if(S.cfg.sid&&S.cfg.gkey){
   }).catch(function(e){S.syncing=false;render()});
 }
 render();
+  initGlobalSearch();
 
       
 
