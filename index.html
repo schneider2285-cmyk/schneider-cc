@@ -322,7 +322,7 @@ function render(){
   mn.innerHTML='<div class="fd2"></div>';
   var w=mn.firstChild;
   var pages={dashboard:pgDash,strategy:pgStrategy,aiupdates:pgAIUpdates,thisweek:pgWeek,pipeline:pgPipe,contacts:pgCon,orgchart:pgOrg,stratmap:pgStrat,winthemes:pgWin,competitive:pgComp,framework:pgFrame,relations:pgRel,risks:pgRisk,settings:pgSet};
-  (pages[S.tab]||pgDash)(w);
+  try{(pages[S.tab]||pgDash)(w)}catch(e){w.innerHTML='<div style="color:red;padding:20px">Error: '+e.message+'<br><pre>'+e.stack+'</pre></div>'}
   mn.scrollTop=0;
 }
 
