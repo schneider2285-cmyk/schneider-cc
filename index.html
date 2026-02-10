@@ -196,7 +196,7 @@ var RELS=[
 
 /* ===== STATE ===== */
 var DEFAULTS={sid:"1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwIukfI4",weburl:"https://script.google.com/macros/s/AKfycbxr4q1cfHBBYnrJ-oBPJIdH8JeVtpbTHDNiIh2THs5EB54poXcuF76vb93WIGXeHos/exec"};
-var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,lastSync:null,dirty:{},sheetData:{}};
+var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,pendingWrites:0,lastSync:null,dirty:{},sheetData:{}};
 try{S.cfg=JSON.parse(localStorage.getItem("secfg4")||"{}")}catch(e){S.cfg={}}
 if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
 if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
@@ -216,50 +216,57 @@ function updContact(id,fields){
   if(S.sel&&S.sel.id===id)S.sel=S.contacts.find(function(c){return c.id===id});
 }
 
-function writeBack(id,fields){
-  var url=S.cfg.weburl;if(!url)return;
-  var c=S.contacts.find(function(x){return x.id===id});if(!c)return;
-    var row=c.sheetRow;if(!row&&S.sheetData&&S.sheetData['Outreach Tracker']){var sd=S.sheetData['Outreach Tracker'];for(var ri=0;ri<sd.length;ri++){if(sd[ri]&&sd[ri][1]&&sd[ri][1].trim()===c.name.trim()){row=ri+1;break}}}if(!row){var idx=S.contacts.findIndex(function(x){return x.id===id});row=idx>=0?idx+6:id+5}
-  var colMap={status:"H",oDate:"I",chan:"J",resp:"K",mtg:"L",mDate:"M",next:"N",owner:"O",notes:"P",seqD:"Q",seqP:"R",why:"S",hook:"T",li:"U",role:"V",fit:"W",bud:"X"};
-  var updates=[];
-  Object.keys(fields).forEach(function(k){if(colMap[k])updates.push({col:colMap[k],val:fields[k]})});
-  if(!updates.length)return;
-  // Apps Script approach: send each update as URL-encoded form via hidden iframe/image
-  // This avoids CORS issues entirely since Apps Script redirects on POST
-  updates.forEach(function(u){
-    var params="?action=update&sheet="+encodeURIComponent("Outreach Tracker")+"&row="+row+"&col="+encodeURIComponent(u.col)+"&value="+encodeURIComponent(u.val);
-    // Use image trick to fire GET request (works through Apps Script redirect)
-    var img=new Image();
-    img.src=url+params;
-    // Also try fetch as backup
-    fetch(url+params,{mode:"no-cors",method:"GET"}).catch(function(){});
-  });
-  showSyncToast("Saved: "+Object.keys(fields).join(", "));
-}
+    function writeBack(id,fields){
+      var url=S.cfg.weburl;if(!url)return;
+      var c=S.contacts.find(function(x){return x.id===id});if(!c)return;
+      var row=c.sheetRow;if(!row&&S.sheetData&&S.sheetData['Outreach Tracker']){var sd=S.sheetData['Outreach Tracker'];for(var ri=0;ri<sd.length;ri++){if(sd[ri]&&sd[ri][1]&&sd[ri][1].trim()===c.name.trim()){row=ri+1;break}}}if(!row){var idx=S.contacts.findIndex(function(x){return x.id===id});row=idx>=0?idx+6:id+5}
+      var colMap={status:"H",oDate:"I",chan:"J",resp:"K",mtg:"L",mDate:"M",next:"N",owner:"O",notes:"P",seqD:"Q",seqP:"R",why:"S",hook:"T",li:"U",role:"V",fit:"W",bud:"X"};
+      var updates=[];
+      Object.keys(fields).forEach(function(k){if(colMap[k])updates.push({col:colMap[k],val:fields[k]})});
+      if(!updates.length)return;
+      S.pendingWrites+=updates.length;renderSyncBtn();
+      updates.forEach(function(u){
+        var params="?action=update&sheet="+encodeURIComponent("Outreach Tracker")+"&row="+row+"&col="+encodeURIComponent(u.col)+"&value="+encodeURIComponent(u.val);
+        jsonpFetch(url+params).then(function(resp){
+          S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
+          if(resp&&resp.success){showSyncToast("\u2713 Saved: "+Object.keys(fields).join(", "))}
+          else{showSyncToast("\u26A0 Write may not have saved")}
+        }).catch(function(){
+          var img=new Image();img.src=url+params;
+          fetch(url+params,{mode:"no-cors",method:"GET"}).catch(function(){});
+          S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
+          showSyncToast("\u26A0 Unconfirmed save (fallback)");
+        });
+      });
+    }
 
-function syncFromSheet(){
-  if(S.syncing)return;
-  var sid=S.cfg.sid,gk=S.cfg.gkey;
-  if(!sid||!gk)return;
-  S.syncing=true;renderSyncBtn();
-  (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
-    if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date();render()}
-    S.syncing=false;renderSyncBtn();
-    showSyncToast("Synced "+data.length+" contacts");syncAllTabs();
-  }).catch(function(e){S.syncing=false;renderSyncBtn();showSyncToast("Sync error: "+e.message)});
-}
+    function syncFromSheet(){
+      if(S.syncing)return;
+      if(S.pendingWrites>0){showSyncToast("Waiting for "+S.pendingWrites+" write(s) to finish...");setTimeout(syncFromSheet,2000);return;}
+      var sid=S.cfg.sid,gk=S.cfg.gkey;
+      if(!sid||!gk)return;
+      S.syncing=true;renderSyncBtn();
+      (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
+        if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date();render()}
+        S.syncing=false;renderSyncBtn();
+        showSyncToast("Synced "+data.length+" contacts");syncAllTabs();
+      }).catch(function(e){S.syncing=false;renderSyncBtn();showSyncToast("Sync error: "+e.message)});
+    }
 
-function showSyncToast(msg){
-  var t=document.getElementById("synctoast");
-  if(!t){t=document.createElement("div");t.id="synctoast";t.style.cssText="position:fixed;bottom:20px;right:20px;background:var(--b3);border:1px solid var(--bd);color:var(--t1);padding:8px 16px;border-radius:6px;font-size:11px;z-index:200;opacity:0;transition:opacity .3s";document.body.appendChild(t)}
-  t.textContent=msg;t.style.opacity="1";
-  setTimeout(function(){t.style.opacity="0"},2500);
-}
+    function showSyncToast(msg){
+      var t=document.getElementById("synctoast");
+      if(!t){t=document.createElement("div");t.id="synctoast";t.style.cssText="position:fixed;bottom:20px;right:20px;background:var(--b3);border:1px solid var(--bd);color:var(--t1);padding:8px 16px;border-radius:6px;font-size:11px;z-index:200;opacity:0;transition:opacity .3s";document.body.appendChild(t)}
+      t.textContent=msg;t.style.opacity="1";
+      setTimeout(function(){t.style.opacity="0"},2500);
+    }
 
-function renderSyncBtn(){
-  var el=document.getElementById("syncbtn");
-  if(el)el.textContent=S.syncing?"Syncing...":"\u21BB Sync";
-}
+    function renderSyncBtn(){
+      var el=document.getElementById("syncbtn");
+      if(!el)return;
+      if(S.pendingWrites>0){el.textContent="Saving ("+S.pendingWrites+")...";el.disabled=true;}
+      else if(S.syncing){el.textContent="Syncing...";el.disabled=true;}
+      else{el.textContent="\u21BB Sync";el.disabled=false;}
+    }
 
 /* ===== HELPERS ===== */
 function $(id){return document.getElementById(id)}
