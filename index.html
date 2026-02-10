@@ -230,8 +230,8 @@ function updContact(id,fields){
     updates.forEach(function(u){
       var params="?action=update&sheet="+encodeURIComponent("Outreach Tracker")+"&row="+row+"&col="+encodeURIComponent(u.col)+"&value="+encodeURIComponent(u.val);
       var img=new Image();
-      img.onload=function(){showSyncToast("2713 Saved: "+u.field);if(S.dirty&&S.dirty[id])delete S.dirty[id][u.field];if(S.dirty[id]&&!Object.keys(S.dirty[id]).length)delete S.dirty[id]};
-      img.onerror=function(){showSyncToast("2713 Saved: "+u.field);if(S.dirty&&S.dirty[id])delete S.dirty[id][u.field];if(S.dirty[id]&&!Object.keys(S.dirty[id]).length)delete S.dirty[id]};
+      img.onload=function(){showSyncToast("2713 Saved: "+u.field)};
+      img.onerror=function(){showSyncToast("2713 Saved: "+u.field)};
       img.src=url+params;
     });
   }
@@ -250,6 +250,7 @@ function updContact(id,fields){
             return c;
           });
         }
+                if(S.dirty&&Object.keys(S.dirty).length>0){data.forEach(function(c){if(S.dirty[c.id]){Object.keys(S.dirty[c.id]).forEach(function(k){if(c[k]===S.dirty[c.id][k]){delete S.dirty[c.id][k]}});if(!Object.keys(S.dirty[c.id]).length)delete S.dirty[c.id]}});}
         S.contacts=data;S.conn=true;S.lastSync=new Date();render();
       }
       S.syncing=false;renderSyncBtn();
