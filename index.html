@@ -232,14 +232,18 @@ function updContact(id,fields){
           if(resp&&resp.success){showSyncToast("\u2713 Saved: "+Object.keys(fields).join(", "))}
           else{showSyncToast("\u26A0 Write may not have saved")}
         }).catch(function(){
-          var img=new Image();img.src=url+params;
-          fetch(url+params,{mode:"no-cors",method:"GET"}).catch(function(){});
-          S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
-          showSyncToast("\u2713 Saved");
+          fetch(url+params,{method:"GET",redirect:"follow"}).then(function(r){return r.json()}).then(function(j){
+            S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
+            if(j&&j.success){showSyncToast("\u2713 Saved: "+Object.keys(fields).join(", "))}
+            else{showSyncToast("\u26A0 Write may not have saved")}
+          }).catch(function(){
+            var img=new Image();img.src=url+params;
+            S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
+            showSyncToast("\u2713 Saved");
+          });
         });
       });
     }
-
     function syncFromSheet(){
       if(S.syncing)return;
       if(S.pendingWrites>0){showSyncToast("Waiting for "+S.pendingWrites+" write(s) to finish...");setTimeout(syncFromSheet,2000);return;}
