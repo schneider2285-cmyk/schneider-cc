@@ -242,7 +242,7 @@ function syncFromSheet(){
   var sid=S.cfg.sid,gk=S.cfg.gkey;
   if(!sid||!gk)return;
   S.syncing=true;renderSyncBtn();
-  fetchSheet(sid,gk).then(function(data){
+  (S.cfg.weburl?fetch(S.cfg.weburl).then(function(r){return r.json()}).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
     if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date();render()}
     S.syncing=false;renderSyncBtn();
     showSyncToast("Synced "+data.length+" contacts");
@@ -1621,7 +1621,7 @@ function pgSet(el){
     save();var sid=$("s_sid").value,gk=$("s_gkey").value;
     if(!sid||!gk){$("s_shstatus").textContent="Enter Sheet ID and API Key first.";$("s_shstatus").style.color="var(--red)";return}
     $("s_shstatus").textContent="Testing...";$("s_shstatus").style.color="var(--t3)";$("s_shtest").disabled=true;
-    fetchSheet(sid,gk).then(function(data){
+    (S.cfg.weburl?fetch(S.cfg.weburl).then(function(r){return r.json()}).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
       if(data.length>0){S.contacts=data;S.conn=true;$("s_shstatus").textContent="Connected! Loaded "+data.length+" contacts.";$("s_shstatus").style.color="var(--grn)";renderSB()}
       else{$("s_shstatus").textContent="Connected but no data found. Check tab name/row range.";$("s_shstatus").style.color="var(--gld)"}
       $("s_shtest").disabled=false;
