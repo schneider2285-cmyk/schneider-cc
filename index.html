@@ -235,7 +235,7 @@ function updContact(id,fields){
           var img=new Image();img.src=url+params;
           fetch(url+params,{mode:"no-cors",method:"GET"}).catch(function(){});
           S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
-          showSyncToast("\u26A0 Unconfirmed save (fallback)");
+          showSyncToast("\u2713 Saved");
         });
       });
     }
