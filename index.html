@@ -153,7 +153,7 @@ tr:hover td{background:var(--b3)}
 </div>
 <script>
 /* ===== DATA ===== */
-var SL=["Not Started","Outreach Sent","Responded","Meeting Set","Engaged"];
+var SL=["Not Started","Researching","Email Sent","LinkedIn Sent","Follow-Up","Meeting Set","Engaged","On Hold","Closed Won"];
 var PCOL={SAP:"var(--grn)",AI:"var(--blu)",Advisory:"var(--gld)",Digital:"var(--pur)",Sustainability:"var(--cyn)"};
 var PTAG={SAP:"tg-g",AI:"tg-b",Advisory:"tg-o",Digital:"tg-p",Sustainability:"tg-c"};
 var DC=[
@@ -219,7 +219,7 @@ function updContact(id,fields){
 function writeBack(id,fields){
   var url=S.cfg.weburl;if(!url)return;
   var c=S.contacts.find(function(x){return x.id===id});if(!c)return;
-  var row=id+5;
+    var idx=S.contacts.findIndex(function(x){return x.id===id});var row=idx>=0?idx+6:id+5;
   var colMap={status:"H",oDate:"I",chan:"J",resp:"K",mtg:"L",mDate:"M",next:"N",owner:"O",notes:"P",seqD:"Q",seqP:"R"};
   var updates=[];
   Object.keys(fields).forEach(function(k){if(colMap[k])updates.push({col:colMap[k],val:fields[k]})});
@@ -292,7 +292,7 @@ function fetchSheet(sid,key){
       return{id:i+1,name:w[1]||"",title:w[2]||"",loc:w[3]||"",tier:rawTier,init:rawInit,timing:w[6]||"",status:w[7]||"Not Started",oDate:w[8]||"",chan:w[9]||"",resp:w[10]||"",mtg:w[11]||"",mDate:w[12]||"",next:w[13]||"",owner:w[14]||"",notes:w[15]||"",seqD:w[16]||"",seqP:w[17]||"",why:w[18]||"",hook:w[19]||"",li:w[20]||"",role:w[21]||"",fit:w[22]||"",bud:w[23]||"",play:play}}).filter(function(c){return c.name});
   });
 }
-function fetchSheetTab(tabName){var sid=S.cfg.sid,gk=S.cfg.gkey;if(!sid||!gk)return Promise.resolve([]);var url="https://sheets.googleapis.com/v4/spreadsheets/"+sid+"/values/"+encodeURIComponent(tabName+"!A1:Z200")+"?key="+gk;return fetch(url).then(function(r){return r.json()}).then(function(d){return d.values||[]}).catch(function(){return[]})} function syncAllTabs(){var tabs=["Strategy","UNIFIED Framework","Org Chart","AI Brief","Dashboard"];tabs.forEach(function(t){fetchSheetTab(t).then(function(d){S.sheetData[t]=d;render()})})} function bindRows(el){el.querySelectorAll(".rw[data-name]").forEach(function(r){r.onclick=function(){var c=S.contacts.find(function(x){return x.name===r.dataset.name});if(c)openPanel(c)}})}
+function fetchSheetTab(tabName){var sid=S.cfg.sid,gk=S.cfg.gkey;if(!sid||!gk)return Promise.resolve([]);var url="https://sheets.googleapis.com/v4/spreadsheets/"+sid+"/values/"+encodeURIComponent(tabName+"!A1:Z200")+"?key="+gk;return fetch(url).then(function(r){return r.json()}).then(function(d){return d.values||[]}).catch(function(){return[]})} function syncAllTabs(){var tabs=["Strategy","UNIFIED Framework","Org Chart & Strategy Map","AI Brief (Weekly)","Dashboard"];tabs.forEach(function(t){fetchSheetTab(t).then(function(d){S.sheetData[t]=d;render()})})} function bindRows(el){el.querySelectorAll(".rw[data-name]").forEach(function(r){r.onclick=function(){var c=S.contacts.find(function(x){return x.name===r.dataset.name});if(c)openPanel(c)}})}
 
 
 
@@ -365,10 +365,10 @@ function pgDash(el){
   var mt=C.filter(function(c){return c.mtg==="Yes"}).length;
   var eng=C.filter(function(c){return c.status==="Engaged"}).length;
   var stl=C.filter(function(c){return c.oDate&&dsince(c.oDate)>14&&!c.resp});
-  var pq=C.filter(function(c){return c.status==="Responded"||(c.status==="Outreach Sent"&&parseInt(c.seqD||0)>=5)||c.mtg==="Yes"||(c.status==="Not Started"&&(c.tier||"").indexOf("Tier 0")>=0)||(c.status==="Not Started"&&(c.tier||"").indexOf("Tier 1")>=0)}).slice(0,8);
+  var pq=C.filter(function(c){return c.status==="Follow-Up"||(c.status==="Email Sent"||c.status==="LinkedIn Sent"&&parseInt(c.seqD||0)>=5)||c.mtg==="Yes"||(c.status==="Not Started"&&(c.tier||"").indexOf("Tier 0")>=0)||(c.status==="Not Started"&&(c.tier||"").indexOf("Tier 1")>=0)}).slice(0,8);
   var fd=SL.map(function(st){return{l:st,c:C.filter(function(c){return c.status===st}).length}});
   var mx=Math.max.apply(null,fd.map(function(f){return f.c}).concat([1]));
-  var fc=["#606078","#4d9fff","#ffc857","#a855f7","#3ddc84"];
+  var fc=["#606078","#4d9fff","#22d3ee","#a855f7","#ffc857","#ec4899","#3ddc84","#9696ae","#f97316"];
 
   // Play stats
   var plays=["SAP","AI","Advisory","Digital","Sustainability"];
@@ -434,7 +434,7 @@ function pgDash(el){
   o+='<table style="width:100%;font-size:10px;border-collapse:collapse"><thead><tr style="border-bottom:1px solid var(--bd)"><th style="text-align:left;padding:3px 6px;color:var(--t3);font-size:8px">Tier</th><th style="padding:3px;color:var(--t3);font-size:8px">Total</th><th style="padding:3px;color:var(--t3);font-size:8px">Sent</th><th style="padding:3px;color:var(--t3);font-size:8px">Resp</th><th style="padding:3px;color:var(--t3);font-size:8px">Mtg</th></tr></thead><tbody>';
   tierList.forEach(function(t){
     var tc=C.filter(function(c){return c.tier===t});
-    var sent=tc.filter(function(c){return c.status==="Outreach Sent"||c.status==="Responded"||c.status==="Meeting Set"||c.status==="Engaged"}).length;
+    var sent=tc.filter(function(c){return c.status==="Email Sent"||c.status==="LinkedIn Sent"||c.status==="Follow-Up"||c.status==="Meeting Set"||c.status==="Engaged"}).length;
     var resp=tc.filter(function(c){return c.resp}).length;
     var mtg=tc.filter(function(c){return c.mtg==="Yes"}).length;
     var cl=t.indexOf("SAP")>=0?"var(--grn)":t.indexOf("AI")>=0||t.indexOf("Data")>=0?"var(--blu)":t.indexOf("Digital")>=0?"var(--pur)":t.indexOf("Sustain")>=0?"var(--cyn)":t.indexOf("Cyber")>=0?"var(--red)":"var(--t2)";
@@ -623,7 +623,7 @@ function pgStrategy(el){
     matchedContacts.forEach(function(mc,ci){
       var pc=mc.info,lc=mc.live;
       var st=lc?lc.status:"Not Started";
-      var sd=st==="Engaged"||st==="Meeting Set"?"var(--grn)":st==="Responded"?"var(--gld)":st==="Outreach Sent"?"var(--blu)":"var(--t3)";
+      var sd=st==="Engaged"||st==="Meeting Set"?"var(--grn)":st==="Follow-Up"?"var(--gld)":st==="Email Sent"||st==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
       var playCol=PCOL[lc?lc.play:""||p.name.indexOf("SAP")>=0?"SAP":"Advisory"]||p.color;
       var ini=pc.name.split(" ").map(function(w){return w[0]}).join("").substring(0,2);
 
@@ -658,8 +658,8 @@ function pgStrategy(el){
 function pgAIUpdates(el){
   var C=S.contacts;
 
-  var sheetAI=S.sheetData["AI Brief"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} // Simulated AI intel feed — in production these would come from an API or sheet
-  var sheetAI=S.sheetData["AI Brief"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} var updates=[
+  var sheetAI=S.sheetData["AI Brief (Weekly)"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} // Simulated AI intel feed — in production these would come from an API or sheet
+  var sheetAI=S.sheetData["AI Brief (Weekly)"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} var updates=[
     {date:"Feb 7, 2026",type:"Job Posting",icon:"\uD83D\uDCBC",priority:"high",
      title:"15 new SAP S/4HANA roles posted on LinkedIn",
      detail:"Schneider posted 15 new SAP roles in the past week: 6 S/4 Functional Consultants, 4 BASIS Admins, 3 ABAP Developers, 2 Solution Architects. Locations: Bangalore (9), Paris (4), Boston (2). All marked 'Urgent Hire.' Average days-open for existing SAP roles now exceeds 95 days.",
@@ -835,9 +835,9 @@ function pgAIUpdates(el){
 function pgWeek(el){
   var C=S.contacts;
   var mt=C.filter(function(c){return c.mtg==="Yes"&&c.mDate});
-  var fu=C.filter(function(c){return c.status==="Outreach Sent"});
+  var fu=C.filter(function(c){return c.status==="Email Sent"||c.status==="LinkedIn Sent"});
   var no=C.filter(function(c){return c.status==="Not Started"}).slice(0,5);
-  var aw=C.filter(function(c){return c.status==="Responded"&&c.mtg!=="Yes"});
+  var aw=C.filter(function(c){return c.status==="Follow-Up"&&c.mtg!=="Yes"});
   var o='<div class="pt3">This Week</div><div class="ps3">Week of '+new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})+'</div><div class="g2">';
   o+='<div class="cd"><div class="ct">Meetings '+tag(mt.length,"tg-p")+'</div>';
   if(!mt.length)o+='<div style="color:var(--t3);font-size:12px">None scheduled</div>';
@@ -904,7 +904,7 @@ function pgCon(el){
     o+='<div id="tierBreak"><table style="width:100%;font-size:11px;border-collapse:collapse"><thead><tr style="border-bottom:1px solid var(--bd)"><th style="text-align:left;padding:4px 8px;color:var(--t3);font-size:9px">Tier</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Total</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Sent</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Resp</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Mtg</th></tr></thead><tbody>';
     tierList.forEach(function(t){
       var tc=S.contacts.filter(function(c){return c.tier===t});
-      var sent=tc.filter(function(c){return c.status==="Outreach Sent"||c.status==="Responded"||c.status==="Meeting Set"||c.status==="Engaged"}).length;
+      var sent=tc.filter(function(c){return c.status==="Email Sent"||c.status==="LinkedIn Sent"||c.status==="Follow-Up"||c.status==="Meeting Set"||c.status==="Engaged"}).length;
       var resp=tc.filter(function(c){return c.resp}).length;
       var mtg=tc.filter(function(c){return c.mtg==="Yes"}).length;
       var tierColor=t.indexOf("SAP")>=0?"var(--grn)":t.indexOf("AI")>=0||t.indexOf("Data")>=0?"var(--blu)":t.indexOf("Digital")>=0?"var(--pur)":t.indexOf("Sustain")>=0?"var(--cyn)":t.indexOf("Cyber")>=0?"var(--red)":"var(--t2)";
@@ -938,7 +938,7 @@ function pgOrg(el){
 
   /* Full org: BU > Sub-BU/Division > Team > Contacts
      Each level is visually nested so you can see the full path */
-  var sheetOC=S.sheetData["Org Chart"];if(sheetOC&&sheetOC.length>2){var orgContacts=[];sheetOC.forEach(function(rw){if(!rw)return;rw.forEach(function(cell){if(!cell)return;var s=cell.toString().trim();var mc=S.contacts.find(function(c){return s.indexOf(c.name)>=0});if(mc&&!orgContacts.find(function(x){return x.name===mc.name}))orgContacts.push(mc)})});if(orgContacts.length>0)S._orgSheetContacts=orgContacts} var ORG=[
+  var sheetOC=S.sheetData["Org Chart & Strategy Map"];if(sheetOC&&sheetOC.length>2){var orgContacts=[];sheetOC.forEach(function(rw){if(!rw)return;rw.forEach(function(cell){if(!cell)return;var s=cell.toString().trim();var mc=S.contacts.find(function(c){return s.indexOf(c.name)>=0});if(mc&&!orgContacts.find(function(x){return x.name===mc.name}))orgContacts.push(mc)})});if(orgContacts.length>0)S._orgSheetContacts=orgContacts} var ORG=[
     {bu:"Office of the CEO",color:"#3DCC4A",subs:[
       {name:"Executive Leadership",teams:[
         {name:"CEO",contacts:[{name:"Peter Herweck",title:"Chief Executive Officer",tier:"T0",play:"Digital"}]}
@@ -1035,7 +1035,7 @@ function pgOrg(el){
   var ceoData=ORG[0].subs[0].teams[0].contacts[0];
   var ceoCt=C.find(function(c){return c.name===ceoData.name});
   var ceoSt=ceoCt?ceoCt.status:"Not Started";
-  var ceoDot=ceoSt==="Engaged"?"var(--grn)":ceoSt==="Responded"?"var(--gld)":ceoSt==="Outreach Sent"?"var(--blu)":"var(--t3)";
+  var ceoDot=ceoSt==="Engaged"?"var(--grn)":ceost==="Follow-Up"?"var(--gld)":ceost==="Email Sent"||st==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
 
   o+='<div style="background:var(--b2);border:1px solid var(--bd);border-left:4px solid #3DCC4A;border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer" class="oc-click" data-name="Peter Herweck">';
   o+='<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3DCC4A,#2a9d3a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">PH</div>';
@@ -1075,7 +1075,7 @@ function pgOrg(el){
         tm.contacts.forEach(function(ct){
           var mc=C.find(function(c){return c.name===ct.name});
           var st=mc?mc.status:"Not Started";
-          var sd=st==="Engaged"||st==="Meeting Set"?"var(--grn)":st==="Responded"?"var(--gld)":st==="Outreach Sent"?"var(--blu)":"var(--t3)";
+          var sd=st==="Engaged"||st==="Meeting Set"?"var(--grn)":st==="Follow-Up"?"var(--gld)":st==="Email Sent"||st==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
           var playCol=PCOL[ct.play]||"var(--t3)";
           var ini=ct.name.split(" ").map(function(w){return w[0]}).join("").substring(0,2);
 
