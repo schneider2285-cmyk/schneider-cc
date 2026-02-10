@@ -196,7 +196,7 @@ var RELS=[
 
 /* ===== STATE ===== */
 var DEFAULTS={sid:"1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwIukfI4",weburl:"https://script.google.com/macros/s/AKfycbxr4q1cfHBBYnrJ-oBPJIdH8JeVtpbTHDNiIh2THs5EB54poXcuF76vb93WIGXeHos/exec"};
-var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,lastSync:null,dirty:{}};
+var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,lastSync:null,dirty:{},sheetData:{}};
 try{S.cfg=JSON.parse(localStorage.getItem("secfg4")||"{}")}catch(e){S.cfg={}}
 if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
 if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
@@ -245,7 +245,7 @@ function syncFromSheet(){
   (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
     if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date();render()}
     S.syncing=false;renderSyncBtn();
-    showSyncToast("Synced "+data.length+" contacts");
+    showSyncToast("Synced "+data.length+" contacts");syncAllTabs();
   }).catch(function(e){S.syncing=false;renderSyncBtn();showSyncToast("Sync error: "+e.message)});
 }
 
@@ -292,7 +292,7 @@ function fetchSheet(sid,key){
       return{id:i+1,name:w[1]||"",title:w[2]||"",loc:w[3]||"",tier:rawTier,init:rawInit,timing:w[6]||"",status:w[7]||"Not Started",oDate:w[8]||"",chan:w[9]||"",resp:w[10]||"",mtg:w[11]||"",mDate:w[12]||"",next:w[13]||"",owner:w[14]||"",notes:w[15]||"",seqD:w[16]||"",seqP:w[17]||"",why:w[18]||"",hook:w[19]||"",li:w[20]||"",role:w[21]||"",fit:w[22]||"",bud:w[23]||"",play:play}}).filter(function(c){return c.name});
   });
 }
-function bindRows(el){el.querySelectorAll(".rw[data-name]").forEach(function(r){r.onclick=function(){var c=S.contacts.find(function(x){return x.name===r.dataset.name});if(c)openPanel(c)}})}
+function fetchSheetTab(tabName){var sid=S.cfg.sid,gk=S.cfg.gkey;if(!sid||!gk)return Promise.resolve([]);var url="https://sheets.googleapis.com/v4/spreadsheets/"+sid+"/values/"+encodeURIComponent(tabName+"!A1:Z200")+"?key="+gk;return fetch(url).then(function(r){return r.json()}).then(function(d){return d.values||[]}).catch(function(){return[]})} function syncAllTabs(){var tabs=["Strategy","UNIFIED Framework","Org Chart","AI Brief","Dashboard"];tabs.forEach(function(t){fetchSheetTab(t).then(function(d){S.sheetData[t]=d;render()})})} function bindRows(el){el.querySelectorAll(".rw[data-name]").forEach(function(r){r.onclick=function(){var c=S.contacts.find(function(x){return x.name===r.dataset.name});if(c)openPanel(c)}})}
 
 
 
@@ -476,7 +476,7 @@ function pgDash(el){
 function pgStrategy(el){
   var C=S.contacts;
 
-  var priorities=[
+  var sheetST=S.sheetData["Strategy"];if(sheetST&&sheetST.length>2){var stSections={};var curSec="";sheetST.forEach(function(rw){if(!rw||!rw.length)return;var cell=(rw[0]||"")+" "+(rw[1]||"");if(cell.indexOf("PLAY 1")>=0)curSec="SAP";else if(cell.indexOf("PLAY 2")>=0)curSec="AI";else if(cell.indexOf("PLAY 3")>=0)curSec="Advisory";else if(cell.indexOf("PLAY 4")>=0)curSec="Digital";else if(cell.indexOf("PLAY 5")>=0)curSec="Sustainability";if(curSec&&!stSections[curSec])stSections[curSec]={lines:[]};if(curSec){var txt=rw.filter(function(c){return c}).join(" ").trim();if(txt)stSections[curSec].lines.push(txt)}});if(Object.keys(stSections).length>0){S._sheetStrategy=stSections}} var priorities=[
     {num:1,name:"SAP S/4HANA Enterprise Migration",color:"var(--grn)",icon:"\u26A1",
      what:"Schneider is executing a $700M+ SAP S/4HANA migration \u2014 the largest IT transformation in company history. The UNIFY program spans 197 plants, 97 distribution centers, and 100+ country operations. Germany and India are live. Global rollout runs through 2027.",
      why:"SAP ECC 6.0 hits end-of-life 2027. Impact 2026 requires unified financial reporting and real-time supply chain visibility. None of this works on the current fragmented ECC landscape.",
@@ -658,8 +658,8 @@ function pgStrategy(el){
 function pgAIUpdates(el){
   var C=S.contacts;
 
-  // Simulated AI intel feed — in production these would come from an API or sheet
-  var updates=[
+  var sheetAI=S.sheetData["AI Brief"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} // Simulated AI intel feed — in production these would come from an API or sheet
+  var sheetAI=S.sheetData["AI Brief"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} var updates=[
     {date:"Feb 7, 2026",type:"Job Posting",icon:"\uD83D\uDCBC",priority:"high",
      title:"15 new SAP S/4HANA roles posted on LinkedIn",
      detail:"Schneider posted 15 new SAP roles in the past week: 6 S/4 Functional Consultants, 4 BASIS Admins, 3 ABAP Developers, 2 Solution Architects. Locations: Bangalore (9), Paris (4), Boston (2). All marked 'Urgent Hire.' Average days-open for existing SAP roles now exceeds 95 days.",
@@ -938,7 +938,7 @@ function pgOrg(el){
 
   /* Full org: BU > Sub-BU/Division > Team > Contacts
      Each level is visually nested so you can see the full path */
-  var ORG=[
+  var sheetOC=S.sheetData["Org Chart"];if(sheetOC&&sheetOC.length>2){var orgContacts=[];sheetOC.forEach(function(rw){if(!rw)return;rw.forEach(function(cell){if(!cell)return;var s=cell.toString().trim();var mc=S.contacts.find(function(c){return s.indexOf(c.name)>=0});if(mc&&!orgContacts.find(function(x){return x.name===mc.name}))orgContacts.push(mc)})});if(orgContacts.length>0)S._orgSheetContacts=orgContacts} var ORG=[
     {bu:"Office of the CEO",color:"#3DCC4A",subs:[
       {name:"Executive Leadership",teams:[
         {name:"CEO",contacts:[{name:"Peter Herweck",title:"Chief Executive Officer",tier:"T0",play:"Digital"}]}
@@ -1392,7 +1392,7 @@ function pgFrame(el){
      S.fwPri = selected priority index
      S.fwProd = selected product index
   */
-  if(S.fwLevel===undefined){S.fwLevel=0;S.fwPri=null;S.fwProd=null}
+  var sheetFW=S.sheetData["UNIFIED Framework"];if(sheetFW&&sheetFW.length>1){var parsed=[];var hdr=sheetFW[0];var curPri=null;for(var ri=1;ri<sheetFW.length;ri++){var rw=sheetFW[ri];if(!rw||!rw.length)continue;if(rw[0]&&rw[0].toString().match(/^\d+$/)){var pn=parseInt(rw[0]);var colors=["var(--grn)","var(--blu)","var(--gld)","var(--pur)","var(--cyn)"];curPri={num:pn,name:rw[1]||"",color:colors[(pn-1)%5],why:rw[2]||"",execOwner:rw[3]||"",execTitle:rw[4]||"",execConf:rw[5]||"",execNotes:rw[6]||"",products:[]};parsed.push(curPri)}if(curPri&&rw[7]){var prod=null;curPri.products.forEach(function(p){if(p.name===rw[7])prod=p});if(!prod){prod={name:rw[7],evidence:rw[8]||"",budget:rw[9]||"",budgetLvl:rw[10]||"",timeline:rw[11]||"",timelineLvl:rw[12]||"",components:[]};curPri.products.push(prod)}if(rw[13]){prod.components.push({team:rw[13],teamHier:rw[14]||"",loc:rw[15]||"",type:rw[16]||"Own",vendors:rw[17]||"",vendorDisplace:rw[18]||"",toptal:rw[19]||"",toptalFit:rw[20]||"",contact:rw[21]||"",contactTitle:rw[22]||"",buyRole:rw[23]||""})}}}if(parsed.length>0)PRI=parsed} if(S.fwLevel===undefined){S.fwLevel=0;S.fwPri=null;S.fwProd=null}
 
   var o='';
 
@@ -1669,7 +1669,7 @@ if(S.cfg.sid&&S.cfg.gkey){
   (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(S.cfg.sid,S.cfg.gkey)}):fetchSheet(S.cfg.sid,S.cfg.gkey)).then(function(data){
     if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date()}
     S.syncing=false;render();
-    if(data.length>0)showSyncToast("Loaded "+data.length+" contacts from sheet");
+    if(data.length>0){showSyncToast("Loaded "+data.length+" contacts from sheet");syncAllTabs()}
   }).catch(function(e){S.syncing=false;render()});
 }
 render();
