@@ -220,7 +220,7 @@ function writeBack(id,fields){
   var url=S.cfg.weburl;if(!url)return;
   var c=S.contacts.find(function(x){return x.id===id});if(!c)return;
     var idx=S.contacts.findIndex(function(x){return x.id===id});var row=c.sheetRow||(idx>=0?idx+6:id+5);
-  var colMap={status:"H",oDate:"I",chan:"J",resp:"K",mtg:"L",mDate:"M",next:"N",owner:"O",notes:"P",seqD:"Q",seqP:"R"};
+  var colMap={status:"H",oDate:"I",chan:"J",resp:"K",mtg:"L",mDate:"M",next:"N",owner:"O",notes:"P",seqD:"Q",seqP:"R",why:"S",hook:"T",li:"U",role:"V",fit:"W",bud:"X"};
   var updates=[];
   Object.keys(fields).forEach(function(k){if(colMap[k])updates.push({col:colMap[k],val:fields[k]})});
   if(!updates.length)return;
@@ -342,18 +342,18 @@ function renderPanel(){
   o+='<div class="fl2"><label>Notes</label><textarea id="pn_notes" rows="3" style="resize:vertical">'+esc(c.notes||'')+'</textarea></div>';
   o+='<div style="display:flex;gap:6px;margin-bottom:12px"><div class="fl2" style="flex:1"><label>Meeting?</label><select id="pn_mtg"><option value="No"'+(c.mtg!=='Yes'?' selected':'')+'>No</option><option value="Yes"'+(c.mtg==='Yes'?' selected':'')+'>Yes</option></select></div><div class="fl2" style="flex:1"><label>Meeting Date</label><input id="pn_mdate" type="date" value="'+esc(c.mDate||'')+'"></div></div>';
   o+='<div style="display:flex;gap:6px;margin-bottom:12px"><div class="fl2" style="flex:1"><label>Seq Days</label><input id="pn_seqd" value="'+esc(c.seqD||'')+'"></div><div class="fl2" style="flex:1"><label>Seq Phase</label><input id="pn_seqp" value="'+esc(c.seqP||'')+'"></div></div></div>';
-  o+='<div class="cd"><div class="ct">Why They Buy Now</div><p style="font-size:12px;color:var(--t2);line-height:1.6">'+esc(c.why||"--")+'</p></div>';
-  o+='<div class="cd"><div class="ct">Outreach Hook</div><p style="font-size:12px;color:var(--t2);line-height:1.6;font-style:italic">'+esc(c.hook||"--")+'</p></div>';
+  o+='<div class="cd"><div class="ct">Why They Buy Now</div><div class="fl2"><textarea id="pn_why" rows="2" style="resize:vertical">'+esc(c.why||'')+'</textarea></div></div>';
+  o+='<div class="cd"><div class="ct">Outreach Hook</div><div class="fl2"><textarea id="pn_hook" rows="2" style="resize:vertical;font-style:italic">'+esc(c.hook||'')+'</textarea></div></div>';
   o+='<div class="cd"><div class="ct">Details</div><div class="dtgrid">';
-  o+='<div><span class="dlab">Location: </span>'+esc(c.loc)+'</div><div><span class="dlab">Role: </span>'+esc(c.role)+'</div>';
+  o+='<div><label>Role</label><select id="pn_role"><option value="">--</option><option value="Economic Buyer"'+(c.role==='Economic Buyer'?' selected':'')+'>Economic Buyer</option><option value="Champion"'+(c.role==='Champion'?' selected':'')+'>Champion</option><option value="Technical Buyer"'+(c.role==='Technical Buyer'?' selected':'')+'>Technical Buyer</option><option value="Influencer"'+(c.role==='Influencer'?' selected':'')+'>Influencer</option><option value="Executive Sponsor"'+(c.role==='Executive Sponsor'?' selected':'')+'>Executive Sponsor</option></select></div><div class="fl2"><label>Fit</label><input id="pn_fit" value="'+esc(c.fit||'')+'" style="width:60px"></div><div><span class="dlab">Location: </span>'+esc(c.loc)+'</div>';
   o+='<div><span class="dlab">Fit: </span>'+esc(c.fit)+'/10</div><div><span class="dlab">Timing: </span>'+esc(c.timing)+'</div>';
-  o+='<div class="sp"><span class="dlab">Budget: </span>'+esc(c.bud)+'</div>';
+  o+='<div class="sp"><label>Budget</label><input id="pn_bud" value="'+esc(c.bud||'')+'"></div>';
   o+='</div></div>';
   $("pn").innerHTML=o;
   $("xpn").onclick=closePanel;
   function bindField(elId,field){var el=$(elId);if(!el)return;el.addEventListener("change",function(){var upd={};upd[field]=el.value;updContact(c.id,upd);if(field==="status"){renderPanel();render()}})}
-  bindField("pn_status","status");bindField("pn_chan","chan");bindField("pn_next","next");bindField("pn_notes","notes");bindField("pn_mtg","mtg");bindField("pn_mdate","mDate");bindField("pn_seqd","seqD");bindField("pn_seqp","seqP");
-  ["pn_next","pn_notes","pn_seqd","pn_seqp"].forEach(function(elId){var el=$(elId);if(!el)return;el.addEventListener("blur",function(){var field={pn_next:"next",pn_notes:"notes",pn_seqd:"seqD",pn_seqp:"seqP"}[elId];var upd={};upd[field]=el.value;updContact(c.id,upd)})});
+  bindField("pn_status","status");bindField("pn_chan","chan");bindField("pn_next","next");bindField("pn_notes","notes");bindField("pn_mtg","mtg");bindField("pn_mdate","mDate");bindField("pn_seqd","seqD");bindField("pn_seqp","seqP");bindField("pn_why","why");bindField("pn_hook","hook");bindField("pn_role","role");bindField("pn_fit","fit");bindField("pn_bud","bud");
+  ["pn_next","pn_notes","pn_seqd","pn_seqp","pn_why","pn_hook","pn_fit","pn_bud"].forEach(function(elId){var el=$(elId);if(!el)return;el.addEventListener("blur",function(){var field={pn_next:"next",pn_notes:"notes",pn_seqd:"seqD",pn_seqp:"seqP",pn_why:"why",pn_hook:"hook",pn_fit:"fit",pn_bud:"bud"}[elId];var upd={};upd[field]=el.value;updContact(c.id,upd)})});
 }
 
 
