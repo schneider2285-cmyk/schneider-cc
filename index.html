@@ -219,7 +219,7 @@ function updContact(id,fields){
 function writeBack(id,fields){
   var url=S.cfg.weburl;if(!url)return;
   var c=S.contacts.find(function(x){return x.id===id});if(!c)return;
-    var idx=S.contacts.findIndex(function(x){return x.id===id});var row=idx>=0?idx+6:id+5;
+    var idx=S.contacts.findIndex(function(x){return x.id===id});var row=c.sheetRow||(idx>=0?idx+6:id+5);
   var colMap={status:"H",oDate:"I",chan:"J",resp:"K",mtg:"L",mDate:"M",next:"N",owner:"O",notes:"P",seqD:"Q",seqP:"R"};
   var updates=[];
   Object.keys(fields).forEach(function(k){if(colMap[k])updates.push({col:colMap[k],val:fields[k]})});
@@ -289,7 +289,7 @@ function fetchSheet(sid,key){
       else if(tierLower.indexOf("advisory")>=0||tierLower.indexOf("hr")>=0||initLower.indexOf("advisory")>=0||initLower.indexOf("workforce")>=0||initLower.indexOf("consulting")>=0)play="Advisory";
       // If initiative has clear first word match, use that
       if(play==="Advisory"&&rawInit){var fw=rawInit.split(/[\s\/]/)[0];if({"SAP":1,"AI":1,"Digital":1,"Sustainability":1}[fw])play=fw}
-      return{id:i+1,name:w[1]||"",title:w[2]||"",loc:w[3]||"",tier:rawTier,init:rawInit,timing:w[6]||"",status:w[7]||"Not Started",oDate:w[8]||"",chan:w[9]||"",resp:w[10]||"",mtg:w[11]||"",mDate:w[12]||"",next:w[13]||"",owner:w[14]||"",notes:w[15]||"",seqD:w[16]||"",seqP:w[17]||"",why:w[18]||"",hook:w[19]||"",li:w[20]||"",role:w[21]||"",fit:w[22]||"",bud:w[23]||"",play:play}}).filter(function(c){return c.name});
+      return{id:i+1,name:w[1]||"",title:w[2]||"",loc:w[3]||"",tier:rawTier,init:rawInit,timing:w[6]||"",status:w[7]||"Not Started",oDate:w[8]||"",chan:w[9]||"",resp:w[10]||"",mtg:w[11]||"",mDate:w[12]||"",next:w[13]||"",owner:w[14]||"",notes:w[15]||"",seqD:w[16]||"",seqP:w[17]||"",why:w[18]||"",hook:w[19]||"",li:w[20]||"",role:w[21]||"",fit:w[22]||"",bud:w[23]||"",sheetRow:i+6,play:play}}).filter(function(c){return c.name});
   });
 }
 function fetchSheetTab(tabName){var sid=S.cfg.sid,gk=S.cfg.gkey;if(!sid||!gk)return Promise.resolve([]);var url="https://sheets.googleapis.com/v4/spreadsheets/"+sid+"/values/"+encodeURIComponent(tabName+"!A1:Z200")+"?key="+gk;return fetch(url).then(function(r){return r.json()}).then(function(d){return d.values||[]}).catch(function(){return[]})} function syncAllTabs(){var tabs=["Strategy","UNIFIED Framework","Org Chart & Strategy Map","AI Brief (Weekly)","Dashboard"];tabs.forEach(function(t){fetchSheetTab(t).then(function(d){S.sheetData[t]=d;render()})})} function bindRows(el){el.querySelectorAll(".rw[data-name]").forEach(function(r){r.onclick=function(){var c=S.contacts.find(function(x){return x.name===r.dataset.name});if(c)openPanel(c)}})}
@@ -1035,7 +1035,7 @@ function pgOrg(el){
   var ceoData=ORG[0].subs[0].teams[0].contacts[0];
   var ceoCt=C.find(function(c){return c.name===ceoData.name});
   var ceoSt=ceoCt?ceoCt.status:"Not Started";
-  var ceoDot=ceoSt==="Engaged"?"var(--grn)":ceost==="Follow-Up"?"var(--gld)":ceost==="Email Sent"||st==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
+  var ceoDot=ceoSt==="Engaged"?"var(--grn)":ceoSt==="Follow-Up"?"var(--gld)":ceoSt==="Email Sent"||ceoSt==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
 
   o+='<div style="background:var(--b2);border:1px solid var(--bd);border-left:4px solid #3DCC4A;border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer" class="oc-click" data-name="Peter Herweck">';
   o+='<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3DCC4A,#2a9d3a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">PH</div>';
