@@ -1673,6 +1673,45 @@ if(S.cfg.sid&&S.cfg.gkey){
   }).catch(function(e){S.syncing=false;render()});
 }
 render();
+
+    /* ===== DAILY BRIEF LOADER ===== */
+  (function(){
+    var origAI=window.pgAIUpdates;
+    window.pgAIUpdates=function(){
+      if(origAI)origAI();
+      fetch('data/daily-brief.json?t='+Date.now())
+        .then(function(r){return r.json()})
+        .then(function(b){
+          var ct=document.getElementById('pgAIUpdates');
+          if(!ct)return;
+          var old=ct.innerHTML;
+          var h='<div style="margin-bottom:24px">';
+          h+='<h2 style="color:#3DCD58;margin:0 0 4px">Daily Intelligence Brief</h2>';
+          h+='<p style="color:#888;font-size:12px;margin:0 0 16px">Updated: '+new Date(b.generated_at).toLocaleDateString('en-US',{weekday:"long",year:"numeric",month:"long",day:"numeric"})+'</p>';
+          if(b.sections){
+            b.sections.forEach(function(s){
+              h+='<div style="background:#1a1a2e;border-radius:8px;padding:16px;margin-bottom:12px;border-left:3px solid #3DCD58">';
+              h+='<h3 style="color:#3DCD58;margin:0 0 8px;font-size:15px">'+(s.icon||'')+' '+s.title+'</h3>';
+              if(s.items){
+                s.items.forEach(function(it){
+                  h+='<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #333">';
+                  h+='<p style="color:#e0e0e0;margin:0 0 4px;font-size:14px"><strong>'+it.headline+'</strong></p>';
+                  h+='<p style="color:#aaa;margin:0 0 4px;font-size:13px">'+it.summary+'</p>';
+                  if(it.source)h+='<span style="color:#3DCD58;font-size:11px">Source: '+it.source+'</span>';
+                  if(it.action_item)h+='<p style="color:#FFD700;font-size:12px;margin:4px 0 0">Action: '+it.action_item+'</p>';
+                  h+='</div>';
+                });
+              }
+              h+='</div>';
+            });
+          }
+          h+='</div><hr style="border-color:#333;margin:24px 0"><h2 style="color:#3DCD58">Baseline Intelligence</h2>';
+          ct.innerHTML=h+old;
+        }).catch(function(e){console.log('Brief not yet available:',e)});
+    };
+  })();
+
+  
 </script>
 </body>
 </html>
