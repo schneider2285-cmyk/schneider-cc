@@ -1674,48 +1674,10 @@ if(S.cfg.sid&&S.cfg.gkey){
 }
 render();
 
-      /* ===== DAILY BRIEF LOADER ===== */
-  (function(){
-    var origAI=window.pgAIUpdates;
-    window.pgAIUpdates=function(){
-      if(origAI)origAI();
-      fetch('data/daily-brief.json?t='+Date.now())
-        .then(function(r){return r.json()})
-        .then(function(b){
-          var ct=document.getElementById('pgAIUpdates');
-          if(!ct)return;
-          var old=ct.innerHTML;
-          var icons={news:'\uD83D\uDCF0',financial:'\uD83D\uDCC8',leadership:'\uD83D\uDC64',hiring:'\uD83D\uDCBC',strategic:'\uD83C\uDFAF',social:'\uD83D\uDCF1',competitive:'\u2694\uFE0F'};
-          function md(s){return s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/^### (.+)$/gm,'<h4 style="color:#3DCD58;margin:12px 0 4px;font-size:14px">$1</h4>').replace(/^## (.+)$/gm,'<h3 style="color:#3DCD58;margin:12px 0 6px;font-size:15px">$1</h3>').replace(/^# (.+)$/gm,'<h3 style="color:#3DCD58;margin:12px 0 6px;font-size:16px">$1</h3>').replace(/^- (.+)$/gm,'<li style="color:#ccc;margin:4px 0;font-size:13px">$1</li>').replace(/\n/g,'<br>');}
-          var h='<div style="margin-bottom:24px">';
-          h+='<h2 style="color:#3DCD58;margin:0 0 4px">Daily Intelligence Brief</h2>';
-          h+='<p style="color:#888;font-size:12px;margin:0 0 16px">Updated: '+new Date(b.generated_at).toLocaleDateString('en-US',{weekday:"long",year:"numeric",month:"long",day:"numeric"})+'</p>';
-          if(b.sections){
-            b.sections.forEach(function(s){
-              var ico=icons[s.id]||icons[s.icon]||'\uD83D\uDD35';
-              h+='<div style="background:#1a1a2e;border-radius:8px;padding:16px;margin-bottom:12px;border-left:3px solid #3DCD58">';
-              h+='<h3 style="color:#3DCD58;margin:0 0 8px;font-size:15px;cursor:pointer" onclick="var c=this.nextElementSibling;c.style.display=c.style.display===\'none\'?\'block\':\'none\'">'+ico+' '+s.label+' <span style="font-size:11px;color:#888">\u25BC</span></h3>';
-              h+='<div style="display:block">';
-              if(s.content){h+='<div style="color:#ccc;font-size:13px;line-height:1.6">'+md(s.content)+'</div>';}
-              if(s.citations&&s.citations.length){
-                h+='<div style="margin-top:8px;padding-top:8px;border-top:1px solid #333">';
-                h+='<p style="color:#666;font-size:11px;margin:0 0 4px">Sources:</p>';
-                s.citations.forEach(function(c,i){
-                  var domain=c.replace(/https?:\/\//,'').split('/')[0];
-                  h+='<a href="'+c+'" target="_blank" style="color:#3DCD58;font-size:11px;margin-right:8px">['+( i+1)+'] '+domain+'</a>';
-                });
-                h+='</div>';
-              }
-              h+='</div></div>';
-            });
-          }
-          h+='</div><hr style="border-color:#333;margin:24px 0"><h2 style="color:#3DCD58">Baseline Intelligence</h2>';
-          ct.innerHTML=h+old;
-        }).catch(function(e){console.log('Brief not yet available:',e)});
-    };
-  })();
+      
 
   
 </script>
+  <script src="scripts/daily-brief-ui.js"></script>
 </body>
 </html>
