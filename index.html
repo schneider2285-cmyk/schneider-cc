@@ -205,7 +205,7 @@ if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
 if(!S.cfg.weburl)S.cfg.weburl=DEFAULTS.weburl;
 
 function saveCfg(){localStorage.setItem("secfg4",JSON.stringify(S.cfg))}
-function setTab(t){S.tab=t;render()}
+function jsonpFetch(url){return new Promise(function(resolve,reject){var cb='_secc_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);window[cb]=function(data){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);resolve(data)};var s=document.createElement('script');s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+cb;s.onerror=function(){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP failed'))};document.body.appendChild(s);setTimeout(function(){if(window[cb]){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP timeout'))}},15000)})} function setTab(t){S.tab=t;render()}
 function openPanel(c){S.sel=c;S.panel=true;renderPanel();$("pbg").classList.add("sh");$("pn").classList.add("sh")}
 function closePanel(){S.panel=false;$("pbg").classList.remove("sh");$("pn").classList.remove("sh")}
 function updStatus(id,st){S.contacts=S.contacts.map(function(c){return c.id===id?Object.assign({},c,{status:st}):c});writeBack(id,{status:st});render()}
@@ -242,7 +242,7 @@ function syncFromSheet(){
   var sid=S.cfg.sid,gk=S.cfg.gkey;
   if(!sid||!gk)return;
   S.syncing=true;renderSyncBtn();
-  (S.cfg.weburl?fetch(S.cfg.weburl).then(function(r){return r.json()}).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
+  (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
     if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date();render()}
     S.syncing=false;renderSyncBtn();
     showSyncToast("Synced "+data.length+" contacts");
@@ -1621,7 +1621,7 @@ function pgSet(el){
     save();var sid=$("s_sid").value,gk=$("s_gkey").value;
     if(!sid||!gk){$("s_shstatus").textContent="Enter Sheet ID and API Key first.";$("s_shstatus").style.color="var(--red)";return}
     $("s_shstatus").textContent="Testing...";$("s_shstatus").style.color="var(--t3)";$("s_shtest").disabled=true;
-    (S.cfg.weburl?fetch(S.cfg.weburl).then(function(r){return r.json()}).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
+    (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
       if(data.length>0){S.contacts=data;S.conn=true;$("s_shstatus").textContent="Connected! Loaded "+data.length+" contacts.";$("s_shstatus").style.color="var(--grn)";renderSB()}
       else{$("s_shstatus").textContent="Connected but no data found. Check tab name/row range.";$("s_shstatus").style.color="var(--gld)"}
       $("s_shtest").disabled=false;
@@ -1666,7 +1666,7 @@ document.getElementById("authPw").addEventListener("keydown",function(e){if(e.ke
 $("pbg").onclick=closePanel;
 if(S.cfg.sid&&S.cfg.gkey){
   S.syncing=true;
-  (S.cfg.weburl?fetch(S.cfg.weburl).then(function(r){return r.json()}).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(S.cfg.sid,S.cfg.gkey)}):fetchSheet(S.cfg.sid,S.cfg.gkey)).then(function(data){
+  (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(S.cfg.sid,S.cfg.gkey)}):fetchSheet(S.cfg.sid,S.cfg.gkey)).then(function(data){
     if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date()}
     S.syncing=false;render();
     if(data.length>0)showSyncToast("Loaded "+data.length+" contacts from sheet");
