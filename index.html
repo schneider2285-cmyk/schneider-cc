@@ -1666,7 +1666,7 @@ document.getElementById("authPw").addEventListener("keydown",function(e){if(e.ke
 $("pbg").onclick=closePanel;
 if(S.cfg.sid&&S.cfg.gkey){
   S.syncing=true;
-  fetchSheet(S.cfg.sid,S.cfg.gkey).then(function(data){
+  (S.cfg.weburl?fetch(S.cfg.weburl).then(function(r){return r.json()}).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(S.cfg.sid,S.cfg.gkey)}):fetchSheet(S.cfg.sid,S.cfg.gkey)).then(function(data){
     if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date()}
     S.syncing=false;render();
     if(data.length>0)showSyncToast("Loaded "+data.length+" contacts from sheet");
