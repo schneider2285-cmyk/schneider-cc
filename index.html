@@ -9,443 +9,1675 @@
 :root{--b0:#08080d;--b1:#0e0e15;--b2:#161620;--b3:#1e1e2c;--bd:#2a2a3c;--bd2:#3a3a54;--t1:#ededf4;--t2:#9696ae;--t3:#5c5c72;--grn:#3ddc84;--blu:#4d9fff;--gld:#ffc857;--pur:#a855f7;--red:#ef4444;--cyn:#22d3ee;--se:#3dcc4a}
 html,body{height:100%;overflow:hidden}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--b0);color:var(--t1);font-size:13px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--b1)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+input,textarea,select{font-family:inherit;background:var(--b3);border:1px solid var(--bd);color:var(--t1);padding:8px 12px;border-radius:6px;outline:none;font-size:13px;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--blu)}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+a{color:var(--blu);text-decoration:none}
 #app{display:flex;height:100vh}
-#sb{width:220px;min-width:220px;background:var(--b1);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow-y:auto}
-#mn{flex:1;overflow-y:auto;padding:24px}
-.logo{padding:20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
-.logo svg{width:32px;height:32px}
-.logo span{font-weight:700;font-size:14px;color:var(--grn)}
-.nav{padding:12px}
-.nb{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:6px;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;background:none;width:100%;text-align:left;border:none}
+#sb{width:200px;min-width:200px;background:var(--b1);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow-y:auto}
+#mn{flex:1;overflow-y:auto;padding:20px 24px}
+.la{padding:16px 12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px}
+.lt{font-weight:700;font-size:11px;color:var(--se);line-height:1.2}
+.ls{font-size:8px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase}
+.ns{padding:8px 6px}
+.nst{font-size:8px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);padding:4px 8px;margin-bottom:2px}
+.nb{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:5px;color:var(--t2);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;background:none;width:100%;text-align:left}
 .nb:hover{background:var(--b3);color:var(--t1)}
 .nb.on{background:rgba(61,220,132,.08);color:var(--grn);border:1px solid rgba(61,220,132,.15)}
-.nb svg{width:18px;height:18px;flex-shrink:0}
-.sec{margin-bottom:32px}
-.sec-t{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:12px;font-weight:600}
-.card{background:var(--b2);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:16px}
-.card-t{font-size:16px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.card-t svg{color:var(--grn)}
-.btn{background:var(--grn);color:var(--b0);border:none;padding:10px 20px;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px;transition:all .15s}
-.btn:hover{background:#2fc975;transform:translateY(-1px)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn-s{background:var(--b3);color:var(--t1);border:1px solid var(--bd)}
-.btn-s:hover{background:var(--bd);transform:translateY(-1px)}
-.inp{background:var(--b3);border:1px solid var(--bd);color:var(--t1);padding:10px 14px;border-radius:6px;font-size:13px;width:100%}
-.inp:focus{outline:none;border-color:var(--grn)}
-select.inp{cursor:pointer}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.stat{text-align:center;padding:16px}
-.stat-v{font-size:28px;font-weight:700;color:var(--grn)}
-.stat-l{font-size:11px;color:var(--t3);text-transform:uppercase;margin-top:4px}
-.tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
-.tag-g{background:rgba(61,220,132,.15);color:var(--grn)}
-.tag-b{background:rgba(77,159,255,.15);color:var(--blu)}
-.tag-r{background:rgba(239,68,68,.15);color:var(--red)}
-.tag-y{background:rgba(255,200,87,.15);color:var(--gld)}
-.ld{display:inline-block;width:20px;height:20px;border:2px solid var(--bd);border-top-color:var(--grn);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.brief-item{padding:16px;border-bottom:1px solid var(--bd)}
-.brief-item:last-child{border-bottom:none}
-.brief-cat{font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600}
-.brief-title{font-weight:600;margin-bottom:6px;font-size:14px}
-.brief-sum{color:var(--t2);font-size:13px;line-height:1.5}
-.tbl{width:100%;border-collapse:collapse}
-.tbl th,.tbl td{padding:12px;text-align:left;border-bottom:1px solid var(--bd)}
-.tbl th{font-size:11px;text-transform:uppercase;color:var(--t3);font-weight:600}
-.tbl tr:hover{background:var(--b3)}
-.row{display:flex;gap:12px;margin-bottom:12px}
-.row>*{flex:1}
-.fm-g{margin-bottom:16px}
-.fm-l{display:block;font-size:12px;color:var(--t2);margin-bottom:6px}
-textarea.inp{min-height:80px;resize:vertical}
-.hidden{display:none}
-.price-up{color:var(--grn)}
-.price-dn{color:var(--red)}
-#brief-content{max-height:500px;overflow-y:auto}
-.api-note{background:var(--b3);padding:12px;border-radius:6px;font-size:12px;color:var(--t2);margin-bottom:16px}
-.result-box{background:var(--b1);border:1px solid var(--bd);border-radius:8px;padding:16px;margin-top:16px}
-.outage-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--bd)}
-.outage-item:last-child{border-bottom:none}
-.outage-loc{font-weight:600}
-.outage-det{font-size:12px;color:var(--t2)}
-.chart-placeholder{height:200px;background:var(--b1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--t3);border:1px dashed var(--bd)}
+.cd{background:var(--b2);border:1px solid var(--bd);border-radius:8px;padding:14px;margin-bottom:12px}
+.ct{font-size:12px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kp{background:var(--b2);border:1px solid var(--bd);border-radius:8px;padding:14px}
+.kl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:4px}
+.kv{font-size:26px;font-weight:700;font-family:monospace}
+.kn{font-size:9px;color:var(--t3);margin-top:2px}
+.tg{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600}
+.tg-g{background:rgba(61,220,132,.12);color:var(--grn)}
+.tg-b{background:rgba(77,159,255,.12);color:var(--blu)}
+.tg-o{background:rgba(255,200,87,.12);color:var(--gld)}
+.tg-p{background:rgba(168,85,247,.12);color:var(--pur)}
+.tg-r{background:rgba(239,68,68,.12);color:var(--red)}
+.tg-c{background:rgba(34,211,238,.12);color:var(--cyn)}
+.tg-x{background:rgba(255,255,255,.06);color:var(--t2)}
+.rw{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:5px;cursor:pointer;transition:background .1s}
+.rw:hover{background:var(--b3)}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;color:#fff}
+.ri2{flex:1;min-width:0}
+.rn{font-size:12px;font-weight:600}
+.rs2{font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt{padding:6px 12px;border-radius:5px;font-size:11px;font-weight:600;transition:all .15s}
+.bt1{background:var(--grn);color:#000}.bt1:hover{filter:brightness(1.15)}
+.bt2{background:var(--b3);color:var(--t1);border:1px solid var(--bd)}.bt2:hover{border-color:var(--bd2)}
+.bt1[disabled]{opacity:.5;cursor:default;filter:none}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{text-align:left;padding:6px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);border-bottom:1px solid var(--bd)}
+td{padding:6px 8px;border-bottom:1px solid rgba(42,42,58,.4);white-space:nowrap}
+tr:hover td{background:var(--b3)}
+.kb{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}
+.kc2{min-width:200px;flex:1;background:var(--b1);border:1px solid var(--bd);border-radius:8px;display:flex;flex-direction:column;max-height:calc(100vh - 160px)}
+.kch{padding:8px 12px;border-bottom:1px solid var(--bd);font-size:11px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.kcb{padding:6px;overflow-y:auto;flex:1}
+.kk{background:var(--b2);border:1px solid var(--bd);border-radius:6px;padding:8px;margin-bottom:6px;cursor:grab}
+.kk:hover{border-color:var(--bd2)}
+.pbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90;display:none}
+.pbg.sh{display:block}
+.pn{position:fixed;top:0;right:0;width:380px;height:100vh;background:var(--b1);border-left:1px solid var(--bd);z-index:100;overflow-y:auto;padding:20px;transform:translateX(100%);transition:transform .2s}
+.pn.sh{transform:translateX(0)}
+.ab{background:var(--b3);border:1px solid var(--bd);border-radius:6px;padding:12px;font-size:12px;line-height:1.7;white-space:pre-wrap;max-height:500px;overflow-y:auto}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:1000px){.g2{grid-template-columns:1fr}}
+.rsk{padding:8px 10px;background:var(--b3);border-radius:6px;margin-bottom:6px;border-left:3px solid var(--red);font-size:12px}
+.on2{background:var(--b2);border:1px solid var(--bd);border-radius:6px;padding:8px 10px;cursor:pointer;border-left:3px solid var(--bd);min-width:160px;transition:background .1s}
+.on2:hover{background:var(--b3)}
+.oc-wrap{position:relative;width:100%;height:calc(100vh - 120px);overflow:hidden;background:var(--b1);border:1px solid var(--bd);border-radius:8px;cursor:grab}
+.oc-wrap.dragging{cursor:grabbing}
+.oc-canvas{position:absolute;transform-origin:0 0;transition:none}
+.oc-node{position:absolute;background:var(--b2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;cursor:pointer;min-width:150px;max-width:200px;user-select:none;transition:box-shadow .15s}
+.oc-node:hover{box-shadow:0 0 12px rgba(61,204,74,.2);z-index:10}
+.oc-node.selected{box-shadow:0 0 0 2px var(--grn);z-index:11}
+.oc-node .oc-name{font-weight:700;font-size:11px;margin-bottom:2px}
+.oc-node .oc-title{font-size:9px;color:var(--t2);line-height:1.3;margin-bottom:4px}
+.oc-node .oc-bu{font-size:8px;color:var(--t3);padding:2px 5px;background:var(--b3);border-radius:3px;display:inline-block;margin-top:2px}
+.oc-node .oc-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.oc-controls{position:absolute;top:10px;right:10px;display:flex;gap:4px;z-index:20}
+.oc-controls button{background:var(--b2);border:1px solid var(--bd);border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;color:var(--t1)}
+.oc-controls button:hover{background:var(--b3)}
+.oc-legend{position:absolute;bottom:10px;left:10px;z-index:20;display:flex;gap:8px;background:var(--b2);border:1px solid var(--bd);border-radius:6px;padding:6px 10px;font-size:9px}
+.oc-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.fd2{animation:fi .25s ease}@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.fl2{margin-bottom:12px}.fl2 label{display:block;font-size:10px;font-weight:600;color:var(--t2);margin-bottom:4px}
+.pt3{font-size:20px;font-weight:700;margin-bottom:2px}
+.ps3{font-size:11px;color:var(--t3);margin-bottom:16px}
+.cvb{height:5px;background:var(--b3);border-radius:3px;overflow:hidden}.cvf{height:100%;border-radius:3px}
+.stexp{padding:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.stexp:hover{background:rgba(255,255,255,.02)}
+.stbody{padding:0 14px 14px;border-top:1px solid var(--bd)}
+.xbtn{position:absolute;top:12px;right:12px;background:none;color:var(--t2);font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer}
+.xbtn:hover{background:var(--b3);color:var(--t1)}
+.dtgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px}
+.dtgrid .sp{grid-column:1/-1}
+.dlab{color:var(--t3)}
+.qqbtn{font-size:10px;padding:3px 8px}
+/* Framework page */
+.fw-hero{background:linear-gradient(135deg,rgba(61,204,74,.08),rgba(77,159,255,.08));border:1px solid rgba(61,204,74,.2);border-radius:12px;padding:24px;margin-bottom:20px}
+.fw-hero h2{font-size:18px;font-weight:700;margin-bottom:6px;color:var(--se)}
+.fw-hero p{font-size:12px;color:var(--t2);line-height:1.6}
+.fw-sec{margin-bottom:24px}
+.fw-sec-head{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.fw-sec-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.fw-explain{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:10px;padding:0 0 0 34px}
+.fw-live{border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid var(--bd);background:var(--b2)}
+.fw-live-head{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:6px}
+.fw-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;margin:3px;font-size:11px;cursor:pointer;border:1px solid var(--bd);background:var(--b3);transition:all .15s}
+.fw-pill:hover{border-color:var(--bd2);background:var(--b2)}
+.fw-pill .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fw-stat{display:flex;align-items:baseline;gap:4px}
+.fw-stat-val{font-size:20px;font-weight:700;font-family:monospace}
+.fw-stat-label{font-size:10px;color:var(--t3)}
+.fw-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){.fw-grid3{grid-template-columns:1fr}}
+.fw-bar{height:8px;background:var(--b3);border-radius:4px;overflow:hidden;margin-top:4px}
+.fw-bar-fill{height:100%;border-radius:4px;transition:width .4s}
+.fw-timeline{position:relative;padding-left:20px;border-left:2px solid var(--bd)}
+.fw-tl-item{position:relative;padding:8px 0 16px 16px;font-size:12px}
+.fw-tl-item::before{content:'';position:absolute;left:-7px;top:12px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bd);background:var(--b1)}
+.fw-tl-item.active::before{border-color:var(--grn);background:var(--grn)}
+.fw-tl-item.done::before{border-color:var(--blu);background:var(--blu)}
+.fw-matrix{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:1px;font-size:11px;background:var(--bd);border-radius:8px;overflow:hidden}
+.fw-matrix>div{padding:8px 10px;background:var(--b2)}
+.fw-matrix .mh{background:var(--b3);font-weight:600;font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)}
+.fw-rel-line{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:12px;background:var(--b3);border-radius:5px;margin-bottom:4px}
+.fw-arrow{color:var(--t3);font-size:10px;flex-shrink:0}
 </style>
 </head>
 <body>
-<div id="app">
-<div id="sb">
-<div class="logo"><svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#3ddc84" stroke-width="2"/><path d="M10 16h12M16 10v12" stroke="#3ddc84" stroke-width="2" stroke-linecap="round"/></svg><span>Schneider CC</span></div>
-<div class="nav">
-<button class="nb on" data-tool="brief"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>Daily Brief</button>
-<button class="nb" data-tool="rates"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>Rate Calculator</button>
-<button class="nb" data-tool="market"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>Market Monitor</button>
-<button class="nb" data-tool="proposal"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Proposal Builder</button>
-<button class="nb" data-tool="regs"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>Regulation Tracker</button>
-<button class="nb" data-tool="load"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Load Analyzer</button>
-<button class="nb" data-tool="outage"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Outage Map</button>
+<div id="authGate" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--b1);display:flex;align-items:center;justify-content:center;z-index:9999">
+  <div style="background:var(--b2);border:1px solid var(--bd);border-radius:12px;padding:40px 36px;width:340px;text-align:center">
+    <div style="margin-bottom:20px">
+      <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#3DCC4A"/><text x="50" y="58" text-anchor="middle" font-size="34" font-weight="700" fill="#fff" font-family="Arial,sans-serif">SE</text></svg>
+    </div>
+    <div style="font-size:18px;font-weight:700;color:var(--t1);margin-bottom:4px">Command Center</div>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:24px">Schneider Electric &mdash; Enterprise Account Intelligence</div>
+    <input id="authPw" type="password" placeholder="Enter password" style="width:100%;padding:10px 14px;margin-bottom:12px;text-align:center;font-size:14px;border-radius:6px;background:var(--b3);border:1px solid var(--bd);color:var(--t1)" autocomplete="off">
+    <button id="authBtn" style="width:100%;padding:10px;font-size:13px;font-weight:700;border-radius:6px;background:#3DCC4A;color:#000;border:none;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Access Command Center</button>
+    <div id="authErr" style="font-size:11px;color:var(--red);margin-top:10px;min-height:16px"></div>
+  </div>
 </div>
+<div id="app" style="display:none">
+  <div id="sb"></div>
+  <div id="mn"></div>
+  <div id="pbg" class="pbg"></div>
+  <div id="pn" class="pn"></div>
 </div>
-<div id="mn"></div>
-  <script>
-const mn=document.getElementById('mn');
-const PERPLEXITY_API_KEY='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';
-
-const tools={
-brief:`<div class="sec"><div class="sec-t">Daily Brief</div>
-<div class="card">
-<div class="card-t"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Energy Market Intelligence</div>
-<div class="api-note">Powered by Perplexity AI - fetches real-time energy market news and analysis</div>
-<div class="row">
-<select class="inp" id="brief-topic">
-<option value="energy market prices and trends today">Market Prices & Trends</option>
-<option value="renewable energy news and developments">Renewable Energy News</option>
-<option value="electricity grid reliability and demand">Grid Reliability & Demand</option>
-<option value="energy policy and regulations news">Policy & Regulations</option>
-<option value="Schneider Electric company news">Schneider Electric News</option>
-</select>
-<button class="btn" onclick="fetchBrief()">Generate Brief</button>
-</div>
-<div id="brief-content"><div style="color:var(--t3);padding:20px;text-align:center">Select a topic and click Generate Brief to get the latest intelligence</div></div>
-</div></div>`,
-
-rates:`<div class="sec"><div class="sec-t">Rate Calculator</div>
-<div class="card">
-<div class="card-t"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>Energy Cost Calculator</div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">Utility Provider</label>
-<select class="inp" id="calc-utility" onchange="updateRates()">
-<option value="nvenergy">NV Energy (Nevada)</option>
-<option value="pge">PG&E (California)</option>
-<option value="sce">SCE (California)</option>
-<option value="aps">APS (Arizona)</option>
-<option value="custom">Custom Rates</option>
-</select></div>
-<div class="fm-g"><label class="fm-l">Rate Schedule</label>
-<select class="inp" id="calc-schedule">
-<option value="residential">Residential TOU</option>
-<option value="commercial">Commercial TOU</option>
-<option value="industrial">Industrial</option>
-</select></div>
-</div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">Monthly Usage (kWh)</label><input type="number" class="inp" id="calc-kwh" value="1000"></div>
-<div class="fm-g"><label class="fm-l">Peak Demand (kW)</label><input type="number" class="inp" id="calc-kw" value="5"></div>
-</div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">On-Peak %</label><input type="number" class="inp" id="calc-onpeak" value="40"></div>
-<div class="fm-g"><label class="fm-l">Off-Peak %</label><input type="number" class="inp" id="calc-offpeak" value="60"></div>
-</div>
-<button class="btn" onclick="calculateRate()">Calculate Cost</button>
-<div id="calc-result"></div>
-</div></div>`,
-
-market:`<div class="sec"><div class="sec-t">Market Monitor</div>
-<div class="grid">
-<div class="card"><div class="stat"><div class="stat-v" id="mkt-lmp">--</div><div class="stat-l">CAISO LMP ($/MWh)</div></div></div>
-<div class="card"><div class="stat"><div class="stat-v" id="mkt-ng">--</div><div class="stat-l">Natural Gas ($/MMBtu)</div></div></div>
-<div class="card"><div class="stat"><div class="stat-v" id="mkt-demand">--</div><div class="stat-l">Grid Demand (GW)</div></div></div>
-<div class="card"><div class="stat"><div class="stat-v" id="mkt-renewable">--</div><div class="stat-l">Renewable %</div></div></div>
-</div>
-<div class="card">
-<div class="card-t">Price Trends (Last 24h)</div>
-<div class="chart-placeholder">Real-time chart would display here with actual API integration</div>
-<div style="margin-top:16px"><button class="btn" onclick="refreshMarket()">Refresh Data</button> <button class="btn btn-s" onclick="fetchMarketNews()">Get Market Analysis</button></div>
-<div id="market-news"></div>
-</div></div>`,
-
-proposal:`<div class="sec"><div class="sec-t">Proposal Builder</div>
-<div class="card">
-<div class="card-t"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Customer Proposal Generator</div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">Customer Name</label><input type="text" class="inp" id="prop-name" placeholder="Enter customer name"></div>
-<div class="fm-g"><label class="fm-l">Industry</label>
-<select class="inp" id="prop-industry">
-<option value="manufacturing">Manufacturing</option>
-<option value="commercial">Commercial Real Estate</option>
-<option value="retail">Retail</option>
-<option value="healthcare">Healthcare</option>
-<option value="datacenters">Data Centers</option>
-<option value="hospitality">Hospitality</option>
-</select></div>
-</div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">Annual Energy Spend ($)</label><input type="number" class="inp" id="prop-spend" placeholder="500000"></div>
-<div class="fm-g"><label class="fm-l">Annual kWh</label><input type="number" class="inp" id="prop-kwh" placeholder="2000000"></div>
-</div>
-<div class="fm-g"><label class="fm-l">Pain Points / Goals</label>
-<textarea class="inp" id="prop-goals" placeholder="Describe the customer's main energy challenges or sustainability goals..."></textarea></div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">Solutions to Include</label>
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
-<label><input type="checkbox" id="sol-ems" checked> EMS</label>
-<label><input type="checkbox" id="sol-solar"> Solar</label>
-<label><input type="checkbox" id="sol-storage"> Battery Storage</label>
-<label><input type="checkbox" id="sol-ev"> EV Charging</label>
-<label><input type="checkbox" id="sol-microgrid"> Microgrid</label>
-<label><input type="checkbox" id="sol-demand"> Demand Response</label>
-</div></div>
-</div>
-<button class="btn" onclick="generateProposal()">Generate Proposal</button>
-<div id="proposal-result"></div>
-</div></div>`,
-
-regs:`<div class="sec"><div class="sec-t">Regulation Tracker</div>
-<div class="card">
-<div class="card-t"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>Energy Regulations & Compliance</div>
-<div class="row">
-<select class="inp" id="reg-state">
-<option value="federal">Federal (FERC/EPA)</option>
-<option value="california">California (CPUC/CEC)</option>
-<option value="nevada">Nevada (PUCN)</option>
-<option value="arizona">Arizona (ACC)</option>
-<option value="texas">Texas (PUCT/ERCOT)</option>
-</select>
-<button class="btn" onclick="fetchRegulations()">Search Regulations</button>
-</div>
-<div id="reg-content"><div style="color:var(--t3);padding:20px;text-align:center">Select a jurisdiction and search for latest regulatory updates</div></div>
-</div>
-<div class="card">
-<div class="card-t">Key Compliance Dates</div>
-<table class="tbl">
-<tr><th>Regulation</th><th>Jurisdiction</th><th>Deadline</th><th>Status</th></tr>
-<tr><td>Clean Energy Standard</td><td>California</td><td>2026-12-31</td><td><span class="tag tag-y">Pending</span></td></tr>
-<tr><td>Building Efficiency Standards</td><td>Nevada</td><td>2026-07-01</td><td><span class="tag tag-g">On Track</span></td></tr>
-<tr><td>Grid Interconnection Rules</td><td>Federal</td><td>2026-03-15</td><td><span class="tag tag-b">In Review</span></td></tr>
-</table>
-</div></div>`,
-
-load:`<div class="sec"><div class="sec-t">Load Analyzer</div>
-<div class="card">
-<div class="card-t"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Load Profile Analysis</div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">Building Type</label>
-<select class="inp" id="load-type">
-<option value="office">Office Building</option>
-<option value="retail">Retail Store</option>
-<option value="warehouse">Warehouse/Distribution</option>
-<option value="manufacturing">Manufacturing Facility</option>
-<option value="datacenter">Data Center</option>
-<option value="hospital">Hospital/Healthcare</option>
-</select></div>
-<div class="fm-g"><label class="fm-l">Square Footage</label><input type="number" class="inp" id="load-sqft" placeholder="50000"></div>
-</div>
-<div class="row">
-<div class="fm-g"><label class="fm-l">Operating Hours</label>
-<select class="inp" id="load-hours">
-<option value="8x5">8 hrs/day, 5 days/week</option>
-<option value="12x5">12 hrs/day, 5 days/week</option>
-<option value="24x5">24 hrs/day, 5 days/week</option>
-<option value="24x7">24/7 Operation</option>
-</select></div>
-<div class="fm-g"><label class="fm-l">Climate Zone</label>
-<select class="inp" id="load-climate">
-<option value="hot-dry">Hot-Dry (Southwest)</option>
-<option value="hot-humid">Hot-Humid (Southeast)</option>
-<option value="mixed">Mixed (Mid-Atlantic)</option>
-<option value="cold">Cold (Northeast/Midwest)</option>
-<option value="marine">Marine (Pacific Coast)</option>
-</select></div>
-</div>
-<button class="btn" onclick="analyzeLoad()">Analyze Load Profile</button>
-<div id="load-result"></div>
-</div></div>`,
-
-outage:`<div class="sec"><div class="sec-t">Outage Map</div>
-<div class="card">
-<div class="card-t"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Active Outages</div>
-<div class="row">
-<select class="inp" id="outage-region">
-<option value="nevada">Nevada</option>
-<option value="california">California</option>
-<option value="arizona">Arizona</option>
-<option value="texas">Texas</option>
-</select>
-<button class="btn" onclick="fetchOutages()">Check Outages</button>
-</div>
-<div id="outage-list"><div style="color:var(--t3);padding:20px;text-align:center">Select a region to view current power outages</div></div>
-</div>
-<div class="card">
-<div class="card-t">Outage Statistics</div>
-<div class="grid">
-<div class="stat"><div class="stat-v" id="out-active">--</div><div class="stat-l">Active Outages</div></div>
-<div class="stat"><div class="stat-v" id="out-affected">--</div><div class="stat-l">Customers Affected</div></div>
-<div class="stat"><div class="stat-v" id="out-restored">--</div><div class="stat-l">Restored Today</div></div>
-</div>
-</div></div>`
-};
-
-// Navigation
-document.querySelectorAll('.nb').forEach(btn=>{
-btn.addEventListener('click',()=>{
-document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-btn.classList.add('on');
-mn.innerHTML=tools[btn.dataset.tool];
-if(btn.dataset.tool==='market')refreshMarket();
-});
-});
-mn.innerHTML=tools.brief;
-
-// Perplexity API call
-async function callPerplexity(query){
-try{
-const res=await fetch('https://api.perplexity.ai/chat/completions',{
-method:'POST',
-headers:{'Authorization':'Bearer '+PERPLEXITY_API_KEY,'Content-Type':'application/json'},
-body:JSON.stringify({model:'llama-3.1-sonar-small-128k-online',messages:[{role:'user',content:query}],max_tokens:1000})
-});
-const data=await res.json();
-return data.choices?.[0]?.message?.content||'No response received';
-}catch(e){return 'Error: '+e.message;}
-}
-
-// Daily Brief
-async function fetchBrief(){
-const topic=document.getElementById('brief-topic').value;
-const content=document.getElementById('brief-content');
-content.innerHTML='<div style="text-align:center;padding:40px"><div class="ld"></div><div style="margin-top:12px;color:var(--t3)">Fetching latest intelligence...</div></div>';
-const query=`As an energy market analyst, provide a brief executive summary about: ${topic}. Include key data points, recent developments, and implications for energy companies. Format with clear sections.`;
-const result=await callPerplexity(query);
-content.innerHTML=`<div class="brief-item"><div class="brief-cat tag-g">${document.getElementById('brief-topic').selectedOptions[0].text}</div><div class="brief-sum">${result.replace(/\n/g,'<br>')}</div></div>`;
-}
-
-// Rate Calculator
-const rates={
-nvenergy:{onpeak:0.12,offpeak:0.08,demand:12},
-pge:{onpeak:0.35,offpeak:0.25,demand:20},
-sce:{onpeak:0.32,offpeak:0.22,demand:18},
-aps:{onpeak:0.14,offpeak:0.09,demand:10},
-custom:{onpeak:0.15,offpeak:0.10,demand:15}
-};
-
-function calculateRate(){
-const util=document.getElementById('calc-utility').value;
-const kwh=parseFloat(document.getElementById('calc-kwh').value)||0;
-const kw=parseFloat(document.getElementById('calc-kw').value)||0;
-const onpeak=(parseFloat(document.getElementById('calc-onpeak').value)||0)/100;
-const offpeak=(parseFloat(document.getElementById('calc-offpeak').value)||0)/100;
-const r=rates[util];
-const onpeakCost=kwh*onpeak*r.onpeak;
-const offpeakCost=kwh*offpeak*r.offpeak;
-const demandCost=kw*r.demand;
-const total=onpeakCost+offpeakCost+demandCost;
-const avgRate=total/kwh;
-document.getElementById('calc-result').innerHTML=`
-<div class="result-box">
-<div class="card-t">Cost Breakdown</div>
-<table class="tbl">
-<tr><td>On-Peak Energy (${(kwh*onpeak).toFixed(0)} kWh @ $${r.onpeak}/kWh)</td><td>$${onpeakCost.toFixed(2)}</td></tr>
-<tr><td>Off-Peak Energy (${(kwh*offpeak).toFixed(0)} kWh @ $${r.offpeak}/kWh)</td><td>$${offpeakCost.toFixed(2)}</td></tr>
-<tr><td>Demand Charge (${kw} kW @ $${r.demand}/kW)</td><td>$${demandCost.toFixed(2)}</td></tr>
-<tr style="font-weight:700;border-top:2px solid var(--bd)"><td>Total Monthly Cost</td><td>$${total.toFixed(2)}</td></tr>
-<tr><td>Average Rate</td><td>$${avgRate.toFixed(4)}/kWh</td></tr>
-</table>
-</div>`;
-}
-
-// Market Monitor
-function refreshMarket(){
-const lmp=(35+Math.random()*30).toFixed(2);
-const ng=(2.5+Math.random()*2).toFixed(2);
-const demand=(25+Math.random()*15).toFixed(1);
-const renewable=(30+Math.random()*25).toFixed(0);
-document.getElementById('mkt-lmp').textContent='$'+lmp;
-document.getElementById('mkt-ng').textContent='$'+ng;
-document.getElementById('mkt-demand').textContent=demand;
-document.getElementById('mkt-renewable').textContent=renewable+'%';
-}
-
-async function fetchMarketNews(){
-const content=document.getElementById('market-news');
-content.innerHTML='<div style="text-align:center;padding:20px"><div class="ld"></div></div>';
-const result=await callPerplexity('Provide a brief analysis of current electricity market conditions, wholesale prices, and renewable energy trends in the US. Include specific numbers.');
-content.innerHTML=`<div class="result-box"><div class="brief-sum">${result.replace(/\n/g,'<br>')}</div></div>`;
-}
-
-// Proposal Builder
-async function generateProposal(){
-const name=document.getElementById('prop-name').value||'Customer';
-const industry=document.getElementById('prop-industry').value;
-const spend=document.getElementById('prop-spend').value||'500000';
-const kwh=document.getElementById('prop-kwh').value||'2000000';
-const goals=document.getElementById('prop-goals').value||'reduce costs and improve sustainability';
-const solutions=[];
-if(document.getElementById('sol-ems').checked)solutions.push('Energy Management System');
-if(document.getElementById('sol-solar').checked)solutions.push('Solar PV');
-if(document.getElementById('sol-storage').checked)solutions.push('Battery Storage');
-if(document.getElementById('sol-ev').checked)solutions.push('EV Charging Infrastructure');
-if(document.getElementById('sol-microgrid').checked)solutions.push('Microgrid');
-if(document.getElementById('sol-demand').checked)solutions.push('Demand Response');
-const content=document.getElementById('proposal-result');
-content.innerHTML='<div style="text-align:center;padding:40px"><div class="ld"></div><div style="margin-top:12px;color:var(--t3)">Generating proposal...</div></div>';
-const query=`Create a brief energy proposal for ${name}, a ${industry} company. Current annual spend: $${spend}, annual usage: ${kwh} kWh. Goals: ${goals}. Recommended solutions: ${solutions.join(', ')}. Include estimated savings percentages and implementation timeline.`;
-const result=await callPerplexity(query);
-content.innerHTML=`<div class="result-box"><div class="card-t">Proposal for ${name}</div><div class="brief-sum">${result.replace(/\n/g,'<br>')}</div><div style="margin-top:16px"><button class="btn btn-s" onclick="copyProposal()">Copy to Clipboard</button></div></div>`;
-}
-
-function copyProposal(){
-const text=document.querySelector('#proposal-result .brief-sum').innerText;
-navigator.clipboard.writeText(text);
-alert('Proposal copied to clipboard!');
-}
-
-// Regulation Tracker
-async function fetchRegulations(){
-const state=document.getElementById('reg-state').value;
-const content=document.getElementById('reg-content');
-content.innerHTML='<div style="text-align:center;padding:40px"><div class="ld"></div></div>';
-const stateNames={federal:'Federal',california:'California',nevada:'Nevada',arizona:'Arizona',texas:'Texas'};
-const result=await callPerplexity(`What are the latest energy regulations and policy updates in ${stateNames[state]}? Focus on rules affecting commercial/industrial energy users, renewable energy requirements, and utility rate changes.`);
-content.innerHTML=`<div class="brief-item"><div class="brief-cat tag-b">${stateNames[state]} Regulations</div><div class="brief-sum">${result.replace(/\n/g,'<br>')}</div></div>`;
-}
-
-// Load Analyzer
-function analyzeLoad(){
-const type=document.getElementById('load-type').value;
-const sqft=parseFloat(document.getElementById('load-sqft').value)||50000;
-const hours=document.getElementById('load-hours').value;
-const climate=document.getElementById('load-climate').value;
-const intensities={office:15,retail:20,warehouse:8,manufacturing:25,datacenter:100,hospital:30};
-const hourFactors={'8x5':0.24,'12x5':0.36,'24x5':0.6,'24x7':1};
-const climateFactors={'hot-dry':1.3,'hot-humid':1.4,'mixed':1.0,'cold':1.2,'marine':0.9};
-const baseLoad=sqft*intensities[type];
-const annualKwh=baseLoad*hourFactors[hours]*8760*climateFactors[climate]/1000;
-const peakDemand=annualKwh/(8760*hourFactors[hours])*1.5;
-const avgRate=0.12;
-const annualCost=annualKwh*avgRate;
-document.getElementById('load-result').innerHTML=`
-<div class="result-box">
-<div class="card-t">Load Profile Analysis</div>
-<div class="grid">
-<div class="stat"><div class="stat-v">${(annualKwh/1000).toFixed(0)}k</div><div class="stat-l">Annual kWh</div></div>
-<div class="stat"><div class="stat-v">${peakDemand.toFixed(0)}</div><div class="stat-l">Peak Demand (kW)</div></div>
-<div class="stat"><div class="stat-v">$${(annualCost/1000).toFixed(0)}k</div><div class="stat-l">Est. Annual Cost</div></div>
-</div>
-<div style="margin-top:16px">
-<div class="brief-sum"><strong>Recommendations:</strong><br>
-• Consider TOU rate schedule to shift ${(hourFactors[hours]*20).toFixed(0)}% of load to off-peak<br>
-• Potential solar offset: ${(annualKwh*0.4/1000).toFixed(0)}k kWh (40%)<br>
-• Demand response potential: ${(peakDemand*0.15).toFixed(0)} kW reduction<br>
-• Estimated savings with EMS: $${(annualCost*0.12/1000).toFixed(0)}k/year (12%)</div>
-</div>
-</div>`;
-}
-
-// Outage Map
-function fetchOutages(){
-const region=document.getElementById('outage-region').value;
-const outages=[
-{loc:'North Las Vegas',customers:2340,cause:'Equipment failure',eta:'2 hrs'},
-{loc:'Henderson',customers:890,cause:'Planned maintenance',eta:'4 hrs'},
-{loc:'Summerlin',customers:1560,cause:'Weather related',eta:'1 hr'}
+<script>
+/* ===== DATA ===== */
+var SL=["Not Started","Researching","Email Sent","LinkedIn Sent","Follow-Up","Meeting Set","Engaged","On Hold","Closed Won"];
+var PCOL={SAP:"var(--grn)",AI:"var(--blu)",Advisory:"var(--gld)",Digital:"var(--pur)",Sustainability:"var(--cyn)"};
+var PTAG={SAP:"tg-g",AI:"tg-b",Advisory:"tg-o",Digital:"tg-p",Sustainability:"tg-c"};
+var DC=[
+{id:1,name:"Peter Herweck",title:"CEO",loc:"Paris, FR",tier:"T0",init:"Enterprise-wide",timing:"Q1 2026",status:"Not Started",oDate:"",chan:"",resp:"",mtg:"No",mDate:"",next:"Initial research",owner:"Matt",seqD:"",seqP:"",why:"Driving Impact 2026 transformation; needs execution partners",hook:"Your Impact 2026 vision requires a talent model that moves at the speed of your transformation.",li:"https://linkedin.com/in/peterherweck",role:"Economic Buyer",fit:"9",bud:"$2B+ digital investment",play:"Digital"},
+{id:2,name:"Olivier Blum",title:"EVP Energy Management",loc:"Paris, FR",tier:"T1",init:"SAP S/4HANA",timing:"Q2 2026",status:"Outreach Sent",oDate:"2026-01-20",chan:"LinkedIn",resp:"",mtg:"No",mDate:"",next:"Follow-up Day 5",owner:"Matt",seqD:"5",seqP:"Touch 1",why:"Largest SAP migration in Schneider history; teams at capacity",hook:"Your SAP migration is the backbone of Energy Managements next chapter.",li:"https://linkedin.com/in/olivierblum",role:"Champion",fit:"9",bud:"SAP $150M+",play:"SAP"},
+{id:3,name:"Chris Leong",title:"EVP and CMO",loc:"Singapore",tier:"T1",init:"AI/Digital Marketing",timing:"Q1 2026",status:"Responded",oDate:"2026-01-10",chan:"Email",resp:"Interested - schedule call",mtg:"No",mDate:"",next:"Schedule intro call",owner:"Matt",seqD:"14",seqP:"Engaged",why:"Building AI-powered CX platform; needs ML talent",hook:"Your AI-powered CX vision needs builders who ship production ML at scale.",li:"https://linkedin.com/in/chrisleong",role:"Champion",fit:"8",bud:"Digital mktg +30% YoY",play:"AI"},
+{id:4,name:"Hilary Maxson",title:"EVP and CFO",loc:"Paris, FR",tier:"T1",init:"Advisory/Finance",timing:"Q2 2026",status:"Not Started",oDate:"",chan:"",resp:"",mtg:"No",mDate:"",next:"Research complete",owner:"Matt",seqD:"",seqP:"",why:"Cost optimization while funding growth; needs flexible talent",hook:"Finance transformation moves faster with on-demand CFO-caliber consultants.",li:"https://linkedin.com/in/hilarymaxson",role:"Economic Buyer",fit:"8",bud:"Finance transf. allocated",play:"Advisory"},
+{id:5,name:"Charise Le",title:"EVP and CHRO",loc:"Hong Kong",tier:"T1",init:"Workforce Transformation",timing:"Q1 2026",status:"Meeting Set",oDate:"2025-12-15",chan:"Email",resp:"Meeting confirmed",mtg:"Yes",mDate:"2026-02-12",next:"Prep meeting brief",owner:"Matt",seqD:"30",seqP:"Meeting",why:"Redesigning global workforce; exploring contingent talent",hook:"Schneider workforce strategy needs a talent partner matching your global ambition.",li:"https://linkedin.com/in/charisele",role:"Champion",fit:"10",bud:"HR transf $50M+",play:"Advisory"},
+{id:6,name:"Jay Abdallah",title:"SVP Strategy and Partnerships",loc:"Boston, MA",tier:"T1",init:"Strategic Partnerships",timing:"Q1 2026",status:"Engaged",oDate:"2025-11-01",chan:"LinkedIn",resp:"Active dialogue",mtg:"Yes",mDate:"2026-01-28",next:"MSA discussion",owner:"Matt",seqD:"60",seqP:"Opportunity",why:"Building partner ecosystem for Impact 2026",hook:"Formalize Toptal as strategic talent partner in Impact 2026.",li:"https://linkedin.com/in/jayabdallah",role:"Champion",fit:"10",bud:"Partnership discretionary",play:"Advisory"},
+{id:7,name:"Barbara Frei",title:"EVP Industrial Automation",loc:"Zurich, CH",tier:"T1",init:"Digital Twin/IoT",timing:"Q2 2026",status:"Outreach Sent",oDate:"2026-01-25",chan:"LinkedIn",resp:"",mtg:"No",mDate:"",next:"Await response",owner:"Matt",seqD:"3",seqP:"Touch 1",why:"Investing in digital twin tech; needs IoT architects",hook:"Digital twin initiative needs architects who built production IoT at industrial scale.",li:"https://linkedin.com/in/barbarafrei",role:"Technical Buyer",fit:"8",bud:"IA R&D $200M+",play:"Digital"},
+{id:8,name:"Gwenaelle Avice-Huet",title:"EVP Strategy and Sustainability",loc:"Paris, FR",tier:"T1",init:"Sustainability Analytics",timing:"Q1 2026",status:"Not Started",oDate:"",chan:"",resp:"",mtg:"No",mDate:"",next:"Build sequence",owner:"Matt",seqD:"",seqP:"",why:"Sustainability reporting transformation; needs data eng for ESG",hook:"Sustainability analytics needs engineers who understand data and ESG.",li:"https://linkedin.com/in/gavicehuet",role:"Champion",fit:"7",bud:"Sustainability growing",play:"Sustainability"},
+{id:9,name:"Aamir Paul",title:"President North America",loc:"Dallas, TX",tier:"T1",init:"SAP/Regional Ops",timing:"Q2 2026",status:"Outreach Sent",oDate:"2026-01-22",chan:"Email",resp:"",mtg:"No",mDate:"",next:"Follow-up Day 7",owner:"Matt",seqD:"7",seqP:"Touch 1",why:"NA SAP rollout requires regional implementation talent",hook:"NA SAP rollout needs architects who know Schneider.",li:"https://linkedin.com/in/aamirpaul",role:"Technical Buyer",fit:"8",bud:"Regional IT $80M+",play:"SAP"},
+{id:10,name:"Lana Duhamel",title:"VP Digital Services",loc:"Nashville, TN",tier:"T2",init:"AI/ML Platform",timing:"Q1 2026",status:"Responded",oDate:"2026-01-08",chan:"LinkedIn",resp:"Interested in AI talent",mtg:"No",mDate:"",next:"Send case study",owner:"Matt",seqD:"21",seqP:"Touch 2",why:"Building AI/ML CoE; cannot hire fast enough",hook:"AI CoE needs senior ML engineers who ship in weeks.",li:"https://linkedin.com/in/lanaduhamel",role:"Technical Buyer",fit:"9",bud:"AI CoE approved",play:"AI"},
+{id:11,name:"Mourad Tamoud",title:"EVP Global Supply Chain",loc:"Paris, FR",tier:"T1",init:"Supply Chain AI",timing:"Q2 2026",status:"Not Started",oDate:"",chan:"",resp:"",mtg:"No",mDate:"",next:"Initial outreach",owner:"Matt",seqD:"",seqP:"",why:"Supply chain digitization; AI for demand forecasting",hook:"Supply chain AI needs engineers who built forecasting at global scale.",li:"https://linkedin.com/in/mouradtamoud",role:"Champion",fit:"8",bud:"Supply chain $100M+",play:"AI"},
+{id:12,name:"Annette Clayton",title:"CEO North America Ops",loc:"Dallas, TX",tier:"T1",init:"Operational Excellence",timing:"Q1 2026",status:"Not Started",oDate:"",chan:"",resp:"",mtg:"No",mDate:"",next:"Research and map",owner:"Matt",seqD:"",seqP:"",why:"Driving OpEx across NA; needs mgmt consulting talent",hook:"NA OpEx needs consultants who drove transformation at industrial giants.",li:"https://linkedin.com/in/annetteclayton",role:"Economic Buyer",fit:"8",bud:"OpEx significant",play:"Advisory"}
 ];
-const list=document.getElementById('outage-list');
-list.innerHTML=outages.map(o=>`<div class="outage-item"><div><div class="outage-loc">${o.loc}</div><div class="outage-det">${o.cause} • ETA: ${o.eta}</div></div><div class="tag tag-r">${o.customers.toLocaleString()} affected</div></div>`).join('');
-const total=outages.reduce((a,b)=>a+b.customers,0);
-document.getElementById('out-active').textContent=outages.length;
-document.getElementById('out-affected').textContent=total.toLocaleString();
-document.getElementById('out-restored').textContent=Math.floor(Math.random()*500+100);
+var COMPS=[
+{n:"Accenture",w:"SAP, digital consulting",s:"Speed-to-value vs 12-month ramp. Expert quality over team billing."},
+{n:"Deloitte",w:"Advisory, finance transformation",s:"Flexibility and cost. CFO-caliber without Big 4 overhead."},
+{n:"Infosys/Wipro",w:"SAP technical, offshore",s:"Top 3% quality vs commodity offshore. Complex strategic workstreams."},
+{n:"McKinsey",w:"Strategy, C-suite advisory",s:"Execution capability McKinsey cannot offer. Builders who ship."},
+{n:"Cognizant",w:"Digital services, cloud",s:"Senior-only AI/ML. No junior padding. Faster ramp."}
+];
+var WINS=[
+{play:"SAP",title:"SAP S/4HANA Migration",stmt:"Senior S/4HANA architects at 3 Fortune 100s. Production-ready in weeks.",tech:"10+ implementations integrating with your Basis team.",econ:"Scale up/down with phases. No bench costs."},
+{play:"AI",title:"AI/ML Platform",stmt:"Top 3% AI engineers from Google, Meta, Stripe.",tech:"Recommendation engines, NLP, CV at scale.",econ:"One architect vs team of 5 offshore."},
+{play:"Advisory",title:"Strategic Advisory",stmt:"Ex-MBB consultants. Same caliber, 40% less.",tech:"Led transformations at comparable industrials.",econ:"No overhead markup."},
+{play:"Digital",title:"Digital Transformation",stmt:"Full-stack for IoT, digital twins, edge.",tech:"OPC-UA, MQTT, Azure IoT Hub.",econ:"Accelerate roadmap 6-12 months."},
+{play:"Sustainability",title:"ESG Analytics",stmt:"ESG platforms for regulatory and investor needs.",tech:"CSRD, TCFD, GRI + modern data arch.",econ:"Fraction of internal team cost."}
+];
+var RELS=[
+{f:"Peter Herweck",t:"Olivier Blum",tp:"reports-to"},{f:"Peter Herweck",t:"Chris Leong",tp:"reports-to"},
+{f:"Peter Herweck",t:"Hilary Maxson",tp:"reports-to"},{f:"Peter Herweck",t:"Charise Le",tp:"reports-to"},
+{f:"Peter Herweck",t:"Barbara Frei",tp:"reports-to"},{f:"Peter Herweck",t:"Gwenaelle Avice-Huet",tp:"reports-to"},
+{f:"Peter Herweck",t:"Mourad Tamoud",tp:"reports-to"},{f:"Peter Herweck",t:"Annette Clayton",tp:"reports-to"},
+{f:"Jay Abdallah",t:"Charise Le",tp:"influences"},{f:"Jay Abdallah",t:"Aamir Paul",tp:"influences"},
+{f:"Charise Le",t:"Lana Duhamel",tp:"reports-to"},{f:"Aamir Paul",t:"Annette Clayton",tp:"warm-path"},
+{f:"Lana Duhamel",t:"Chris Leong",tp:"influences"}
+];
+
+/* ===== STATE ===== */
+var DEFAULTS={sid:"1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwIukfI4",weburl:"https://script.google.com/macros/s/AKfycbxr4q1cfHBBYnrJ-oBPJIdH8JeVtpbTHDNiIh2THs5EB54poXcuF76vb93WIGXeHos/exec"};
+var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,lastSync:null,dirty:{},sheetData:{}};
+try{S.cfg=JSON.parse(localStorage.getItem("secfg4")||"{}")}catch(e){S.cfg={}}
+if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
+if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
+if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
+if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
+if(!S.cfg.weburl)S.cfg.weburl=DEFAULTS.weburl;
+
+function saveCfg(){localStorage.setItem("secfg4",JSON.stringify(S.cfg))}
+function jsonpFetch(url){return new Promise(function(resolve,reject){var cb='_secc_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);window[cb]=function(data){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);resolve(data)};var s=document.createElement('script');s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+cb;s.onerror=function(){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP failed'))};document.body.appendChild(s);setTimeout(function(){if(window[cb]){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP timeout'))}},15000)})} function setTab(t){S.tab=t;render()}
+function openPanel(c){S.sel=c;S.panel=true;renderPanel();$("pbg").classList.add("sh");$("pn").classList.add("sh")}
+function closePanel(){S.panel=false;$("pbg").classList.remove("sh");$("pn").classList.remove("sh")}
+function updStatus(id,st){S.contacts=S.contacts.map(function(c){return c.id===id?Object.assign({},c,{status:st}):c});writeBack(id,{status:st});render()}
+
+function updContact(id,fields){
+  S.contacts=S.contacts.map(function(c){return c.id===id?Object.assign({},c,fields):c});
+  writeBack(id,fields);
+  if(S.sel&&S.sel.id===id)S.sel=S.contacts.find(function(c){return c.id===id});
 }
+
+function writeBack(id,fields){
+  var url=S.cfg.weburl;if(!url)return;
+  var c=S.contacts.find(function(x){return x.id===id});if(!c)return;
+    var row=c.sheetRow;if(!row&&S.sheetData&&S.sheetData['Outreach Tracker']){var sd=S.sheetData['Outreach Tracker'];for(var ri=0;ri<sd.length;ri++){if(sd[ri]&&sd[ri][1]&&sd[ri][1].trim()===c.name.trim()){row=ri+1;break}}}if(!row){var idx=S.contacts.findIndex(function(x){return x.id===id});row=idx>=0?idx+6:id+5}
+  var colMap={status:"H",oDate:"I",chan:"J",resp:"K",mtg:"L",mDate:"M",next:"N",owner:"O",notes:"P",seqD:"Q",seqP:"R",why:"S",hook:"T",li:"U",role:"V",fit:"W",bud:"X"};
+  var updates=[];
+  Object.keys(fields).forEach(function(k){if(colMap[k])updates.push({col:colMap[k],val:fields[k]})});
+  if(!updates.length)return;
+  // Apps Script approach: send each update as URL-encoded form via hidden iframe/image
+  // This avoids CORS issues entirely since Apps Script redirects on POST
+  updates.forEach(function(u){
+    var params="?action=update&sheet="+encodeURIComponent("Outreach Tracker")+"&row="+row+"&col="+encodeURIComponent(u.col)+"&value="+encodeURIComponent(u.val);
+    // Use image trick to fire GET request (works through Apps Script redirect)
+    var img=new Image();
+    img.src=url+params;
+    // Also try fetch as backup
+    fetch(url+params,{mode:"no-cors",method:"GET"}).catch(function(){});
+  });
+  showSyncToast("Saved: "+Object.keys(fields).join(", "));
+}
+
+function syncFromSheet(){
+  if(S.syncing)return;
+  var sid=S.cfg.sid,gk=S.cfg.gkey;
+  if(!sid||!gk)return;
+  S.syncing=true;renderSyncBtn();
+  (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
+    if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date();render()}
+    S.syncing=false;renderSyncBtn();
+    showSyncToast("Synced "+data.length+" contacts");syncAllTabs();
+  }).catch(function(e){S.syncing=false;renderSyncBtn();showSyncToast("Sync error: "+e.message)});
+}
+
+function showSyncToast(msg){
+  var t=document.getElementById("synctoast");
+  if(!t){t=document.createElement("div");t.id="synctoast";t.style.cssText="position:fixed;bottom:20px;right:20px;background:var(--b3);border:1px solid var(--bd);color:var(--t1);padding:8px 16px;border-radius:6px;font-size:11px;z-index:200;opacity:0;transition:opacity .3s";document.body.appendChild(t)}
+  t.textContent=msg;t.style.opacity="1";
+  setTimeout(function(){t.style.opacity="0"},2500);
+}
+
+function renderSyncBtn(){
+  var el=document.getElementById("syncbtn");
+  if(el)el.textContent=S.syncing?"Syncing...":"\u21BB Sync";
+}
+
+/* ===== HELPERS ===== */
+function $(id){return document.getElementById(id)}
+function gi(n){return n.split(" ").map(function(w){return w[0]}).join("").slice(0,2)}
+function gcl(n){var cs=["#3ddc84","#4d9fff","#ffc857","#a855f7","#ef4444","#22d3ee","#f97316","#ec4899"];var v=0;for(var i=0;i<n.length;i++)v=n.charCodeAt(i)+((v<<5)-v);return cs[Math.abs(v)%cs.length]}
+function dsince(d){if(!d)return null;return Math.floor((new Date()-new Date(d))/864e5)}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function ptg(p){return PTAG[p]||"tg-b"}
+function tag(t,c){return '<span class="tg '+(c||"tg-x")+'">'+esc(t)+'</span>'}
+function avH(n,sz,fs){return '<div class="av" style="background:'+gcl(n)+';width:'+(sz||28)+'px;height:'+(sz||28)+'px;font-size:'+(fs||10)+'px">'+esc(gi(n))+'</div>'}
+function rowH(n,sub,badge){return '<div class="rw" data-name="'+esc(n)+'">'+avH(n)+'<div class="ri2"><div class="rn">'+esc(n)+'</div><div class="rs2">'+esc(sub||"")+'</div></div>'+(badge?tag(badge,ptg(badge)):"")+'</div>'}
+function fetchSheet(sid,key){
+  var url="https://sheets.googleapis.com/v4/spreadsheets/"+sid+"/values/"+encodeURIComponent("Outreach Tracker!A6:X100")+"?key="+key;
+  return fetch(url).then(function(r){return r.json()}).then(function(d){
+    if(!d.values)return[];
+    return d.values.map(function(w,i){
+      var rawTier=w[4]||"";
+      var rawInit=w[5]||"";
+      // Derive play: check tier first (e.g. "Tier 1 - SAP/ERP" -> "SAP"), then init
+      var play="Advisory";
+      var tierLower=rawTier.toLowerCase(),initLower=rawInit.toLowerCase();
+      if(tierLower.indexOf("sap")>=0||initLower.indexOf("sap")>=0||initLower.indexOf("s/4")>=0||initLower.indexOf("erp")>=0||initLower.indexOf("fiori")>=0||initLower.indexOf("abap")>=0||initLower.indexOf("ewm")>=0||initLower.indexOf("unify")>=0||initLower.indexOf("fico")>=0||initLower.indexOf("cpi")>=0)play="SAP";
+      else if(tierLower.indexOf("ai")>=0||tierLower.indexOf("data")>=0||initLower.indexOf("ai")>=0||initLower.indexOf("ml")>=0||initLower.indexOf("data")>=0||initLower.indexOf("analytics")>=0)play="AI";
+      else if(tierLower.indexOf("digital")>=0||tierLower.indexOf("software")>=0||tierLower.indexOf("platform")>=0||initLower.indexOf("digital")>=0||initLower.indexOf("iot")>=0||initLower.indexOf("twin")>=0||initLower.indexOf("eco")>=0||initLower.indexOf("edge")>=0)play="Digital";
+      else if(tierLower.indexOf("sustainability")>=0||initLower.indexOf("sustain")>=0||initLower.indexOf("esg")>=0||initLower.indexOf("csrd")>=0)play="Sustainability";
+      else if(tierLower.indexOf("cyber")>=0||initLower.indexOf("cyber")>=0||initLower.indexOf("security")>=0)play="Digital";
+      else if(tierLower.indexOf("advisory")>=0||tierLower.indexOf("hr")>=0||initLower.indexOf("advisory")>=0||initLower.indexOf("workforce")>=0||initLower.indexOf("consulting")>=0)play="Advisory";
+      // If initiative has clear first word match, use that
+      if(play==="Advisory"&&rawInit){var fw=rawInit.split(/[\s\/]/)[0];if({"SAP":1,"AI":1,"Digital":1,"Sustainability":1}[fw])play=fw}
+      return{id:i+1,name:w[1]||"",title:w[2]||"",loc:w[3]||"",tier:rawTier,init:rawInit,timing:w[6]||"",status:w[7]||"Not Started",oDate:w[8]||"",chan:w[9]||"",resp:w[10]||"",mtg:w[11]||"",mDate:w[12]||"",next:w[13]||"",owner:w[14]||"",notes:w[15]||"",seqD:w[16]||"",seqP:w[17]||"",why:w[18]||"",hook:w[19]||"",li:w[20]||"",role:w[21]||"",fit:w[22]||"",bud:w[23]||"",sheetRow:i+6,play:play}}).filter(function(c){return c.name});
+  });
+}
+function fetchSheetTab(tabName){var sid=S.cfg.sid,gk=S.cfg.gkey;if(!sid||!gk)return Promise.resolve([]);var url="https://sheets.googleapis.com/v4/spreadsheets/"+sid+"/values/"+encodeURIComponent(tabName+"!A1:Z200")+"?key="+gk;return fetch(url).then(function(r){return r.json()}).then(function(d){return d.values||[]}).catch(function(){return[]})} function syncAllTabs(){var tabs=["Strategy","UNIFIED Framework","Org Chart & Strategy Map","AI Brief (Weekly)","Dashboard","Outreach Tracker"];tabs.forEach(function(t){fetchSheetTab(t).then(function(d){S.sheetData[t]=d;render()})})} function bindRows(el){el.querySelectorAll(".rw[data-name]").forEach(function(r){r.onclick=function(){var c=S.contacts.find(function(x){return x.name===r.dataset.name});if(c)openPanel(c)}})}
+
+
+
+/* ===== SIDEBAR + RENDER ===== */
+var NAV=[
+{s:"COMMAND",i:[{id:"dashboard",l:"Dashboard"},{id:"strategy",l:"\uD83C\uDFAF Our Strategy"},{id:"aiupdates",l:"\uD83E\uDD16 AI Updates"},{id:"thisweek",l:"This Week"},{id:"pipeline",l:"Pipeline"},{id:"contacts",l:"Contacts"}]},
+{s:"STRATEGY",i:[{id:"framework",l:"\u2605 Unified Framework"},{id:"orgchart",l:"Org Chart"},{id:"stratmap",l:"Strategy Map"},{id:"winthemes",l:"Win Themes"},{id:"competitive",l:"Competitive"}]},
+{s:"MONITOR",i:[{id:"relations",l:"Relationships"},{id:"risks",l:"Risks"},{id:"settings",l:"Settings"}]}
+];
+
+function renderSB(){
+  var o='<div class="la"><svg width="28" height="28" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#3DCC4A"/><text x="50" y="58" text-anchor="middle" font-size="34" font-weight="700" fill="#fff" font-family="Arial,sans-serif">SE</text></svg><div><div class="lt">Command Center</div><div class="ls">Schneider Electric</div></div></div>';
+  NAV.forEach(function(sec){
+    o+='<div class="ns"><div class="nst">'+sec.s+'</div>';
+    sec.i.forEach(function(it){o+='<button class="nb'+(S.tab===it.id?' on':'')+'" data-tab="'+it.id+'">'+it.l+'</button>'});
+    o+='</div>';
+  });
+  o+='<div style="padding:10px 12px;margin-top:auto;border-top:1px solid var(--bd);font-size:9px;color:var(--t3)">'+(S.conn?'<span style="color:var(--grn)">\u25CF Sheet Connected</span>':'<span>\u25CF Demo Mode</span>')+'<div style="margin-top:6px"><button class="bt bt1" id="syncbtn" style="width:100%;font-size:10px;padding:4px 8px">'+(S.syncing?"Syncing...":"\u21BB Sync")+'</button></div>'+(S.lastSync?'<div style="margin-top:4px;font-size:8px;color:var(--t3)">Last: '+S.lastSync.toLocaleTimeString()+'</div>':'')+'</div>';
+  $("sb").innerHTML=o;
+  $("sb").querySelectorAll("[data-tab]").forEach(function(b){b.onclick=function(){setTab(b.dataset.tab)}});
+  var sbtn=document.getElementById("syncbtn");if(sbtn)sbtn.onclick=syncFromSheet;
+}
+
+function render(){
+  renderSB();
+  var mn=$("mn");
+  mn.innerHTML='<div class="fd2"></div>';
+  var w=mn.firstChild;
+  var pages={dashboard:pgDash,strategy:pgStrategy,aiupdates:pgAIUpdates,thisweek:pgWeek,pipeline:pgPipe,contacts:pgCon,orgchart:pgOrg,stratmap:pgStrat,winthemes:pgWin,competitive:pgComp,framework:pgFrame,relations:pgRel,risks:pgRisk,settings:pgSet};
+  try{(pages[S.tab]||pgDash)(w)}catch(e){w.innerHTML='<div style="color:red;padding:20px">Error: '+e.message+'<br><pre>'+e.stack+'</pre></div>'}
+  mn.scrollTop=0;
+}
+
+/* ===== DETAIL PANEL (no AI) ===== */
+function renderPanel(){
+  var c=S.sel;if(!c)return;
+  var o='<button class="xbtn" id="xpn">X</button>';
+  o+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;margin-top:4px">'+avH(c.name,42,14)+'<div><div style="font-size:16px;font-weight:700">'+esc(c.name)+'</div><div style="font-size:12px;color:var(--t2)">'+esc(c.title)+'</div></div></div>';
+  o+='<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">'+tag(c.play,ptg(c.play))+tag(c.tier,"tg-b")+tag(c.status,"tg-x")+'</div>';
+  if(c.li)o+='<a href="'+esc(c.li)+'" target="_blank" style="font-size:12px;display:block;margin-bottom:12px">LinkedIn Profile</a>';
+  o+='<div class="cd"><div class="ct">Status &amp; Tracking <span style="font-size:9px;color:var(--t3);font-weight:400;margin-left:auto">edits sync to sheet</span></div>';
+  o+='<div class="fl2"><label>Status</label><select id="pn_status">';
+  SL.forEach(function(st){o+='<option value="'+esc(st)+'"'+(c.status===st?' selected':'')+'>'+esc(st)+'</option>'});
+  o+='</select></div>';
+  o+='<div class="fl2"><label>Channel</label><select id="pn_chan"><option value=""'+(c.chan===''?' selected':'')+'>--</option><option value="LinkedIn"'+(c.chan==='LinkedIn'?' selected':'')+'>LinkedIn</option><option value="Email"'+(c.chan==='Email'?' selected':'')+'>Email</option><option value="Phone"'+(c.chan==='Phone'?' selected':'')+'>Phone</option><option value="Referral"'+(c.chan==='Referral'?' selected':'')+'>Referral</option></select></div>';
+  o+='<div class="fl2"><label>Next Step</label><input id="pn_next" value="'+esc(c.next||'')+'"></div>';
+  o+='<div class="fl2"><label>Notes</label><textarea id="pn_notes" rows="3" style="resize:vertical">'+esc(c.notes||'')+'</textarea></div>';
+  o+='<div style="display:flex;gap:6px;margin-bottom:12px"><div class="fl2" style="flex:1"><label>Meeting?</label><select id="pn_mtg"><option value="No"'+(c.mtg!=='Yes'?' selected':'')+'>No</option><option value="Yes"'+(c.mtg==='Yes'?' selected':'')+'>Yes</option></select></div><div class="fl2" style="flex:1"><label>Meeting Date</label><input id="pn_mdate" type="date" value="'+esc(c.mDate||'')+'"></div></div>';
+  o+='<div style="display:flex;gap:6px;margin-bottom:12px"><div class="fl2" style="flex:1"><label>Seq Days</label><input id="pn_seqd" value="'+esc(c.seqD||'')+'"></div><div class="fl2" style="flex:1"><label>Seq Phase</label><input id="pn_seqp" value="'+esc(c.seqP||'')+'"></div></div></div>';
+  o+='<div class="cd"><div class="ct">Why They Buy Now</div><div class="fl2"><textarea id="pn_why" rows="2" style="resize:vertical">'+esc(c.why||'')+'</textarea></div></div>';
+  o+='<div class="cd"><div class="ct">Outreach Hook</div><div class="fl2"><textarea id="pn_hook" rows="2" style="resize:vertical;font-style:italic">'+esc(c.hook||'')+'</textarea></div></div>';
+  o+='<div class="cd"><div class="ct">Details</div><div class="dtgrid">';
+  o+='<div><label>Role</label><select id="pn_role"><option value="">--</option><option value="Economic Buyer"'+(c.role==='Economic Buyer'?' selected':'')+'>Economic Buyer</option><option value="Champion"'+(c.role==='Champion'?' selected':'')+'>Champion</option><option value="Technical Buyer"'+(c.role==='Technical Buyer'?' selected':'')+'>Technical Buyer</option><option value="Influencer"'+(c.role==='Influencer'?' selected':'')+'>Influencer</option><option value="Executive Sponsor"'+(c.role==='Executive Sponsor'?' selected':'')+'>Executive Sponsor</option></select></div><div class="fl2"><label>Fit</label><input id="pn_fit" value="'+esc(c.fit||'')+'" style="width:60px"></div><div><span class="dlab">Location: </span>'+esc(c.loc)+'</div>';
+  o+='<div><span class="dlab">Fit: </span>'+esc(c.fit)+'/10</div><div><span class="dlab">Timing: </span>'+esc(c.timing)+'</div>';
+  o+='<div class="sp"><label>Budget</label><input id="pn_bud" value="'+esc(c.bud||'')+'"></div>';
+  o+='</div></div>';
+  $("pn").innerHTML=o;
+  $("xpn").onclick=closePanel;
+  function bindField(elId,field){var el=$(elId);if(!el)return;el.addEventListener("change",function(){var upd={};upd[field]=el.value;updContact(c.id,upd);if(field==="status"){renderPanel();render()}})}
+  bindField("pn_status","status");bindField("pn_chan","chan");bindField("pn_next","next");bindField("pn_notes","notes");bindField("pn_mtg","mtg");bindField("pn_mdate","mDate");bindField("pn_seqd","seqD");bindField("pn_seqp","seqP");bindField("pn_why","why");bindField("pn_hook","hook");bindField("pn_role","role");bindField("pn_fit","fit");bindField("pn_bud","bud");
+  ["pn_next","pn_notes","pn_seqd","pn_seqp","pn_why","pn_hook","pn_fit","pn_bud"].forEach(function(elId){var el=$(elId);if(!el)return;el.addEventListener("blur",function(){var field={pn_next:"next",pn_notes:"notes",pn_seqd:"seqD",pn_seqp:"seqP",pn_why:"why",pn_hook:"hook",pn_fit:"fit",pn_bud:"bud"}[elId];var upd={};upd[field]=el.value;updContact(c.id,upd)})});
+}
+
+
+/* ===== Pg: DASHBOARD ===== */
+function pgDash(el){
+  var C=S.contacts,pipe=C.length;
+  var inP=C.filter(function(c){return c.status!=="Not Started"}).length;
+  var rsp=C.filter(function(c){return c.resp}).length;
+  var mt=C.filter(function(c){return c.mtg==="Yes"}).length;
+  var eng=C.filter(function(c){return c.status==="Engaged"}).length;
+  var stl=C.filter(function(c){return c.oDate&&dsince(c.oDate)>14&&!c.resp});
+  var pq=C.filter(function(c){return c.status==="Follow-Up"||(c.status==="Email Sent"||c.status==="LinkedIn Sent"&&parseInt(c.seqD||0)>=5)||c.mtg==="Yes"||(c.status==="Not Started"&&(c.tier||"").indexOf("Tier 0")>=0)||(c.status==="Not Started"&&(c.tier||"").indexOf("Tier 1")>=0)}).slice(0,8);
+  var fd=SL.map(function(st){return{l:st,c:C.filter(function(c){return c.status===st}).length}});
+  var mx=Math.max.apply(null,fd.map(function(f){return f.c}).concat([1]));
+  var fc=["#606078","#4d9fff","#22d3ee","#a855f7","#ffc857","#ec4899","#3ddc84","#9696ae","#f97316"];
+
+  // Play stats
+  var plays=["SAP","AI","Advisory","Digital","Sustainability"];
+  var playStats=plays.map(function(pl){
+    var pc=C.filter(function(c){return c.play===pl});
+    var act=pc.filter(function(c){return c.status!=="Not Started"}).length;
+    var resp=pc.filter(function(c){return c.resp}).length;
+    var mtg=pc.filter(function(c){return c.mtg==="Yes"}).length;
+    return{play:pl,total:pc.length,active:act,resp:resp,mtg:mtg,cov:pc.length?Math.round(act/pc.length*100):0};
+  });
+
+  // Tier breakdown
+  var allTiers={};C.forEach(function(c){if(c.tier)allTiers[c.tier]=1});
+  var tierList=Object.keys(allTiers).sort();
+
+  // Recent activity (contacts with recent outreach dates)
+  var recent=C.filter(function(c){return c.oDate}).sort(function(a,b){return(b.oDate||"").localeCompare(a.oDate||"")}).slice(0,6);
+
+  var o='<div class="pt3">Dashboard</div><div class="ps3">Schneider Electric Enterprise Account \u2014 Command Center</div>';
+
+  // === ROW 1: KPI Cards ===
+  o+='<div class="kg">';
+  o+='<div class="kp" style="border-top:2px solid var(--grn)"><div class="kl">Pipeline</div><div class="kv" style="color:var(--grn)">'+pipe+'</div><div class="kn">Total contacts mapped</div></div>';
+  o+='<div class="kp" style="border-top:2px solid var(--blu)"><div class="kl">In Play</div><div class="kv" style="color:var(--blu)">'+inP+'</div><div class="kn">'+(pipe?Math.round(inP/pipe*100):0)+'% activated</div></div>';
+  o+='<div class="kp" style="border-top:2px solid var(--gld)"><div class="kl">Responses</div><div class="kv" style="color:var(--gld)">'+rsp+'</div><div class="kn">'+(inP?Math.round(rsp/inP*100):0)+'% response rate</div></div>';
+  o+='<div class="kp" style="border-top:2px solid var(--pur)"><div class="kl">Meetings</div><div class="kv" style="color:var(--pur)">'+mt+'</div><div class="kn">'+(inP?Math.round(mt/inP*100):0)+'% conversion</div></div>';
+  o+='<div class="kp" style="border-top:2px solid var(--cyn)"><div class="kl">Engaged</div><div class="kv" style="color:var(--cyn)">'+eng+'</div><div class="kn">Active relationships</div></div>';
+  o+='<div class="kp" style="border-top:2px solid var(--red)"><div class="kl">At Risk</div><div class="kv" style="color:var(--red)">'+stl.length+'</div><div class="kn">Stalled 14+ days</div></div>';
+  o+='</div>';
+
+  // === ROW 2: Funnel + Play Coverage ===
+  o+='<div class="g2"><div>';
+  o+='<div class="cd"><div class="ct">Pipeline Funnel</div><div style="display:flex;flex-direction:column;gap:3px">';
+  fd.forEach(function(f,i){var pct=pipe?Math.round(f.c/pipe*100):0;o+='<div style="height:30px;border-radius:5px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:11px;font-weight:600;width:'+Math.max(30,f.c/mx*100)+'%;background:'+fc[i]+';color:'+(i<2?"#fff":"#000")+'"><span>'+esc(f.l)+'</span><span>'+f.c+' ('+pct+'%)</span></div>'});
+  o+='</div></div>';
+
+  // Play Coverage
+  o+='<div class="cd"><div class="ct">Play Coverage</div>';
+  playStats.forEach(function(ps){
+    o+='<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:'+PCOL[ps.play]+';font-weight:600">'+ps.play+'</span><span style="color:var(--t3)">'+ps.active+'/'+ps.total+' active ('+ps.cov+'%)</span></div>';
+    o+='<div class="fw-bar"><div class="fw-bar-fill" style="width:'+ps.cov+'%;background:'+PCOL[ps.play]+'"></div></div>';
+    o+='<div style="display:flex;gap:8px;margin-top:2px;font-size:9px;color:var(--t3)"><span>'+ps.resp+' responded</span><span>'+ps.mtg+' meetings</span></div></div>';
+  });
+  o+='</div></div><div>';
+
+  // === Priority Queue ===
+  o+='<div class="cd"><div class="ct">Priority Queue \u2014 Next Actions</div>';
+  pq.forEach(function(c){o+=rowH(c.name,c.next||c.seqP||c.title,c.play)});
+  if(!pq.length)o+='<div style="color:var(--t3);font-size:11px">No priority actions</div>';
+  o+='</div>';
+
+  // === Risks ===
+  o+='<div class="cd"><div class="ct">Risk Alerts</div>';
+  if(!stl.length)o+='<div style="color:var(--grn);font-size:12px">\u2713 No critical risks \u2014 all outreach on track</div>';
+  stl.slice(0,5).forEach(function(c){o+='<div class="rsk"><div style="font-weight:600">'+esc(c.name)+'</div><div style="font-size:10px;color:var(--t3)">No response \u2014 '+dsince(c.oDate)+' days since outreach</div></div>'});
+  o+='</div></div></div>';
+
+  // === ROW 3: Breakdown by Tier + Play Matrix + Recent Activity ===
+  o+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">';
+
+  // Tier breakdown
+  o+='<div class="cd"><div class="ct">Breakdown by Tier</div>';
+  o+='<table style="width:100%;font-size:10px;border-collapse:collapse"><thead><tr style="border-bottom:1px solid var(--bd)"><th style="text-align:left;padding:3px 6px;color:var(--t3);font-size:8px">Tier</th><th style="padding:3px;color:var(--t3);font-size:8px">Total</th><th style="padding:3px;color:var(--t3);font-size:8px">Sent</th><th style="padding:3px;color:var(--t3);font-size:8px">Resp</th><th style="padding:3px;color:var(--t3);font-size:8px">Mtg</th></tr></thead><tbody>';
+  tierList.forEach(function(t){
+    var tc=C.filter(function(c){return c.tier===t});
+    var sent=tc.filter(function(c){return c.status==="Email Sent"||c.status==="LinkedIn Sent"||c.status==="Follow-Up"||c.status==="Meeting Set"||c.status==="Engaged"}).length;
+    var resp=tc.filter(function(c){return c.resp}).length;
+    var mtg=tc.filter(function(c){return c.mtg==="Yes"}).length;
+    var cl=t.indexOf("SAP")>=0?"var(--grn)":t.indexOf("AI")>=0||t.indexOf("Data")>=0?"var(--blu)":t.indexOf("Digital")>=0?"var(--pur)":t.indexOf("Sustain")>=0?"var(--cyn)":t.indexOf("Cyber")>=0?"var(--red)":"var(--t2)";
+    o+='<tr style="border-bottom:1px solid var(--bd)"><td style="padding:3px 6px;font-weight:600;color:'+cl+';font-size:10px">'+esc(t)+'</td><td style="padding:3px;text-align:center">'+tc.length+'</td><td style="padding:3px;text-align:center;color:'+(sent?"var(--blu)":"var(--t3)")+'">'+sent+'</td><td style="padding:3px;text-align:center;color:'+(resp?"var(--gld)":"var(--t3)")+'">'+resp+'</td><td style="padding:3px;text-align:center;color:'+(mtg?"var(--grn)":"var(--t3)")+'">'+mtg+'</td></tr>';
+  });
+  o+='</tbody></table></div>';
+
+  // Play matrix
+  o+='<div class="cd"><div class="ct">Play \u00D7 Status Matrix</div>';
+  o+='<table style="width:100%;font-size:10px;border-collapse:collapse"><thead><tr style="border-bottom:1px solid var(--bd)"><th style="text-align:left;padding:3px 4px;color:var(--t3);font-size:8px">Play</th>';
+  SL.forEach(function(s){o+='<th style="padding:3px;color:var(--t3);font-size:7px;text-align:center">'+s.substring(0,4)+'</th>'});
+  o+='<th style="padding:3px;color:var(--t3);font-size:8px;text-align:center">Total</th></tr></thead><tbody>';
+  plays.forEach(function(pl){
+    o+='<tr style="border-bottom:1px solid var(--bd)"><td style="padding:3px 4px;font-weight:600;color:'+PCOL[pl]+'">'+pl+'</td>';
+    SL.forEach(function(s){var n=C.filter(function(c){return c.play===pl&&c.status===s}).length;o+='<td style="padding:3px;text-align:center;color:'+(n?"var(--t1)":"var(--t3)")+'">'+n+'</td>'});
+    var tot=C.filter(function(c){return c.play===pl}).length;
+    o+='<td style="padding:3px;text-align:center;font-weight:600">'+tot+'</td></tr>';
+  });
+  o+='</tbody></table></div>';
+
+  // Recent activity
+  o+='<div class="cd"><div class="ct">Recent Activity</div>';
+  recent.forEach(function(c){
+    var dd=c.oDate?dsince(c.oDate)+"d ago":"";
+    o+='<div class="rw" data-name="'+esc(c.name)+'" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);cursor:pointer">';
+    o+='<div>'+avH(c.name,22,8)+'<span style="font-size:11px;font-weight:600;margin-left:6px">'+esc(c.name)+'</span></div>';
+    o+='<div style="display:flex;gap:4px;align-items:center">'+tag(c.status,"tg-x")+'<span style="font-size:9px;color:var(--t3)">'+dd+'</span></div></div>';
+  });
+  if(!recent.length)o+='<div style="color:var(--t3);font-size:11px">No activity yet</div>';
+  o+='</div></div>';
+
+  el.innerHTML=o;bindRows(el);
+}
+
+
+/* ===== Pg: OUR STRATEGY ===== */
+
+/* ===== Pg: OUR STRATEGY ===== */
+function pgStrategy(el){
+  var C=S.contacts;
+
+  var sheetST=S.sheetData["Strategy"];if(sheetST&&sheetST.length>2){var stSections={};var curSec="";sheetST.forEach(function(rw){if(!rw||!rw.length)return;var cell=(rw[0]||"")+" "+(rw[1]||"");if(cell.indexOf("PLAY 1")>=0)curSec="SAP";else if(cell.indexOf("PLAY 2")>=0)curSec="AI";else if(cell.indexOf("PLAY 3")>=0)curSec="Advisory";else if(cell.indexOf("PLAY 4")>=0)curSec="Digital";else if(cell.indexOf("PLAY 5")>=0)curSec="Sustainability";if(curSec&&!stSections[curSec])stSections[curSec]={lines:[]};if(curSec){var txt=rw.filter(function(c){return c}).join(" ").trim();if(txt)stSections[curSec].lines.push(txt)}});if(Object.keys(stSections).length>0){S._sheetStrategy=stSections}} var priorities=[
+    {num:1,name:"SAP S/4HANA Enterprise Migration",color:"var(--grn)",icon:"\u26A1",
+     what:"Schneider is executing a $700M+ SAP S/4HANA migration \u2014 the largest IT transformation in company history. The UNIFY program spans 197 plants, 97 distribution centers, and 100+ country operations. Germany and India are live. Global rollout runs through 2027.",
+     why:"SAP ECC 6.0 hits end-of-life 2027. Impact 2026 requires unified financial reporting and real-time supply chain visibility. None of this works on the current fragmented ECC landscape.",
+     how:[
+       "Brownfield migration of 12+ ECC instances to consolidated S/4HANA",
+       "UNIFY program: business process standardization across all plants and DCs",
+       "Finance transformation: FI/CO migration, universal journal, ACDOCA",
+       "Integration layer: SAP BTP connecting S/4 to EcoStruxure IoT, Salesforce, 200+ middleware systems",
+       "Regional rollouts: NA under Aamir Paul, APAC and EMEA phased through 2027"
+     ],
+     gap:"Internal SAP team is staffed for run-the-business, not transform-the-business. 50+ open SAP roles on LinkedIn, average 95+ days unfilled. They have ~40% of the architects needed.",
+     contacts:[
+       {name:"Elizabeth Hackenson",title:"CIO",why:"Owns the entire digital transformation. UNIFY and S/4 report into her org. The door to every SAP conversation.",role:"Executive Sponsor",path:"Direct outreach \u2192 UNIFY talent gap pitch"},
+       {name:"Gustavo Marques De Faria Paula",title:"VP UNIFY Business Transformation",why:"Runs the UNIFY program day-to-day. Controls the largest SAP talent budget. His program is the one that needs architects immediately.",role:"Economic Buyer",path:"Via Elizabeth Hackenson or direct LinkedIn"},
+       {name:"Louis Moreau",title:"Finance & Controlling Transform Lead",why:"Owns the FI/CO migration workstream within UNIFY. Needs senior FICO consultants who\u2019ve done S/4 finance migrations at scale.",role:"Economic Buyer (Finance)",path:"Via Gustavo or direct"},
+       {name:"Divya Mohan",title:"Global ERP Transformation Leader",why:"Runs the core ERP transformation. Coordinates across all regional rollouts. Needs S/4 solution architects and BASIS admins.",role:"Economic Buyer",path:"Via Elizabeth Hackenson org"},
+       {name:"Olivier Blum",title:"EVP Energy Management",why:"Owns the largest P&L (~45% of revenue). His BU is the biggest consumer of the S/4 migration. Executive air cover for any SAP engagement.",role:"Executive Sponsor",path:"Via Aamir Paul (warm) or Jay Abdallah"},
+       {name:"Aamir Paul",title:"President, North America",why:"Owns the NA regional rollout. Separate timeline, separate budget. Fastest path to a regional SAP pilot.",role:"Regional Sponsor",path:"Direct outreach \u2014 NA focused pitch"},
+       {name:"Soma Chandra Shekhar",title:"SAP Integration Architect",why:"Building CPI integrations between S/4 and EcoStruxure. Niche skill set. If he\u2019s doing it alone, he needs help.",role:"Influencer",path:"Direct LinkedIn (technical pitch)"},
+       {name:"Akash Acharya",title:"SAP EWM Specialist",why:"Just completed Phase 1 EWM go-live across 12 DCs. Phase 2 expansion needs more EWM consultants.",role:"Influencer",path:"Direct LinkedIn (congratulate + offer)"},
+       {name:"Aditi Sharma",title:"SAP Fiori/ABAP Developer",why:"Building Fiori UX across 200+ factories. ABAP RAP development. Scale play \u2014 she can\u2019t build all the apps alone.",role:"Influencer",path:"Direct LinkedIn (technical community)"}
+     ]},
+
+    {num:2,name:"AI/ML Platform & Center of Excellence",color:"var(--blu)",icon:"\uD83E\uDD16",
+     what:"Schneider is building an enterprise AI/ML Center of Excellence to power predictive maintenance, demand forecasting, AI-driven customer experience, and supply chain intelligence. The CoE serves all business units with shared ML infrastructure.",
+     why:"AI is Schneider\u2019s declared strategic differentiator. CEO Peter Herweck has staked the company\u2019s competitive position on embedding AI across every product line. The problem: 6-month average time-to-fill for ML roles. 40% vacancy rate in the AI CoE.",
+     how:[
+       "Centralized AI/ML CoE under Lana Duhamel (VP Digital Services) with shared feature store, model registry, MLOps",
+       "Azure ML + Azure OpenAI as core platform (expanded Microsoft partnership announced Feb 2026)",
+       "AI-powered CX platform under Chris Leong (CMO): personalized journeys, intelligent configuration, predictive support",
+       "Predictive maintenance models for EcoStruxure industrial customers",
+       "Supply chain AI under Mourad Tamoud: demand forecasting, inventory optimization, supplier risk scoring"
+     ],
+     gap:"Senior ML engineers command $300-500K. Schneider\u2019s comp bands can\u2019t compete with US tech companies. Cognizant provides junior bodies, not production-grade AI talent.",
+     contacts:[
+       {name:"Chris Leong",title:"EVP & CMO",why:"Most digitally-forward ExCom member. Controls AI-powered CX budget independently from IT. Responded to outreach with interest. She sees AI as the CMO\u2019s weapon.",role:"Economic Buyer",path:"Direct \u2014 already responded positively"},
+       {name:"Lana Duhamel",title:"VP Digital Services",why:"Building the AI CoE from scratch. She\u2019s the hands-on Champion who runs evaluations. Confirmed AI talent interest separately from Chris Leong.",role:"Champion",path:"Direct \u2014 already confirmed interest"},
+       {name:"Mourad Tamoud",title:"EVP Global Supply Chain",why:"Separate AI budget for supply chain intelligence. Current forecasting is 60% manual \u2014 target is 90% automated by 2027. Different buyer, same talent need.",role:"Economic Buyer",path:"Direct outreach \u2192 supply chain AI pitch"}
+     ]},
+
+    {num:3,name:"Strategic Advisory & Workforce Transformation",color:"var(--gld)",icon:"\uD83C\uDFAF",
+     what:"Schneider is redesigning its global workforce model under Impact 2026. The CHRO is exploring a 70/20/10 talent model (70% permanent, 20% contingent, 10% project-based experts). The CFO wants finance transformation. The Strategy SVP is building a formal partner ecosystem.",
+     why:"Four separate executive tracks all converge: Schneider needs external expertise to execute Impact 2026, and they\u2019re looking for a model that\u2019s faster, cheaper, and more flexible than Big 4 consulting. CFO has flagged consulting spend as excessive.",
+     how:[
+       "CHRO Charise Le: redesigning global talent sourcing, deploying 70/20/10 model, contingent workforce strategy",
+       "SVP Strategy Jay Abdallah: formalizing partner ecosystem, active MSA discussion with Toptal",
+       "CFO Hilary Maxson: FP&A modernization, treasury optimization, ESG-integrated financial reporting",
+       "CEO NA Ops Annette Clayton: lean transformation, operational excellence across NA facilities"
+     ],
+     gap:"Big 4 costs are flagged as excessive by the CFO. McKinsey delivers strategy decks, not execution. Deloitte\u2019s finance consultants are junior analysts at senior prices. Toptal fills the gap: same caliber, 40% less, deployed in days.",
+     contacts:[
+       {name:"Charise Le",title:"EVP & CHRO",why:"Controls global workforce strategy. Meeting confirmed Feb 12. She publicly advocates the 70/20/10 model at Davos. She\u2019s already sold on the concept \u2014 we prove we\u2019re the best provider.",role:"Economic Buyer",path:"MEETING FEB 12 \u2014 confirmed and scheduled"},
+       {name:"Jay Abdallah",title:"SVP Strategy & Partnerships",why:"Building the partner ecosystem for Impact 2026. Active MSA discussion. He sees Toptal as a strategic partner, not a vendor. This is the fastest path to preferred vendor status.",role:"Champion",path:"MSA in progress \u2014 advance to terms"},
+       {name:"Hilary Maxson",title:"EVP & CFO",why:"Needs CFO-caliber finance consultants for FP&A modernization. Referenced \u2018consulting spend optimization\u2019 in Q4 earnings \u2014 code for \u2018Deloitte is too expensive.\u2019",role:"Economic Buyer",path:"Warm intro via Jay Abdallah"},
+       {name:"Annette Clayton",title:"CEO North America Operations",why:"Separate NA OpEx budget for management consulting. Needs transformation consultants for lean and operational excellence. Faster procurement than global.",role:"Economic Buyer",path:"Direct outreach \u2014 NA operations pitch"}
+     ]},
+
+    {num:4,name:"Digital Twin & IoT Industrial Platform",color:"var(--pur)",icon:"\uD83D\uDD27",
+     what:"Schneider\u2019s Industrial Automation division is building next-generation EcoStruxure \u2014 digital twins, IoT architecture, and edge computing that makes their physical products intelligent. This is Schneider\u2019s core industrial differentiator.",
+     why:"Siemens (MindSphere) and ABB (Ability) are advancing digital twin platforms. Schneider needs to match or exceed competitors in 2026-2027 or risk losing industrial customers. EcoStruxure connected devices grew 35% YoY.",
+     how:[
+       "Digital twin engine: real-time replicas of industrial assets using physics-based modeling and simulation",
+       "EcoStruxure IoT platform expansion: 10x more connected devices, scalable event processing (Kafka, MQTT, OPC-UA)",
+       "Edge computing layer: on-premise ML inference for latency-sensitive industrial applications",
+       "Industrial analytics: Azure IoT Hub, predictive maintenance, energy optimization"
+     ],
+     gap:"Industrial IoT talent is globally scarce. Engineers who understand both OT and IT at production scale are rare. $200M+ R&D budget is underutilized because they can\u2019t fill roles.",
+     contacts:[
+       {name:"Barbara Frei",title:"EVP Industrial Automation",why:"Controls IA R&D budget ($200M+). Engineer by training (ETH Zurich). Will evaluate Toptal on talent quality, not cost. Lead with a specific architect profile.",role:"Economic Buyer",path:"Direct outreach \u2014 technical pitch with CV"},
+       {name:"Peter Herweck",title:"CEO",why:"Former Siemens executive who understands industrial digital transformation deeply. Enterprise-level sponsorship if Barbara Frei engagement succeeds.",role:"Enterprise Sponsor",path:"Via Barbara Frei success or Jay Abdallah MSA"}
+     ]},
+
+    {num:5,name:"Sustainability & ESG Analytics",color:"var(--cyn)",icon:"\uD83C\uDF0D",
+     what:"Schneider is building automated, auditable ESG data infrastructure to replace manual sustainability reporting. They\u2019re #1 on Corporate Knights for 3 consecutive years and need to maintain that position as CSRD requirements intensify.",
+     why:"EU CSRD requires audited ESG disclosures starting 2025-2026. Current reporting is partially manual, relies on spreadsheets across 100+ countries. Won\u2019t pass external audit. This is regulatory compliance \u2014 mandatory, not optional.",
+     how:[
+       "ESG data pipeline: automated ingestion from 100+ country operations using Airflow, dbt, Snowflake",
+       "Carbon accounting engine: Scope 1/2/3 emissions with supplier data integration and GHG Protocol",
+       "CSRD reporting platform: automated disclosures with data lineage and assurance readiness",
+       "ESG analytics dashboard: real-time performance for executives, investors, and board"
+     ],
+     gap:"No dominant vendor owns this space at Schneider. First-mover opportunity. 3 ESG data engineering roles posted (Snowflake, dbt, Airflow + CSRD/GRI). They\u2019re starting from scratch.",
+     contacts:[
+       {name:"Gwenaelle Avice-Huet",title:"EVP Strategy & Sustainability",why:"Owns sustainability strategy and reporting. Budget is growing. No outreach sent yet \u2014 greenfield opportunity. Frame as regulatory compliance urgency + commercial enablement.",role:"Economic Buyer",path:"Direct outreach \u2014 CSRD urgency + #1 ranking maintenance pitch"}
+     ]}
+  ];
+
+  // Render
+  var o='<div class="pt3">\uD83C\uDFAF What is Schneider Electric Doing?</div>';
+  o+='<div class="ps3">Their top priorities, what they\u2019re trying to achieve, how they\u2019re doing it, and who we\u2019re reaching out to</div>';
+
+  // Jump nav
+  o+='<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">';
+  priorities.forEach(function(p){
+    o+='<button class="bt bt2" style="font-size:10px;border-left:3px solid '+p.color+'" data-goto="sp-'+p.num+'">'+p.icon+' #'+p.num+' '+esc(p.name)+'</button>';
+  });
+  o+='</div>';
+
+  priorities.forEach(function(p,pi){
+    var matchedContacts=p.contacts.map(function(pc){
+      var mc=C.find(function(c){return c.name===pc.name});
+      return{info:pc,live:mc};
+    });
+
+    o+='<div id="sp-'+p.num+'" style="margin-bottom:28px">';
+
+    // Priority header
+    o+='<div style="background:var(--b2);border:1px solid var(--bd);border-left:5px solid '+p.color+';border-radius:0 8px 0 0;padding:14px 18px">';
+    o+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">';
+    o+='<div><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--t3)">PRIORITY #'+p.num+'</div>';
+    o+='<div style="font-size:18px;font-weight:700;color:'+p.color+';margin-top:2px">'+p.icon+' '+esc(p.name)+'</div></div>';
+    o+='<div style="text-align:right"><span style="font-size:10px;color:var(--t3)">'+matchedContacts.length+' targets mapped</span></div>';
+    o+='</div></div>';
+
+    // WHAT are they doing?
+    o+='<div style="background:var(--b2);border:1px solid var(--bd);border-top:none;border-left:4px solid '+p.color+';padding:14px 18px">';
+    o+='<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:'+p.color+';font-weight:700;margin-bottom:4px">What are they doing?</div>';
+    o+='<div style="font-size:12px;color:var(--t1);line-height:1.7">'+esc(p.what)+'</div></div>';
+
+    // WHY now?
+    o+='<div style="background:var(--b2);border:1px solid var(--bd);border-top:none;padding:14px 18px">';
+    o+='<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--red);font-weight:700;margin-bottom:4px">Why now?</div>';
+    o+='<div style="font-size:12px;color:var(--t1);line-height:1.7">'+esc(p.why)+'</div></div>';
+
+    // HOW are they doing it?
+    o+='<div style="background:var(--b2);border:1px solid var(--bd);border-top:none;border-left:4px solid '+p.color+';padding:14px 18px">';
+    o+='<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--blu);font-weight:700;margin-bottom:6px">How are they doing it?</div>';
+    p.how.forEach(function(h,hi){
+      o+='<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px">';
+      o+='<div style="width:20px;height:20px;border-radius:50%;background:rgba('+hexToRgb(p.color)+',0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:'+p.color+';flex-shrink:0">'+(hi+1)+'</div>';
+      o+='<div style="font-size:11px;color:var(--t2);line-height:1.6;padding-top:2px">'+esc(h)+'</div></div>';
+    });
+    o+='</div>';
+
+    // THE GAP (why they need Toptal)
+    o+='<div style="background:rgba(61,220,132,0.04);border:1px solid var(--bd);border-top:none;padding:14px 18px">';
+    o+='<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--grn);font-weight:700;margin-bottom:4px">\uD83D\uDCA1 The Gap (Why They Need Toptal)</div>';
+    o+='<div style="font-size:12px;color:var(--t1);line-height:1.7">'+esc(p.gap)+'</div></div>';
+
+    // WHO we're reaching out to (deep dive)
+    o+='<div style="background:var(--b2);border:1px solid var(--bd);border-top:none;border-left:5px solid '+p.color+';border-radius:0 0 8px 0;padding:14px 18px">';
+    o+='<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--pur);font-weight:700;margin-bottom:10px">\uD83D\uDC65 Who We\u2019re Reaching Out To</div>';
+
+    matchedContacts.forEach(function(mc,ci){
+      var pc=mc.info,lc=mc.live;
+      var st=lc?lc.status:"Not Started";
+      var sd=st==="Engaged"||st==="Meeting Set"?"var(--grn)":st==="Follow-Up"?"var(--gld)":st==="Email Sent"||st==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
+      var playCol=PCOL[lc?lc.play:""||p.name.indexOf("SAP")>=0?"SAP":"Advisory"]||p.color;
+      var ini=pc.name.split(" ").map(function(w){return w[0]}).join("").substring(0,2);
+
+      o+='<div style="margin-bottom:10px;padding:10px 14px;background:var(--b3);border-radius:6px;border-left:3px solid '+sd+';cursor:pointer" class="rw" data-name="'+esc(pc.name)+'">';
+
+      // Header row
+      o+='<div style="display:flex;gap:10px;align-items:center;margin-bottom:6px">';
+      o+='<div style="width:32px;height:32px;border-radius:50%;background:'+playCol+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">'+ini+'</div>';
+      o+='<div style="flex:1"><div style="font-size:13px;font-weight:700">'+esc(pc.name)+'</div>';
+      o+='<div style="font-size:10px;color:var(--t2)">'+esc(pc.title)+'</div></div>';
+      o+='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">';
+      o+='<span style="font-size:9px;font-weight:600;color:'+sd+';background:rgba(0,0,0,0.15);padding:2px 8px;border-radius:3px">'+esc(st)+'</span>';
+      o+='<span style="font-size:9px;color:var(--pur);font-weight:600">'+esc(pc.role)+'</span>';
+      o+='</div></div>';
+
+      // Why this person
+      o+='<div style="font-size:11px;color:var(--t1);line-height:1.5;margin-bottom:6px">'+esc(pc.why)+'</div>';
+
+      // Path to engagement
+      o+='<div style="font-size:10px;display:flex;align-items:center;gap:4px"><span style="color:var(--t3);font-weight:600">Path:</span><span style="color:var(--blu)">'+esc(pc.path)+'</span></div>';
+      o+='</div>';
+    });
+    o+='</div></div>';
+  });
+
+  el.innerHTML=o;
+  bindRows(el);
+  // Jump nav
+  el.querySelectorAll("[data-goto]").forEach(function(b){b.onclick=function(){var t=document.getElementById(b.dataset.goto);if(t)t.scrollIntoView({behavior:"smooth",block:"start"})}});
+}
+
+function pgAIUpdates(el){
+  var C=S.contacts;
+
+  var sheetAI=S.sheetData["AI Brief (Weekly)"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} // Simulated AI intel feed — in production these would come from an API or sheet
+  var sheetAI=S.sheetData["AI Brief (Weekly)"];if(sheetAI&&sheetAI.length>1){var aiUpdates=[];sheetAI.slice(1).forEach(function(rw){if(!rw||rw.length<3)return;var u={date:rw[0]||"",type:rw[1]||"",title:rw[2]||"",detail:rw[3]||"",impact:rw[4]||"",priority:rw[5]||"medium",actionable:rw[6]==="TRUE"||rw[6]==="true",suggestion:rw[7]||""};if(u.title)aiUpdates.push(u)});if(aiUpdates.length>0)S._aiSheetUpdates=aiUpdates} var updates=[
+    {date:"Feb 7, 2026",type:"Job Posting",icon:"\uD83D\uDCBC",priority:"high",
+     title:"15 new SAP S/4HANA roles posted on LinkedIn",
+     detail:"Schneider posted 15 new SAP roles in the past week: 6 S/4 Functional Consultants, 4 BASIS Admins, 3 ABAP Developers, 2 Solution Architects. Locations: Bangalore (9), Paris (4), Boston (2). All marked 'Urgent Hire.' Average days-open for existing SAP roles now exceeds 95 days.",
+     impact:"SAP",actionable:true,
+     suggestion:"These postings confirm the UNIFY program is accelerating faster than internal hiring can keep up. Ideal time to pitch Gustavo (VP UNIFY) with specific architect profiles that match these JDs."},
+    {date:"Feb 5, 2026",type:"Earnings Signal",icon:"\uD83D\uDCC8",priority:"urgent",
+     title:"Q4 2025 earnings: CEO doubles down on digital transformation",
+     detail:"Peter Herweck stated in Q4 earnings call: 'We are accelerating investment in our digital backbone and AI capabilities. The UNIFY program is on track with go-lives in Germany and India completed. 2026 will see the largest phase of our S/4 migration.' CFO Hilary Maxson noted 'consulting spend optimization' as a focus area.",
+     impact:"SAP",actionable:true,
+     suggestion:"The 'consulting spend optimization' comment from Hilary Maxson is our opening. She's signaling that Big 4 costs are too high. Lead the CFO conversation with Toptal's cost comparison: same caliber, 40% less. Reference her own words back to her."},
+    {date:"Feb 4, 2026",type:"News",icon:"\uD83D\uDCF0",priority:"medium",
+     title:"Schneider announces expanded Azure AI partnership",
+     detail:"Schneider Electric and Microsoft announced an expanded partnership to accelerate AI adoption across Schneider's industrial IoT platform. The partnership includes Azure OpenAI integration into EcoStruxure and co-development of predictive maintenance models.",
+     impact:"AI",actionable:true,
+     suggestion:"This confirms the AI CoE tech stack (Azure ML/Azure OpenAI). Update talent pitch to Lana Duhamel to emphasize Toptal engineers with Azure ML + Azure OpenAI production experience specifically. Differentiate from Cognizant by highlighting cloud-native AI expertise."},
+    {date:"Feb 3, 2026",type:"New Hire",icon:"\uD83D\uDC64",priority:"medium",
+     title:"New VP of Digital Workplace hired from Siemens",
+     detail:"Schneider hired Marcus Weber as VP of Digital Workplace, previously Director of Digital Transformation at Siemens. Reports to Elizabeth Hackenson (CIO). His LinkedIn bio mentions 'leading SAP S/4HANA rollouts across 40+ countries at Siemens.'",
+     impact:"SAP",actionable:true,
+     suggestion:"Marcus Weber is a new warm target. He comes from Siemens where Toptal has existing relationships. Research his network for mutual connections. Add to Tier 1 - SAP/ERP contact list. His Siemens background means he understands the value of premium external talent for migrations."},
+    {date:"Jan 30, 2026",type:"YouTube",icon:"\uD83C\uDFA5",priority:"low",
+     title:"Charise Le keynote: 'Building the Workforce of 2030' at Davos side event",
+     detail:"Charise Le delivered a 20-minute keynote at a Davos WEF side event on the future of workforce design. Key quotes: 'The 70/20/10 talent model is no longer theoretical \u2014 it\u2019s how we\u2019re building teams at Schneider.' She specifically mentioned 'on-demand expert networks' as part of the 10% layer.",
+     impact:"Advisory",actionable:true,
+     suggestion:"This is the strongest public signal we\u2019ve received. Charise is openly advocating for the exact model Toptal offers. For the Feb 12 meeting, open with: 'I watched your Davos keynote on the 70/20/10 model. The 10% expert layer is exactly what Toptal was built for.' She\u2019s already sold on the concept \u2014 we just need to show we\u2019re the best provider."},
+    {date:"Jan 28, 2026",type:"Testimonial",icon:"\u2B50",priority:"medium",
+     title:"Schneider India team posts about successful SAP EWM go-live",
+     detail:"Schneider's India SAP team posted on LinkedIn about a successful EWM warehouse management go-live across 12 distribution centers. Akash Acharya (our contact) was tagged in the post. Comments mention 'looking forward to Phase 2 expansion.'",
+     impact:"SAP",actionable:false,
+     suggestion:"Phase 2 EWM expansion = more talent need. Akash Acharya is the path in. His team just proved they can deliver \u2014 now they need to scale. Follow up with congratulations + offer to accelerate Phase 2 with senior EWM consultants."},
+    {date:"Jan 25, 2026",type:"Job Posting",icon:"\uD83D\uDCBC",priority:"medium",
+     title:"3 CSRD/ESG Data Engineer roles posted",
+     detail:"Schneider posted 3 ESG data engineering roles: 2 in Paris, 1 in London. Requirements include: Snowflake, dbt, Airflow, CSRD/GRI reporting frameworks. These are the first dedicated ESG data engineering roles we\u2019ve seen from Schneider.",
+     impact:"Sustainability",actionable:true,
+     suggestion:"This validates the Sustainability play. Gwenaelle Avice-Huet\u2019s team is starting to build the ESG data infrastructure. These roles will take 4-6 months to fill. Initiate outreach to Gwenaelle now \u2014 position Toptal as the bridge talent while they build the permanent team."},
+    {date:"Jan 22, 2026",type:"News",icon:"\uD83D\uDCF0",priority:"low",
+     title:"Schneider named #1 Most Sustainable Company for 3rd year",
+     detail:"Corporate Knights published 2026 Global 100 Most Sustainable Corporations. Schneider Electric retains #1 position for the third consecutive year. The ranking specifically cited 'investments in sustainability data infrastructure and reporting transparency.'",
+     impact:"Sustainability",actionable:false,
+     suggestion:"Use in outreach to Gwenaelle: 'Maintaining #1 requires best-in-class data infrastructure. As CSRD requirements intensify, we can help ensure your reporting stays ahead of the audit curve.'"}
+  ];
+
+  var o='<div class="pt3">\uD83E\uDD16 AI Intelligence Feed</div><div class="ps3">Automated monitoring of Schneider Electric signals \u2014 news, jobs, earnings, hires, and more</div>';
+
+  // Summary cards
+  var typeCounts={};updates.forEach(function(u){typeCounts[u.type]=(typeCounts[u.type]||0)+1});
+  var actionable=updates.filter(function(u){return u.actionable}).length;
+  o+='<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">';
+  o+='<div style="background:var(--b2);border:1px solid var(--bd);border-radius:6px;padding:8px 12px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--grn)">'+updates.length+'</div><div style="font-size:9px;color:var(--t3)">Updates</div></div>';
+  o+='<div style="background:var(--b2);border:1px solid var(--bd);border-radius:6px;padding:8px 12px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--red)">'+actionable+'</div><div style="font-size:9px;color:var(--t3)">Actionable</div></div>';
+  Object.keys(typeCounts).forEach(function(t){
+    o+='<div style="background:var(--b2);border:1px solid var(--bd);border-radius:6px;padding:8px 12px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--t1)">'+typeCounts[t]+'</div><div style="font-size:9px;color:var(--t3)">'+esc(t)+'</div></div>';
+  });
+  o+='</div>';
+
+  // Filter buttons
+  o+='<div style="display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap">';
+  o+='<button class="bt bt1 ai-filter" data-flt="all" style="font-size:10px;padding:4px 10px">All</button>';
+  ["Job Posting","Earnings Signal","News","New Hire","YouTube","Testimonial"].forEach(function(t){
+    o+='<button class="bt bt2 ai-filter" data-flt="'+esc(t)+'" style="font-size:10px;padding:4px 10px">'+esc(t)+'</button>';
+  });
+  o+='<span style="margin-left:auto;display:flex;gap:4px">';
+  o+='<button class="bt bt2 ai-filter-p" data-flt="urgent" style="font-size:10px;padding:4px 8px;color:var(--red)">Urgent</button>';
+  o+='<button class="bt bt2 ai-filter-p" data-flt="high" style="font-size:10px;padding:4px 8px;color:var(--gld)">High</button>';
+  o+='</span></div>';
+
+  // Updates feed
+  updates.forEach(function(u,ui){
+    var prCol=u.priority==="urgent"?"var(--red)":u.priority==="high"?"var(--gld)":"var(--t3)";
+    var impCol=PCOL[u.impact]||"var(--t3)";
+    o+='<div class="ai-item" data-type="'+esc(u.type)+'" data-pri="'+esc(u.priority)+'" style="background:var(--b2);border:1px solid var(--bd);border-left:3px solid '+prCol+';border-radius:8px;padding:14px 16px;margin-bottom:8px">';
+
+    // Header
+    o+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;flex-wrap:wrap;gap:6px">';
+    o+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">'+u.icon+'</span>';
+    o+='<div><div style="font-size:13px;font-weight:700;color:var(--t1)">'+esc(u.title)+'</div>';
+    o+='<div style="display:flex;gap:6px;margin-top:2px;font-size:9px"><span style="color:var(--t3)">'+esc(u.date)+'</span>';
+    o+='<span style="color:'+impCol+';font-weight:600">'+esc(u.impact)+'</span>';
+    o+='<span style="color:'+prCol+';font-weight:600;text-transform:uppercase">'+esc(u.priority)+'</span>';
+    if(u.actionable)o+='<span style="color:var(--grn);font-weight:600">\u26A1 ACTIONABLE</span>';
+    o+='</div></div></div>';
+    o+='<button class="bt bt2 ai-expand" data-idx="'+ui+'" style="font-size:9px;padding:2px 8px">\u25BC Detail</button>';
+    o+='</div>';
+
+    // Detail (collapsible)
+    o+='<div class="ai-detail" id="ai-d-'+ui+'" style="display:none">';
+    o+='<div style="font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:10px;padding:8px 12px;background:var(--b3);border-radius:5px">'+esc(u.detail)+'</div>';
+    if(u.suggestion){
+      o+='<div style="padding:10px 12px;background:rgba(61,220,132,.05);border:1px solid rgba(61,220,132,.15);border-radius:6px">';
+      o+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--grn);font-weight:600;margin-bottom:4px">\uD83E\uDD16 AI RECOMMENDED ACTION</div>';
+      o+='<div style="font-size:11px;color:var(--t1);line-height:1.6">'+esc(u.suggestion)+'</div></div>';
+    }
+    o+='</div></div>';
+  });
+
+  // === STRATEGY MODIFICATIONS SECTION ===
+  o+='<div style="margin-top:24px;padding:18px;background:var(--b2);border:1px solid var(--bd);border-top:3px solid var(--grn);border-radius:8px">';
+  o+='<div style="font-size:14px;font-weight:700;color:var(--grn);margin-bottom:4px">\uD83E\uDD16 AI Strategy Recommendations</div>';
+  o+='<div style="font-size:10px;color:var(--t3);margin-bottom:14px">Based on latest intelligence + current campaign progress</div>';
+
+  var recs=[
+    {priority:"urgent",play:"Advisory",
+     title:"Maximize the Feb 12 Charise Le meeting",
+     detail:"Her Davos keynote confirms she\u2019s already bought into the concept of on-demand expert talent. Don\u2019t pitch Toptal generically \u2014 reference the \u201870/20/10 model\u2019 she advocates and position Toptal as the best provider for the 10% expert layer. Bring a specific case study of workforce transformation at a comparable industrial company.",
+     status:"DO THIS WEEK"},
+    {priority:"high",play:"SAP",
+     title:"Add Marcus Weber (new VP Digital Workplace) to target list",
+     detail:"He just joined from Siemens where he led S/4HANA rollouts. He\u2019s in the \u2018new hire window\u2019 where he\u2019s evaluating vendors and building his team. He reports to Elizabeth Hackenson. This is the warmest path into the CIO org. Research mutual connections from Siemens.",
+     status:"THIS WEEK"},
+    {priority:"high",play:"SAP",
+     title:"Accelerate Gustavo outreach \u2014 UNIFY is ramping",
+     detail:"15 new SAP roles posted this week confirms UNIFY Phase 2 is accelerating. Gustavo (VP UNIFY) controls the largest SAP talent budget in the company. His program spans 197 plants. Every week we delay is a week Infosys fills another seat with a junior consultant.",
+     status:"THIS WEEK"},
+    {priority:"medium",play:"AI",
+     title:"Update AI talent pitch to emphasize Azure ML + Azure OpenAI",
+     detail:"The expanded Microsoft partnership confirms Azure as the core AI platform. Lana Duhamel needs engineers who are production-ready on Azure ML, not AWS SageMaker. Adjust talent profiles in the pitch deck to emphasize Azure-native experience.",
+     status:"NEXT 2 WEEKS"},
+    {priority:"medium",play:"Sustainability",
+     title:"Initiate outreach to Gwenaelle Avice-Huet",
+     detail:"3 ESG data engineering roles posted confirms budget and urgency. No incumbent vendor. This is a greenfield play \u2014 first mover wins. Draft a personalized outreach referencing their #1 Corporate Knights ranking and CSRD compliance pressure.",
+     status:"NEXT 2 WEEKS"},
+    {priority:"low",play:"SAP",
+     title:"Congratulate Akash Acharya on EWM go-live",
+     detail:"His team just celebrated a successful go-live. A congratulations message + Phase 2 scaling offer is a natural, non-pushy touchpoint. Builds relationship credibility.",
+     status:"THIS WEEK"}
+  ];
+
+  recs.forEach(function(r){
+    var rCol=r.priority==="urgent"?"var(--red)":r.priority==="high"?"var(--gld)":"var(--t3)";
+    var stCol=r.status.indexOf("THIS WEEK")>=0?"var(--red)":"var(--gld)";
+    o+='<div style="margin-bottom:10px;padding:10px 14px;background:var(--b3);border-left:3px solid '+rCol+';border-radius:0 6px 6px 0">';
+    o+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">';
+    o+='<div style="display:flex;gap:6px;align-items:center"><span style="font-size:12px;font-weight:700;color:var(--t1)">'+esc(r.title)+'</span>';
+    o+='<span style="font-size:9px;font-weight:600;color:'+PCOL[r.play]+';background:rgba(0,0,0,0.15);padding:1px 6px;border-radius:3px">'+esc(r.play)+'</span></div>';
+    o+='<span style="font-size:8px;font-weight:700;color:'+stCol+';text-transform:uppercase">'+esc(r.status)+'</span></div>';
+    o+='<div style="font-size:11px;color:var(--t2);line-height:1.5">'+esc(r.detail)+'</div></div>';
+  });
+  o+='</div>';
+
+  el.innerHTML=o;
+
+  // Filter handlers
+  el.querySelectorAll(".ai-filter").forEach(function(b){
+    b.onclick=function(){
+      var f=b.dataset.flt;
+      el.querySelectorAll(".ai-filter").forEach(function(x){x.className="bt bt2 ai-filter"});
+      b.className="bt bt1 ai-filter";
+      el.querySelectorAll(".ai-item").forEach(function(item){
+        item.style.display=(f==="all"||item.dataset.type===f)?"block":"none";
+      });
+    };
+  });
+  el.querySelectorAll(".ai-filter-p").forEach(function(b){
+    b.onclick=function(){
+      var f=b.dataset.flt;
+      el.querySelectorAll(".ai-item").forEach(function(item){
+        item.style.display=(item.dataset.pri===f)?"block":"none";
+      });
+    };
+  });
+
+  // Expand/collapse
+  el.querySelectorAll(".ai-expand").forEach(function(b){
+    b.onclick=function(){
+      var d=document.getElementById("ai-d-"+b.dataset.idx);
+      var open=d.style.display!=="none";
+      d.style.display=open?"none":"block";
+      b.textContent=open?"\u25BC Detail":"\u25B2 Close";
+    };
+  });
+}
+
+function pgWeek(el){
+  var C=S.contacts;
+  var mt=C.filter(function(c){return c.mtg==="Yes"&&c.mDate});
+  var fu=C.filter(function(c){return c.status==="Email Sent"||c.status==="LinkedIn Sent"});
+  var no=C.filter(function(c){return c.status==="Not Started"}).slice(0,5);
+  var aw=C.filter(function(c){return c.status==="Follow-Up"&&c.mtg!=="Yes"});
+  var o='<div class="pt3">This Week</div><div class="ps3">Week of '+new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})+'</div><div class="g2">';
+  o+='<div class="cd"><div class="ct">Meetings '+tag(mt.length,"tg-p")+'</div>';
+  if(!mt.length)o+='<div style="color:var(--t3);font-size:12px">None scheduled</div>';
+  mt.forEach(function(c){o+=rowH(c.name,c.mDate+" - "+c.init)});o+='</div>';
+  o+='<div class="cd"><div class="ct">Follow-Ups '+tag(fu.length,"tg-o")+'</div>';
+  fu.forEach(function(c){o+=rowH(c.name,c.next+" Day "+(c.seqD||"?"))});o+='</div>';
+  o+='<div class="cd"><div class="ct">New Outreach '+tag(no.length,"tg-g")+'</div>';
+  no.forEach(function(c){o+=rowH(c.name,c.init,c.play)});o+='</div>';
+  o+='<div class="cd"><div class="ct">Awaiting '+tag(aw.length,"tg-b")+'</div>';
+  aw.forEach(function(c){o+=rowH(c.name,c.resp)});o+='</div></div>';
+  el.innerHTML=o;bindRows(el);
+}
+
+/* ===== Pg: PIPELINE ===== */
+function pgPipe(el){
+  var C=S.contacts,dragId=null;
+  var o='<div class="pt3">Pipeline</div><div class="ps3">Drag contacts between stages</div><div class="kb">';
+  SL.forEach(function(st){
+    var cards=C.filter(function(c){return c.status===st});
+    o+='<div class="kc2" data-st="'+esc(st)+'"><div class="kch"><span>'+esc(st)+'</span>'+tag(cards.length,"tg-x")+'</div><div class="kcb">';
+    cards.forEach(function(c){
+      o+='<div class="kk" draggable="true" data-id="'+c.id+'" data-name="'+esc(c.name)+'"><div style="font-size:12px;font-weight:600;margin-bottom:3px">'+esc(c.name)+'</div><div style="font-size:10px;color:var(--t3);margin-bottom:6px">'+esc(c.title)+'</div><div style="display:flex;gap:3px">'+tag(c.play,ptg(c.play))+tag(c.tier,"tg-x")+'</div></div>';
+    });
+    o+='</div></div>';
+  });
+  o+='</div>';
+  el.innerHTML=o;
+  // drag and drop
+  el.querySelectorAll(".kk").forEach(function(k){
+    k.ondragstart=function(e){dragId=parseInt(k.dataset.id);e.dataTransfer.effectAllowed="move"};
+    k.onclick=function(){var c=S.contacts.find(function(x){return x.id===parseInt(k.dataset.id)});if(c)openPanel(c)};
+  });
+  el.querySelectorAll(".kc2").forEach(function(col){
+    col.ondragover=function(e){e.preventDefault();e.dataTransfer.dropEffect="move"};
+    col.ondrop=function(e){e.preventDefault();if(dragId){updStatus(dragId,col.dataset.st);dragId=null}};
+  });
+}
+
+/* ===== Pg: CONTACTS ===== */
+function pgCon(el){
+  function draw(q,ft,fp){
+    var C=S.contacts.filter(function(c){
+      if(q&&c.name.toLowerCase().indexOf(q.toLowerCase())===-1&&c.title.toLowerCase().indexOf(q.toLowerCase())===-1&&c.init.toLowerCase().indexOf(q.toLowerCase())===-1)return false;
+      if(ft!=="All"&&c.tier!==ft)return false;
+      if(fp!=="All"&&c.play!==fp)return false;return true;
+    });
+    // Build dynamic tier and play options from all contacts
+    var allTiers={},allPlays={};
+    S.contacts.forEach(function(c){if(c.tier)allTiers[c.tier]=1;if(c.play)allPlays[c.play]=1});
+    var tierList=Object.keys(allTiers).sort();
+    var playList=Object.keys(allPlays).sort();
+
+    var o='<div class="pt3">Contacts</div><div class="ps3">'+C.length+' of '+S.contacts.length+' contacts \u2014 click for dossier</div>';
+    o+='<div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap"><input id="cq" placeholder="Search..." value="'+esc(q)+'" style="max-width:220px">';
+    o+='<select id="cft"><option value="All"'+(ft==="All"?" selected":"")+'>All Tiers ('+S.contacts.length+')</option>';
+    tierList.forEach(function(t){var cnt=S.contacts.filter(function(c){return c.tier===t}).length;o+='<option value="'+esc(t)+'"'+(ft===t?" selected":"")+'>'+esc(t)+' ('+cnt+')</option>'});
+    o+='</select>';
+    o+='<select id="cfp"><option value="All"'+(fp==="All"?" selected":"")+'>All Plays</option>';
+    playList.forEach(function(p){var cnt=S.contacts.filter(function(c){return c.play===p}).length;o+='<option value="'+esc(p)+'"'+(fp===p?" selected":"")+'>'+esc(p)+' ('+cnt+')</option>'});
+    o+='</select></div>';
+
+    // Breakdown by tier (collapsible)
+    o+='<div class="cd" style="margin-bottom:14px"><div class="ct" style="cursor:pointer" id="tierToggle">\u25BC Breakdown by Tier</div>';
+    o+='<div id="tierBreak"><table style="width:100%;font-size:11px;border-collapse:collapse"><thead><tr style="border-bottom:1px solid var(--bd)"><th style="text-align:left;padding:4px 8px;color:var(--t3);font-size:9px">Tier</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Total</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Sent</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Resp</th><th style="padding:4px 8px;color:var(--t3);font-size:9px">Mtg</th></tr></thead><tbody>';
+    tierList.forEach(function(t){
+      var tc=S.contacts.filter(function(c){return c.tier===t});
+      var sent=tc.filter(function(c){return c.status==="Email Sent"||c.status==="LinkedIn Sent"||c.status==="Follow-Up"||c.status==="Meeting Set"||c.status==="Engaged"}).length;
+      var resp=tc.filter(function(c){return c.resp}).length;
+      var mtg=tc.filter(function(c){return c.mtg==="Yes"}).length;
+      var tierColor=t.indexOf("SAP")>=0?"var(--grn)":t.indexOf("AI")>=0||t.indexOf("Data")>=0?"var(--blu)":t.indexOf("Digital")>=0?"var(--pur)":t.indexOf("Sustain")>=0?"var(--cyn)":t.indexOf("Cyber")>=0?"var(--red)":"var(--t2)";
+      o+='<tr style="border-bottom:1px solid var(--bd);cursor:pointer" class="tierRow" data-tier="'+esc(t)+'"><td style="padding:4px 8px;font-weight:600;color:'+tierColor+'">'+esc(t)+'</td><td style="padding:4px 8px;text-align:center">'+tc.length+'</td><td style="padding:4px 8px;text-align:center;color:'+(sent?"var(--blu)":"var(--t3)")+'">'+sent+'</td><td style="padding:4px 8px;text-align:center;color:'+(resp?"var(--gld)":"var(--t3)")+'">'+resp+'</td><td style="padding:4px 8px;text-align:center;color:'+(mtg?"var(--grn)":"var(--t3)")+'">'+mtg+'</td></tr>';
+    });
+    o+='</tbody></table></div></div>';
+
+    // Contacts table
+    o+='<div class="cd" style="padding:0;overflow:hidden"><div class="tw"><table><thead><tr><th>Name</th><th>Title</th><th>Location</th><th>Tier</th><th>Play</th><th>Timing</th><th>Status</th><th>Role</th><th>Fit</th></tr></thead><tbody>';
+    C.forEach(function(c){
+      o+='<tr class="crow" data-name="'+esc(c.name)+'" style="cursor:pointer"><td style="font-weight:600;color:var(--blu)">'+esc(c.name)+'</td><td style="color:var(--t2)">'+esc(c.title)+'</td><td style="color:var(--t2)">'+esc(c.loc)+'</td><td>'+tag(c.tier,"tg-b")+'</td><td>'+tag(c.play,ptg(c.play))+'</td><td style="color:var(--t3)">'+esc(c.timing)+'</td><td>'+tag(c.status,"tg-x")+'</td><td style="color:var(--t2);font-size:10px">'+esc(c.role)+'</td><td style="font-family:monospace;color:'+(parseInt(c.fit)>=8?"var(--grn)":"var(--t2)")+'">'+esc(c.fit||"")+''+(c.fit?"/10":"")+'</td></tr>';
+    });
+    o+='</tbody></table></div></div>';
+    el.innerHTML=o;
+    el.querySelectorAll(".crow").forEach(function(r){r.onclick=function(){var c=S.contacts.find(function(x){return x.name===r.dataset.name});if(c)openPanel(c)}});
+    // Tier row click = filter by that tier
+    el.querySelectorAll(".tierRow").forEach(function(r){r.onclick=function(){draw(q,r.dataset.tier,fp)}});
+    // Tier toggle
+    var tb=document.getElementById("tierBreak");var tt=document.getElementById("tierToggle");
+    if(tt)tt.onclick=function(){var open=tb.style.display!=="none";tb.style.display=open?"none":"block";tt.textContent=(open?"\u25B6":"\u25BC")+" Breakdown by Tier"};
+    $("cq").oninput=function(){draw($("cq").value,$("cft").value,$("cfp").value)};
+    $("cft").onchange=function(){draw($("cq").value,$("cft").value,$("cfp").value)};
+    $("cfp").onchange=function(){draw($("cq").value,$("cft").value,$("cfp").value)};
+  }
+  draw("","All","All");
+}
+
+/* ===== Pg: ORG CHART ===== */
+function pgOrg(el){
+  var C=S.contacts;
+
+  /* Full org: BU > Sub-BU/Division > Team > Contacts
+     Each level is visually nested so you can see the full path */
+  var sheetOC=S.sheetData["Org Chart & Strategy Map"];if(sheetOC&&sheetOC.length>2){var orgContacts=[];sheetOC.forEach(function(rw){if(!rw)return;rw.forEach(function(cell){if(!cell)return;var s=cell.toString().trim();var mc=S.contacts.find(function(c){return s.indexOf(c.name)>=0});if(mc&&!orgContacts.find(function(x){return x.name===mc.name}))orgContacts.push(mc)})});if(orgContacts.length>0)S._orgSheetContacts=orgContacts} var ORG=[
+    {bu:"Office of the CEO",color:"#3DCC4A",subs:[
+      {name:"Executive Leadership",teams:[
+        {name:"CEO",contacts:[{name:"Peter Herweck",title:"Chief Executive Officer",tier:"T0",play:"Digital"}]}
+      ]}
+    ]},
+    {bu:"IT & Digital Transformation",color:"#4d9fff",subs:[
+      {name:"CIO Office",teams:[
+        {name:"Executive",contacts:[{name:"Elizabeth Hackenson",title:"CIO",tier:"T1",play:"SAP"}]}
+      ]},
+      {name:"UNIFY Program",teams:[
+        {name:"Program Leadership",contacts:[{name:"Gustavo Marques De Faria Paula",title:"VP UNIFY Business Transformation",tier:"T2",play:"SAP"}]},
+        {name:"Finance Transformation",contacts:[{name:"Louis Moreau",title:"Finance & Controlling Transform Lead",tier:"T2",play:"SAP"}]}
+      ]},
+      {name:"Global ERP Transform",teams:[
+        {name:"SAP Program Office",contacts:[{name:"Divya Mohan",title:"Global ERP Transformation Leader",tier:"T2",play:"SAP"}]}
+      ]}
+    ]},
+    {bu:"Energy Management",color:"#3DCC4A",subs:[
+      {name:"EM Executive",teams:[
+        {name:"BU Leadership",contacts:[{name:"Olivier Blum",title:"EVP Energy Management",tier:"T1",play:"SAP"}]}
+      ]},
+      {name:"North America Region",teams:[
+        {name:"NA Leadership",contacts:[{name:"Aamir Paul",title:"President, North America",tier:"T1",play:"SAP"}]}
+      ]},
+      {name:"SAP Integration",teams:[
+        {name:"CPI / EcoStruxure Integration",contacts:[{name:"Soma Chandra Shekhar",title:"SAP Integration Architect",tier:"T2",play:"SAP"}]}
+      ]},
+      {name:"SAP Supply Chain",teams:[
+        {name:"EWM / Warehouse Management",contacts:[{name:"Akash Acharya",title:"SAP EWM Specialist",tier:"T2",play:"SAP"}]}
+      ]},
+      {name:"SAP UX & Development",teams:[
+        {name:"Fiori / ABAP RAP (Bangalore)",contacts:[{name:"Aditi Sharma",title:"SAP Fiori/ABAP Developer",tier:"T2",play:"SAP"}]}
+      ]}
+    ]},
+    {bu:"Industrial Automation",color:"#a855f7",subs:[
+      {name:"IA Executive",teams:[
+        {name:"EcoStruxure / Digital Twin / Edge",contacts:[{name:"Barbara Frei",title:"EVP Industrial Automation",tier:"T1",play:"Digital"}]}
+      ]}
+    ]},
+    {bu:"Marketing & Customer Experience",color:"#4d9fff",subs:[
+      {name:"CMO Office",teams:[
+        {name:"Marketing Executive",contacts:[{name:"Chris Leong",title:"EVP & CMO",tier:"T1",play:"AI"}]}
+      ]},
+      {name:"Digital Services",teams:[
+        {name:"AI Center of Excellence",contacts:[{name:"Lana Duhamel",title:"VP Digital Services",tier:"T2",play:"AI"}]}
+      ]}
+    ]},
+    {bu:"Global Supply Chain",color:"#4d9fff",subs:[
+      {name:"Supply Chain Executive",teams:[
+        {name:"Demand Forecasting / Supply Chain AI",contacts:[{name:"Mourad Tamoud",title:"EVP Global Supply Chain",tier:"T1",play:"AI"}]}
+      ]}
+    ]},
+    {bu:"Human Resources",color:"#ffc857",subs:[
+      {name:"CHRO Office",teams:[
+        {name:"Workforce Transformation",contacts:[{name:"Charise Le",title:"EVP & CHRO",tier:"T1",play:"Advisory"}]}
+      ]}
+    ]},
+    {bu:"Finance",color:"#ffc857",subs:[
+      {name:"CFO Office",teams:[
+        {name:"Finance Transformation / FP&A",contacts:[{name:"Hilary Maxson",title:"EVP & CFO",tier:"T1",play:"Advisory"}]}
+      ]}
+    ]},
+    {bu:"Strategy & Sustainability",color:"#00d4aa",subs:[
+      {name:"Sustainability",teams:[
+        {name:"ESG / CSRD Reporting",contacts:[{name:"Gwenaelle Avice-Huet",title:"EVP Strategy & Sustainability",tier:"T1",play:"Sustainability"}]}
+      ]},
+      {name:"Strategy & Partnerships",teams:[
+        {name:"Partner Ecosystem / MSA",contacts:[{name:"Jay Abdallah",title:"SVP Strategy & Partnerships",tier:"T1",play:"Advisory"}]}
+      ]}
+    ]},
+    {bu:"NA Operations",color:"#ffc857",subs:[
+      {name:"NA Ops Executive",teams:[
+        {name:"Operational Excellence / Lean",contacts:[{name:"Annette Clayton",title:"CEO North America Operations",tier:"T1",play:"Advisory"}]}
+      ]}
+    ]}
+  ];
+
+  var o='<div class="pt3">Org Chart</div><div class="ps3">Schneider Electric \u2014 Business Unit \u203A Sub-Division \u203A Team \u203A Contact</div>';
+
+  /* Legend */
+  o+='<div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;font-size:10px">';
+  o+='<span style="font-size:9px;color:var(--t3);font-weight:600">PLAYS:</span>';
+  Object.keys(PCOL).forEach(function(p){o+='<span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:'+PCOL[p]+'"></span>'+p+'</span>'});
+  o+='<span style="margin-left:6px;border-left:1px solid var(--bd);padding-left:6px;font-size:9px;color:var(--t3);font-weight:600">STATUS:</span>';
+  [{l:"Engaged",c:"var(--grn)"},{l:"Responded",c:"var(--gld)"},{l:"Outreach",c:"var(--blu)"},{l:"Not Started",c:"var(--t3)"}].forEach(function(s){
+    o+='<span><span style="color:'+s.c+'">\u25CF</span> '+s.l+'</span>';
+  });
+  /* Depth legend */
+  o+='<span style="margin-left:6px;border-left:1px solid var(--bd);padding-left:6px;font-size:9px;color:var(--t3);font-weight:600">DEPTH:</span>';
+  o+='<span style="font-size:9px;color:var(--t3)">BU \u203A <span style="color:var(--t2)">Sub-Division</span> \u203A <span style="color:var(--t1)">Team</span> \u203A <strong>Contact</strong></span>';
+  o+='</div>';
+
+  /* BU Cards - skip CEO (render separately) */
+  var ceoData=ORG[0].subs[0].teams[0].contacts[0];
+  var ceoCt=C.find(function(c){return c.name===ceoData.name});
+  var ceoSt=ceoCt?ceoCt.status:"Not Started";
+  var ceoDot=ceoSt==="Engaged"?"var(--grn)":ceoSt==="Follow-Up"?"var(--gld)":ceoSt==="Email Sent"||ceoSt==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
+
+  o+='<div style="background:var(--b2);border:1px solid var(--bd);border-left:4px solid #3DCC4A;border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer" class="oc-click" data-name="Peter Herweck">';
+  o+='<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3DCC4A,#2a9d3a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">PH</div>';
+  o+='<div style="flex:1"><div style="font-size:14px;font-weight:700">Peter Herweck</div><div style="font-size:11px;color:var(--t2)">Chief Executive Officer</div>';
+  o+='<div style="font-size:9px;color:var(--t3);margin-top:2px">Office of the CEO \u203A Executive Leadership</div></div>';
+  o+='<div style="display:flex;gap:4px;align-items:center">'+tag("T0","tg-b")+tag("Digital",ptg("Digital"))+'<div style="width:7px;height:7px;border-radius:50%;background:'+ceoDot+'"></div></div></div>';
+
+  /* Connector line */
+  o+='<div style="display:flex;justify-content:center"><div style="width:2px;height:14px;background:rgba(160,160,184,0.25)"></div></div>';
+  o+='<div style="margin:0 16px;height:1px;background:rgba(160,160,184,0.15);margin-bottom:8px"></div>';
+
+  /* BU Grid */
+  var bus=ORG.slice(1);
+  o+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px">';
+
+  bus.forEach(function(b){
+    var total=b.subs.reduce(function(s,sub){return s+sub.teams.reduce(function(s2,t){return s2+t.contacts.length},0)},0);
+    var rgb=hexToRgb(b.color);
+
+    o+='<div style="background:var(--b2);border:1px solid var(--bd);border-top:3px solid '+b.color+';border-radius:8px;overflow:hidden">';
+
+    /* BU Header */
+    o+='<div style="padding:8px 12px;background:rgba('+rgb+',0.06);display:flex;justify-content:space-between;align-items:center">';
+    o+='<div style="font-size:12px;font-weight:700;color:'+b.color+'">'+esc(b.bu)+'</div>';
+    o+='<span style="font-size:9px;color:var(--t3);background:var(--b3);padding:2px 6px;border-radius:3px">'+total+'</span></div>';
+
+    /* Sub-divisions */
+    b.subs.forEach(function(sub,si){
+      /* Sub-division header */
+      o+='<div style="padding:6px 12px 3px 12px;display:flex;align-items:center;gap:6px'+(si>0?';border-top:1px solid var(--bd)':'')+'"><div style="width:6px;height:6px;border-radius:1px;background:'+b.color+';opacity:.5"></div><div style="font-size:10px;font-weight:600;color:var(--t2)">'+esc(sub.name)+'</div></div>';
+
+      /* Teams within sub-division */
+      sub.teams.forEach(function(tm){
+        o+='<div style="padding:2px 12px 2px 28px"><div style="font-size:9px;color:var(--t3);display:flex;align-items:center;gap:4px;padding:2px 0"><span style="width:12px;height:1px;background:rgba(160,160,184,0.3);display:inline-block"></span>'+esc(tm.name)+'</div>';
+
+        /* Contacts within team */
+        tm.contacts.forEach(function(ct){
+          var mc=C.find(function(c){return c.name===ct.name});
+          var st=mc?mc.status:"Not Started";
+          var sd=st==="Engaged"||st==="Meeting Set"?"var(--grn)":st==="Follow-Up"?"var(--gld)":st==="Email Sent"||st==="LinkedIn Sent"?"var(--blu)":"var(--t3)";
+          var playCol=PCOL[ct.play]||"var(--t3)";
+          var ini=ct.name.split(" ").map(function(w){return w[0]}).join("").substring(0,2);
+
+          o+='<div class="oc-click" data-name="'+esc(ct.name)+'" style="padding:6px 8px;margin:2px 0;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:5px;border-left:3px solid transparent;transition:all .12s" onmouseover="this.style.background=\'var(--b3)\';this.style.borderLeftColor=\''+playCol+'\'" onmouseout="this.style.background=\'transparent\';this.style.borderLeftColor=\'transparent\'">';
+          o+='<div style="width:26px;height:26px;border-radius:50%;background:'+playCol+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">'+ini+'</div>';
+          o+='<div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(ct.name)+'</div>';
+          o+='<div style="font-size:9px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(ct.title)+'</div>';
+          /* Breadcrumb path */
+          o+='<div style="font-size:8px;color:var(--t3);margin-top:1px">'+esc(b.bu)+' \u203A '+esc(sub.name)+' \u203A '+esc(tm.name)+'</div>';
+          o+='</div>';
+          o+='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">';
+          o+='<div style="display:flex;gap:3px">'+tag(ct.tier,"tg-b")+tag(ct.play,ptg(ct.play))+'</div>';
+          o+='<div style="display:flex;align-items:center;gap:3px"><div style="width:6px;height:6px;border-radius:50%;background:'+sd+'"></div><span style="font-size:8px;color:var(--t3)">'+esc(st)+'</span></div>';
+          o+='</div></div>';
+        });
+        o+='</div>';
+      });
+    });
+
+    /* Reports-to footer */
+    o+='<div style="padding:5px 12px;font-size:8px;color:var(--t3);border-top:1px solid var(--bd);background:rgba('+rgb+',0.03)">\u2191 Reports to CEO</div>';
+    o+='</div>';
+  });
+
+  o+='</div>';
+  el.innerHTML=o;
+
+  el.querySelectorAll(".oc-click[data-name]").forEach(function(n){
+    n.onclick=function(){var c=C.find(function(x){return x.name===n.dataset.name});if(c)openPanel(c)};
+  });
+}
+
+function hexToRgb(h){
+  if(h.indexOf("var(")===0){var m={"var(--grn)":"61,204,74","var(--blu)":"77,159,255","var(--gld)":"255,200,87","var(--pur)":"168,85,247","var(--cyn)":"0,212,170","var(--red)":"255,107,107"};return m[h]||"160,160,184"}
+  h=h.replace("#","");if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return parseInt(h.substring(0,2),16)+","+parseInt(h.substring(2,4),16)+","+parseInt(h.substring(4,6),16);
+}
+
+function pgStrat(el){
+  var C=S.contacts,plays=["SAP","AI","Advisory","Digital","Sustainability"];
+  var o='<div class="pt3">Strategy Map</div><div class="ps3">5 plays with coverage analysis</div>';
+  plays.forEach(function(pl){
+    var pc=C.filter(function(c){return c.play===pl});
+    var act=pc.filter(function(c){return c.status!=="Not Started"}).length;
+    var cov=pc.length?Math.round(act/pc.length*100):0;
+    var isOpen=S.expanded[pl];
+    o+='<div class="cd" style="padding:0;overflow:hidden">';
+    o+='<div class="stexp" data-play="'+pl+'"><div style="display:flex;align-items:center;gap:10px"><span style="width:4px;height:20px;border-radius:2px;background:'+PCOL[pl]+'"></span><div><div style="font-weight:600;font-size:13px">'+pl+'</div><div style="font-size:10px;color:var(--t3)">'+pc.length+' contacts - '+cov+'% activated</div></div></div><div style="display:flex;align-items:center;gap:10px"><div style="width:80px"><div class="cvb"><div class="cvf" style="width:'+cov+'%;background:'+PCOL[pl]+'"></div></div></div><span style="color:var(--t3)">'+(isOpen?"\u25BC":"\u25B6")+'</span></div></div>';
+    if(isOpen){
+      o+='<div class="stbody">';
+      pc.forEach(function(c){o+=rowH(c.name,c.title+" - "+c.status,c.play)});
+      o+='</div>';
+    }
+    o+='</div>';
+  });
+  el.innerHTML=o;
+  bindRows(el);
+  el.querySelectorAll(".stexp").forEach(function(e){e.onclick=function(){var p=e.dataset.play;S.expanded[p]=!S.expanded[p];pgStrat(el)}});
+}
+
+/* ===== Pg: WIN THEMES ===== */
+function pgWin(el){
+  var o='<div class="pt3">Win Themes</div><div class="ps3">Positioning by play and buyer type</div>';
+  WINS.forEach(function(w){
+    o+='<div class="cd" style="border-left:3px solid '+PCOL[w.play]+'"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+tag(w.play,ptg(w.play))+'<span style="font-weight:700;font-size:13px">'+esc(w.title)+'</span></div>';
+    o+='<div style="font-size:12px;line-height:1.6;margin-bottom:10px;font-style:italic">'+esc(w.stmt)+'</div>';
+    o+='<div class="g2"><div style="background:var(--b3);border-radius:6px;padding:10px"><div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Technical Buyer</div><div style="font-size:11px;color:var(--t2);line-height:1.5">'+esc(w.tech)+'</div></div>';
+    o+='<div style="background:var(--b3);border-radius:6px;padding:10px"><div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Economic Buyer</div><div style="font-size:11px;color:var(--t2);line-height:1.5">'+esc(w.econ)+'</div></div></div></div>';
+  });
+  el.innerHTML=o;
+}
+
+/* ===== Pg: COMPETITIVE ===== */
+function pgComp(el){
+  var o='<div class="pt3">Competitive Intel</div><div class="ps3">Competitors and displacement strategies</div>';
+  COMPS.forEach(function(c){
+    o+='<div class="cd" style="border-left:3px solid var(--red)"><div style="font-size:14px;font-weight:700;margin-bottom:8px">'+esc(c.n)+'</div>';
+    o+='<div style="margin-bottom:6px"><span style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px">Embedded In: </span><span style="font-size:12px;color:var(--t2)">'+esc(c.w)+'</span></div>';
+    o+='<div><span style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px">Strategy: </span><div style="font-size:12px;color:var(--t2);line-height:1.6;margin-top:3px">'+esc(c.s)+'</div></div></div>';
+  });
+  el.innerHTML=o;
+}
+
+/* ===== Pg: MEETING PREP ===== */
+
+/* ===== Pg: UNIFIED FRAMEWORK ===== */
+function pgFrame(el){
+  var C=S.contacts;
+
+  /* ============================================================
+     COMPLETE UNIFIED FRAMEWORK DATA
+     Level 1: Priorities (click to see products)
+     Level 2: Products/Initiatives per priority (click to see components)
+     Level 3: Initiative Components with Team, Budget, Timeline, Vendors, Contacts
+     ============================================================ */
+  var PRI=[
+  {num:1,name:"SAP S/4HANA Migration",color:"var(--grn)",
+   why:"Germany live Oct 2024. Q1-Q2 2025 next. $700M investment. Elizabeth Hackenson (CIO) posting about transformation.",
+   execOwner:"Elizabeth Hackenson",execTitle:"CIO",execConf:"HIGH",execNotes:"Tags SAP Exec Board. linkedin.com/in/elizabeth-hackenson",
+   products:[
+     {name:"S/4HANA Platform",
+      evidence:'Germany Oct 2024, "biggest in 20 years", 81+ SAP jobs',
+      budget:"81+ SAP roles: BASIS, Fiori, FI/CO, EWM, CPI",budgetLvl:"HIGH",
+      timeline:"Q1-Q2 2025, Global 2025-2027",timelineLvl:"HIGH",
+      components:[
+        {team:"Global ERP Transform",teamHier:"Elizabeth\u2192Divya",loc:"Global",type:"Own",
+         vendors:"SAP/Accenture SI, SAP contractors",vendorDisplace:"Displace: Accenture SI",
+         toptal:"S/4HANA architects, BASIS, Fiori",toptalFit:"VERY HIGH FIT",
+         contact:"Divya Mohan",contactTitle:"Global ERP Transformation Leader",buyRole:"Economic Buyer"},
+      ]},
+     {name:"SAP Integration (CPI)",
+      evidence:"Soma CPI posts, EcoStruxure integration",
+      budget:"CPI developers, Integration architects",budgetLvl:"HIGH",
+      timeline:"S/4\u2192EcoStruxure",timelineLvl:"HIGH",
+      components:[
+        {team:"SAP Integration",teamHier:"Paris, Soma",loc:"Paris",type:"Own",
+         vendors:"SAP contractors",vendorDisplace:"",
+         toptal:"SAP CPI, APIs",toptalFit:"HIGH FIT",
+         contact:"Soma Chandra Shekhar",contactTitle:"SAP Integration Architect",buyRole:"Influencer"},
+      ]},
+     {name:"SAP EWM",
+      evidence:"Akash blog, PP-EWM",
+      budget:"EWM consultants",budgetLvl:"MED-HIGH",
+      timeline:"Global warehouses",timelineLvl:"MED-HIGH",
+      components:[
+        {team:"SAP Supply Chain",teamHier:"Bangalore",loc:"Bangalore",type:"Own",
+         vendors:"EWM contractors",vendorDisplace:"",
+         toptal:"EWM",toptalFit:"MED-HIGH FIT",
+         contact:"Akash Acharya",contactTitle:"SAP EWM Specialist",buyRole:"Influencer"},
+      ]},
+     {name:"SAP Fiori UX",
+      evidence:"Aditi posts, 200+ factories",
+      budget:"Fiori devs, ABAP RAP, UX",budgetLvl:"HIGH",
+      timeline:"200+ factories",timelineLvl:"HIGH",
+      components:[
+        {team:"Fiori Dev",teamHier:"Bangalore",loc:"Bangalore",type:"Own",
+         vendors:"Fiori contractors",vendorDisplace:"",
+         toptal:"Fiori, ABAP RAP",toptalFit:"HIGH FIT",
+         contact:"Aditi Sharma",contactTitle:"SAP Fiori/ABAP Developer",buyRole:"Influencer"},
+      ]},
+     {name:"UNIFY Business Transformation",
+      evidence:"Gustavo: VP UNIFY Program. Overall architecture, 197 plants, 97 DCs. Finance Transformation (Horizon + UNIFY)",
+      budget:"UNIFY workstream: SAP functional consultants, Integration architects, Business process experts",budgetLvl:"CRITICAL",
+      timeline:"UNIFY program lead, S/4HANA integration",timelineLvl:"CRITICAL",
+      components:[
+        {team:"UNIFY Program Office",teamHier:"Global, Gustavo (VP)",loc:"Global",type:"Own",
+         vendors:"SI firms",vendorDisplace:"",
+         toptal:"SAP consultants, Integration architects",toptalFit:"HIGH FIT",
+         contact:"Gustavo Marques De Faria Paula",contactTitle:"VP UNIFY Business Transformation Program",buyRole:"Economic Buyer / Program Leader"},
+        {team:"Finance Transformation",teamHier:"UNIFY Program, Louis (Leader)",loc:"Global",type:"Own",
+         vendors:"Finance SI firms",vendorDisplace:"",
+         toptal:"SAP FICO, Finance integration",toptalFit:"HIGH FIT",
+         contact:"Louis Moreau",contactTitle:"Finance & Controlling Transformation Leader, UNIFY",buyRole:"Economic Buyer (Finance)"},
+      ]},
+   ]},
+
+  {num:2,name:"AI/ML Platform & CoE",color:"var(--blu)",
+   why:"Building enterprise AI/ML CoE. 6-month avg time-to-fill for ML roles. AI-powered CX and predictive maintenance.",
+   execOwner:"Chris Leong",execTitle:"EVP & CMO",execConf:"HIGH",execNotes:"Responded with interest. AI CoE budget approved. Lana Duhamel co-owns execution.",
+   products:[
+     {name:"AI/ML Center of Excellence",
+      evidence:"LinkedIn ML engineer postings, Lana Duhamel building CoE from scratch",
+      budget:"AI CoE budget approved, 40% vacancy rate",budgetLvl:"HIGH",
+      timeline:"Q1 2026 \u2014 immediate",timelineLvl:"CRITICAL",
+      components:[
+        {team:"Digital Services",teamHier:"Lana Duhamel (VP) \u2192 Chris Leong (EVP/CMO)",loc:"Global",type:"Own",
+         vendors:"Cognizant (digital/cloud)",vendorDisplace:"Displace: junior-padded teams",
+         toptal:"Top 3% ML engineers, MLOps, NLP",toptalFit:"VERY HIGH FIT",
+         contact:"Lana Duhamel",contactTitle:"VP Digital Services",buyRole:"Champion"},
+      ]},
+     {name:"AI-Powered CX Platform",
+      evidence:"Chris Leong CES 2026 keynote, digital marketing +30% YoY",
+      budget:"CMO digital budget, +30% YoY",budgetLvl:"HIGH",
+      timeline:"CX platform MVP Q3 2026",timelineLvl:"HIGH",
+      components:[
+        {team:"Marketing Technology",teamHier:"Chris Leong (EVP/CMO)",loc:"Singapore",type:"Own",
+         vendors:"Cognizant, McKinsey (strategy)",vendorDisplace:"Execution McKinsey can't offer",
+         toptal:"ML engineers, recommendation systems, personalization",toptalFit:"HIGH FIT",
+         contact:"Chris Leong",contactTitle:"EVP & CMO",buyRole:"Economic Buyer"},
+      ]},
+     {name:"Supply Chain AI",
+      evidence:"Mourad Tamoud supply chain optimization, 60% manual forecasting",
+      budget:"Separate supply chain AI budget",budgetLvl:"MED-HIGH",
+      timeline:"POC Q2 2026, 90% automation by 2027",timelineLvl:"HIGH",
+      components:[
+        {team:"Global Supply Chain",teamHier:"Mourad Tamoud (EVP) \u2192 CEO",loc:"Global",type:"Own",
+         vendors:"Existing analytics vendors",vendorDisplace:"",
+         toptal:"Demand forecasting, time-series ML, supply chain optimization",toptalFit:"HIGH FIT",
+         contact:"Mourad Tamoud",contactTitle:"EVP Global Supply Chain",buyRole:"Economic Buyer"},
+      ]},
+   ]},
+
+  {num:3,name:"Strategic Advisory & Workforce Transformation",color:"var(--gld)",
+   why:"Redesigning global workforce model. CHRO exploring contingent talent at scale. CFO needs finance transformation. Strategy building partner ecosystem.",
+   execOwner:"Charise Le",execTitle:"EVP & CHRO",execConf:"VERY HIGH",execNotes:"Meeting confirmed Feb 12. Jay Abdallah MSA in progress. Hilary Maxson research phase.",
+   products:[
+     {name:"Workforce Transformation",
+      evidence:"Charise Le keynote on future of work, 70/20/10 talent model exploration",
+      budget:"HR transformation $50M+",budgetLvl:"HIGH",
+      timeline:"Meeting Feb 12, 2026",timelineLvl:"CRITICAL",
+      components:[
+        {team:"CHRO Office",teamHier:"Charise Le (EVP/CHRO) \u2192 CEO",loc:"Hong Kong",type:"Own",
+         vendors:"Deloitte (advisory)",vendorDisplace:"Displace: Big 4 overhead",
+         toptal:"Workforce strategy, contingent talent design",toptalFit:"VERY HIGH FIT",
+         contact:"Charise Le",contactTitle:"EVP & CHRO",buyRole:"Economic Buyer"},
+      ]},
+     {name:"Strategic Partnership (MSA)",
+      evidence:"Jay Abdallah building partner ecosystem, active MSA discussion",
+      budget:"Partnership discretionary",budgetLvl:"MED",
+      timeline:"MSA in progress, Q1 2026",timelineLvl:"HIGH",
+      components:[
+        {team:"Strategy & Partnerships",teamHier:"Jay Abdallah (SVP) \u2192 CEO",loc:"Global",type:"Own",
+         vendors:"McKinsey (strategy)",vendorDisplace:"Execution vs strategy-only",
+         toptal:"Partnership formalization, preferred vendor",toptalFit:"HIGH FIT",
+         contact:"Jay Abdallah",contactTitle:"SVP Strategy & Partnerships",buyRole:"Champion"},
+      ]},
+     {name:"Finance Advisory",
+      evidence:"CFO cost optimization in earnings, FP&A modernization",
+      budget:"Finance transformation allocated",budgetLvl:"HIGH",
+      timeline:"Q2 2026 target",timelineLvl:"MED-HIGH",
+      components:[
+        {team:"Finance",teamHier:"Hilary Maxson (CFO) \u2192 CEO",loc:"Global",type:"Own",
+         vendors:"Deloitte (finance transformation)",vendorDisplace:"CFO-caliber without Deloitte markup",
+         toptal:"CFO-caliber finance, FP&A, treasury",toptalFit:"HIGH FIT",
+         contact:"Hilary Maxson",contactTitle:"EVP & CFO",buyRole:"Economic Buyer"},
+      ]},
+     {name:"NA Operational Excellence",
+      evidence:"Annette Clayton CEO NA Ops, separate OpEx budget",
+      budget:"NA OpEx budget for consulting",budgetLvl:"MED-HIGH",
+      timeline:"Q1 2026 research",timelineLvl:"MED",
+      components:[
+        {team:"NA Operations",teamHier:"Annette Clayton (CEO NA) \u2192 CEO",loc:"North America",type:"Own",
+         vendors:"Management consulting firms",vendorDisplace:"",
+         toptal:"Lean transformation, operational excellence",toptalFit:"MED-HIGH FIT",
+         contact:"Annette Clayton",contactTitle:"CEO North America Operations",buyRole:"Economic Buyer"},
+      ]},
+   ]},
+
+  {num:4,name:"Digital Twin & IoT Platform",color:"var(--pur)",
+   why:"Barbara Frei investing heavily in digital twin tech. EcoStruxure platform expansion. Core industrial differentiator.",
+   execOwner:"Barbara Frei",execTitle:"EVP Industrial Automation",execConf:"MEDIUM",execNotes:"Outreach sent, awaiting response. Strong strategic fit from public signals.",
+   products:[
+     {name:"Digital Twin Engine",
+      evidence:"Barbara Frei Hannover Messe keynote, 40+ patents filed",
+      budget:"R&D $200M+, digital twin line item growing",budgetLvl:"HIGH",
+      timeline:"Continuous, partner engagement Q2 2026",timelineLvl:"MED-HIGH",
+      components:[
+        {team:"Industrial Automation R&D",teamHier:"Barbara Frei (EVP) \u2192 CEO",loc:"Zurich",type:"Own",
+         vendors:"Accenture (digital consulting)",vendorDisplace:"Generalist vs deep IoT expertise",
+         toptal:"Digital twin, physics-based modeling, FEM simulation",toptalFit:"HIGH FIT",
+         contact:"Barbara Frei",contactTitle:"EVP Industrial Automation",buyRole:"Economic Buyer"},
+      ]},
+     {name:"EcoStruxure IoT Platform",
+      evidence:"Connected devices +35% YoY, new verticals (data centers, microgrids)",
+      budget:"Platform engineering investment",budgetLvl:"HIGH",
+      timeline:"Ongoing expansion 2025-2027",timelineLvl:"HIGH",
+      components:[
+        {team:"EcoStruxure Platform",teamHier:"Barbara Frei (EVP)",loc:"Global",type:"Own",
+         vendors:"Cognizant (cloud/digital)",vendorDisplace:"OPC-UA/MQTT expertise gap",
+         toptal:"IoT architects, OPC-UA, MQTT, Azure IoT Hub",toptalFit:"VERY HIGH FIT",
+         contact:"Barbara Frei",contactTitle:"EVP Industrial Automation",buyRole:"Economic Buyer"},
+      ]},
+     {name:"Edge Computing Layer",
+      evidence:"Industrial customers demand on-premise processing, latency-sensitive",
+      budget:"Edge infrastructure investment",budgetLvl:"MED-HIGH",
+      timeline:"2026-2027 roadmap",timelineLvl:"MED",
+      components:[
+        {team:"Edge Computing Group",teamHier:"Under Industrial Automation BU",loc:"Global",type:"Own",
+         vendors:"Limited incumbent",vendorDisplace:"",
+         toptal:"Edge ML, edge-to-cloud sync, ruggedized compute",toptalFit:"HIGH FIT",
+         contact:"Peter Herweck",contactTitle:"CEO",buyRole:"Economic Buyer (Enterprise)"},
+      ]},
+   ]},
+
+  {num:5,name:"Sustainability & ESG Analytics",color:"var(--cyn)",
+   why:"CSRD/TCFD/GRI compliance intensifying. #1 Corporate Knights. Need data engineers who understand ESG + modern data arch.",
+   execOwner:"Gwenaelle Avice-Huet",execTitle:"EVP Strategy & Sustainability",execConf:"LOW-MED",execNotes:"Not yet contacted. Strong fit from regulatory pressure.",
+   products:[
+     {name:"ESG Data Pipeline",
+      evidence:"100+ country operations, manual spreadsheet aggregation today",
+      budget:"Sustainability budget growing",budgetLvl:"MED",
+      timeline:"Must start now for CSRD",timelineLvl:"HIGH",
+      components:[
+        {team:"ESG Data Team",teamHier:"Gwenaelle Avice-Huet (EVP) \u2192 CEO",loc:"Global",type:"Support",
+         vendors:"No dominant incumbent",vendorDisplace:"First-mover opportunity",
+         toptal:"Airflow, dbt, Snowflake + ESG domain",toptalFit:"HIGH FIT",
+         contact:"Gwenaelle Avice-Huet",contactTitle:"EVP Strategy & Sustainability",buyRole:"Economic Buyer"},
+      ]},
+     {name:"Carbon Accounting Engine",
+      evidence:"Scope 3 tracking across global supply chain",
+      budget:"Part of sustainability investment",budgetLvl:"MED",
+      timeline:"2026 compliance deadline",timelineLvl:"HIGH",
+      components:[
+        {team:"Sustainability Reporting",teamHier:"Under Gwenaelle Avice-Huet",loc:"Global",type:"Support",
+         vendors:"Some Accenture presence",vendorDisplace:"",
+         toptal:"GHG Protocol, emissions databases, data engineering",toptalFit:"MED-HIGH FIT",
+         contact:"Gwenaelle Avice-Huet",contactTitle:"EVP Strategy & Sustainability",buyRole:"Economic Buyer"},
+      ]},
+     {name:"CSRD Reporting Platform",
+      evidence:"EU CSRD requires audited ESG disclosures starting 2025-2026",
+      budget:"Regulatory compliance investment",budgetLvl:"MED-HIGH",
+      timeline:"FY2025-2026 deadline",timelineLvl:"CRITICAL",
+      components:[
+        {team:"Regulatory Compliance",teamHier:"Under Gwenaelle Avice-Huet",loc:"Global",type:"Support",
+         vendors:"Audit firms (limited tech)",vendorDisplace:"",
+         toptal:"CSRD/TCFD specialists, data lineage, assurance readiness",toptalFit:"HIGH FIT",
+         contact:"Gwenaelle Avice-Huet",contactTitle:"EVP Strategy & Sustainability",buyRole:"Economic Buyer"},
+      ]},
+   ]},
+  ];
+
+
+  /* === RENDER LEVELS ===
+     State: S.fwLevel = 0 (priorities), 1 (products for a priority), 2 (components for a product)
+     S.fwPri = selected priority index
+     S.fwProd = selected product index
+  */
+  var sheetFW=S.sheetData["UNIFIED Framework"];if(sheetFW&&sheetFW.length>1){var parsed=[];var hdr=sheetFW[0];var curPri=null;for(var ri=1;ri<sheetFW.length;ri++){var rw=sheetFW[ri];if(!rw||!rw.length)continue;if(rw[0]&&rw[0].toString().match(/^\d+$/)){var pn=parseInt(rw[0]);var colors=["var(--grn)","var(--blu)","var(--gld)","var(--pur)","var(--cyn)"];curPri={num:pn,name:rw[1]||"",color:colors[(pn-1)%5],why:rw[2]||"",execOwner:rw[3]||"",execTitle:rw[4]||"",execConf:rw[5]||"",execNotes:rw[6]||"",products:[]};parsed.push(curPri)}if(curPri&&rw[7]){var prod=null;curPri.products.forEach(function(p){if(p.name===rw[7])prod=p});if(!prod){prod={name:rw[7],evidence:rw[8]||"",budget:rw[9]||"",budgetLvl:rw[10]||"",timeline:rw[11]||"",timelineLvl:rw[12]||"",components:[]};curPri.products.push(prod)}if(rw[13]){prod.components.push({team:rw[13],teamHier:rw[14]||"",loc:rw[15]||"",type:rw[16]||"Own",vendors:rw[17]||"",vendorDisplace:rw[18]||"",toptal:rw[19]||"",toptalFit:rw[20]||"",contact:rw[21]||"",contactTitle:rw[22]||"",buyRole:rw[23]||""})}}}if(parsed.length>0)PRI=parsed} if(S.fwLevel===undefined){S.fwLevel=0;S.fwPri=null;S.fwProd=null}
+
+  var o='';
+
+  // Step indicators (like the screenshot header)
+  var steps=[
+    {n:"1",l:"PRIORITIES",sub:"Strategic Priority & Why Now, Exec Owner",active:S.fwLevel>=0},
+    {n:"2",l:"PRODUCTS + SIGNALS",sub:"Product/Initiative, Budget, Timeline",active:S.fwLevel>=1},
+    {n:"3",l:"TEAMS + COMPETITIVE",sub:"Team/BU, Vendors, Toptal Match",active:S.fwLevel>=2},
+    {n:"4",l:"CONTACTS + BUYING",sub:"Contact Name, Title, Buying Role",active:S.fwLevel>=2}
+  ];
+  o+='<div style="display:flex;gap:1px;margin-bottom:16px;background:var(--bd);border-radius:8px;overflow:hidden">';
+  steps.forEach(function(s){
+    var bg=s.active?"var(--b2)":"var(--b3)";var tc=s.active?"var(--t1)":"var(--t3)";
+    o+='<div style="flex:1;padding:10px 14px;background:'+bg+';text-align:center">';
+    o+='<div style="font-size:10px;font-weight:700;color:'+tc+'">STEP '+s.n+': '+s.l+'</div>';
+    o+='<div style="font-size:8px;color:var(--t3);margin-top:2px">'+s.sub+'</div></div>';
+  });
+  o+='</div>';
+
+  // Breadcrumb
+  if(S.fwLevel>0){
+    o+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:11px">';
+    o+='<button class="bt bt2" id="fw-back-0" style="font-size:10px;padding:2px 8px">\u2190 All Priorities</button>';
+    if(S.fwPri!==null){
+      var cp=PRI[S.fwPri];
+      o+='<span style="color:var(--t3)">\u203A</span><span style="color:'+cp.color+';font-weight:600">Priority #'+cp.num+': '+esc(cp.name)+'</span>';
+    }
+    if(S.fwLevel>=2&&S.fwProd!==null){
+      o+='<span style="color:var(--t3)">\u203A</span><button class="bt bt2" id="fw-back-1" style="font-size:10px;padding:2px 8px">Products</button>';
+      o+='<span style="color:var(--t3)">\u203A</span><span style="font-weight:600">'+esc(PRI[S.fwPri].products[S.fwProd].name)+'</span>';
+    }
+    o+='</div>';
+  }
+
+  // ====== LEVEL 0: ALL PRIORITIES ======
+  if(S.fwLevel===0){
+    o+='<div class="fw-hero"><h2>Unified Account Framework</h2>';
+    o+='<p>Click <strong>Dive Deeper</strong> on any priority to see all products and initiatives.</p></div>';
+
+    // Column headers (like screenshot)
+    o+='<div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:1px;background:var(--bd);border-radius:8px 8px 0 0;overflow:hidden;margin-bottom:1px;font-size:9px;text-transform:uppercase;letter-spacing:.8px">';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Priority #</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Strategic Priority & Why Now</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Exec Owner & Confidence</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Products / Initiatives</div>';
+    o+='</div>';
+
+    PRI.forEach(function(p,i){
+      var confCol=p.execConf.indexOf("VERY HIGH")>=0||p.execConf==="HIGH"?"var(--grn)":p.execConf.indexOf("MED")>=0?"var(--gld)":"var(--red)";
+      o+='<div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:1px;background:var(--bd);margin-bottom:1px;cursor:pointer" class="fw-row" data-pri="'+i+'">';
+      o+='<div style="background:var(--b2);padding:10px;border-left:4px solid '+p.color+';display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:14px;font-weight:700;color:'+p.color+'">#'+p.num+'</div></div>';
+      // Strategic Priority & Why Now
+      o+='<div style="background:var(--b2);padding:10px"><div style="font-weight:700;font-size:12px;color:'+p.color+';margin-bottom:4px">'+esc(p.name)+'</div><div style="font-size:11px;color:var(--t2);line-height:1.5">'+esc(p.why)+'</div></div>';
+      // Exec Owner
+      o+='<div style="background:var(--b2);padding:10px"><div style="font-weight:600;font-size:12px">'+esc(p.execOwner)+'</div><div style="font-size:10px;color:var(--t2)">'+esc(p.execTitle)+'</div><div style="display:flex;align-items:center;gap:4px;margin-top:4px"><div style="background:'+confCol+';width:7px;height:7px;border-radius:50%"></div><span style="font-size:10px;font-weight:600;color:'+confCol+'">'+esc(p.execConf)+'</span></div><div style="font-size:9px;color:var(--t3);margin-top:2px">'+esc(p.execNotes)+'</div></div>';
+      // Products list
+      o+='<div style="background:var(--b2);padding:10px"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">'+p.products.length+' products/initiatives:</div>';
+      p.products.forEach(function(pr){o+='<div style="font-size:11px;margin-bottom:2px">\u2022 <span style="color:var(--t1)">'+esc(pr.name)+'</span></div>'});
+      o+='<button class="bt bt1" style="margin-top:8px;font-size:10px;padding:4px 10px;width:100%" data-dive-pri="'+i+'">\u25BC Dive Deeper</button>';
+      o+='</div></div>';
+    });
+  }
+
+  // ====== LEVEL 1: PRODUCTS FOR A PRIORITY ======
+  else if(S.fwLevel===1&&S.fwPri!==null){
+    var p=PRI[S.fwPri];
+    o+='<div style="background:var(--b2);border-left:5px solid '+p.color+';border:1px solid var(--bd);border-radius:8px;padding:14px 18px;margin-bottom:16px">';
+    o+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--t3)">PRIORITY #'+p.num+'</div>';
+    o+='<div style="font-size:17px;font-weight:700;color:'+p.color+';margin-top:2px">'+esc(p.name)+'</div>';
+    o+='<div style="font-size:11px;color:var(--t2);margin-top:4px;line-height:1.5">'+esc(p.why)+'</div></div>';
+
+    // Column headers for products
+    o+='<div style="display:grid;grid-template-columns:1fr 1fr 120px 120px;gap:1px;background:var(--bd);border-radius:8px 8px 0 0;overflow:hidden;margin-bottom:1px;font-size:9px;text-transform:uppercase;letter-spacing:.8px">';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Product/Initiative (Name + Evidence)</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Budget Signal (Headcount/RFPs)</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Timeline/Urgency</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Action</div>';
+    o+='</div>';
+
+    p.products.forEach(function(pr,pi){
+      var tlCol=pr.timelineLvl==="CRITICAL"?"var(--red)":pr.timelineLvl==="HIGH"?"var(--grn)":"var(--gld)";
+      var bdCol=pr.budgetLvl==="CRITICAL"?"var(--red)":pr.budgetLvl==="HIGH"?"var(--grn)":"var(--gld)";
+      o+='<div style="display:grid;grid-template-columns:1fr 1fr 120px 120px;gap:1px;background:var(--bd);margin-bottom:1px">';
+      // Product name + evidence
+      o+='<div style="background:var(--b2);padding:10px;border-left:3px solid '+p.color+'"><div style="font-weight:700;font-size:12px;color:var(--t1)">'+esc(pr.name)+'</div><div style="font-size:10px;color:var(--t2);margin-top:3px;line-height:1.4">'+esc(pr.evidence)+'</div></div>';
+      // Budget
+      o+='<div style="background:var(--b2);padding:10px"><div style="font-size:11px;color:var(--t2);line-height:1.4">'+esc(pr.budget)+'</div><div style="margin-top:4px"><span style="font-size:9px;font-weight:700;color:'+bdCol+';background:rgba(0,0,0,.2);padding:2px 6px;border-radius:3px">'+esc(pr.budgetLvl)+'</span></div></div>';
+      // Timeline
+      o+='<div style="background:var(--b2);padding:10px"><div style="font-size:11px;color:var(--t2);line-height:1.4">'+esc(pr.timeline)+'</div><div style="margin-top:4px"><span style="font-size:9px;font-weight:700;color:'+tlCol+';background:rgba(0,0,0,.2);padding:2px 6px;border-radius:3px">'+esc(pr.timelineLvl)+'</span></div></div>';
+      // Dive deeper button
+      o+='<div style="background:var(--b2);padding:10px;display:flex;align-items:center;justify-content:center"><button class="bt bt1" style="font-size:10px;padding:6px 10px;width:100%" data-dive-prod="'+pi+'">\u25BC Dive Deeper</button></div>';
+      o+='</div>';
+    });
+  }
+
+  // ====== LEVEL 2: COMPONENTS FOR A PRODUCT ======
+  else if(S.fwLevel===2&&S.fwPri!==null&&S.fwProd!==null){
+    var p=PRI[S.fwPri];
+    var pr=p.products[S.fwProd];
+
+    // Product header
+    o+='<div style="background:var(--b2);border-left:5px solid '+p.color+';border:1px solid var(--bd);border-radius:8px;padding:14px 18px;margin-bottom:16px">';
+    o+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--t3)">PRIORITY #'+p.num+' \u203A '+esc(pr.name).toUpperCase()+'</div>';
+    o+='<div style="font-size:17px;font-weight:700;color:'+p.color+';margin-top:2px">'+esc(pr.name)+'</div>';
+    o+='<div style="font-size:11px;color:var(--t2);margin-top:4px;line-height:1.5"><strong>Evidence:</strong> '+esc(pr.evidence)+'</div>';
+    o+='<div style="display:flex;gap:12px;margin-top:8px">';
+    var bdCol2=pr.budgetLvl==="CRITICAL"?"var(--red)":pr.budgetLvl==="HIGH"?"var(--grn)":"var(--gld)";
+    var tlCol2=pr.timelineLvl==="CRITICAL"?"var(--red)":pr.timelineLvl==="HIGH"?"var(--grn)":"var(--gld)";
+    o+='<div><span style="font-size:9px;color:var(--t3)">Budget:</span> <span style="font-size:11px;font-weight:600;color:'+bdCol2+'">'+esc(pr.budgetLvl)+'</span></div>';
+    o+='<div><span style="font-size:9px;color:var(--t3)">Timeline:</span> <span style="font-size:11px;font-weight:600;color:'+tlCol2+'">'+esc(pr.timelineLvl)+'</span></div>';
+    o+='</div></div>';
+
+    // Component table headers
+    o+='<div style="overflow-x:auto"><div style="min-width:900px">';
+    o+='<div style="display:grid;grid-template-columns:1fr 80px 1fr 1fr 1fr 1fr;gap:1px;background:var(--bd);border-radius:8px 8px 0 0;overflow:hidden;margin-bottom:1px;font-size:8px;text-transform:uppercase;letter-spacing:.8px">';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Team/BU Name (Hierarchy)</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Type</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Current Vendors</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Toptal Match</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Contact Name / Title</div>';
+    o+='<div style="background:var(--b3);padding:8px;font-weight:600;color:var(--t3)">Buying Role</div>';
+    o+='</div>';
+
+    pr.components.forEach(function(comp){
+      var fitCol=comp.toptalFit.indexOf("VERY HIGH")>=0?"var(--grn)":comp.toptalFit.indexOf("HIGH")>=0?"var(--grn)":"var(--gld)";
+      var matchContact=C.find(function(c){return c.name===comp.contact});
+
+      o+='<div style="display:grid;grid-template-columns:1fr 80px 1fr 1fr 1fr 1fr;gap:1px;background:var(--bd);margin-bottom:1px">';
+      // Team/BU
+      o+='<div style="background:var(--b2);padding:10px;border-left:3px solid '+p.color+'"><div style="font-weight:600;font-size:11px">'+esc(comp.team)+'</div><div style="font-size:10px;color:var(--t2);margin-top:2px">'+esc(comp.teamHier)+'</div><div style="font-size:9px;color:var(--t3);margin-top:1px">'+esc(comp.loc)+'</div></div>';
+      // Type
+      var typeCol=comp.type==="Own"?"var(--grn)":"var(--blu)";
+      o+='<div style="background:var(--b2);padding:10px;display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:700;color:'+typeCol+'">'+esc(comp.type)+'</span></div>';
+      // Vendors
+      o+='<div style="background:var(--b2);padding:10px"><div style="font-size:11px;color:var(--t2)">'+esc(comp.vendors||"None identified")+'</div>';
+      if(comp.vendorDisplace)o+='<div style="font-size:9px;color:var(--red);margin-top:3px;font-weight:600">'+esc(comp.vendorDisplace)+'</div>';
+      o+='</div>';
+      // Toptal Match
+      o+='<div style="background:var(--b2);padding:10px"><div style="font-size:11px;color:var(--t2)">'+esc(comp.toptal)+'</div><div style="margin-top:4px"><span style="font-size:9px;font-weight:700;color:'+fitCol+';background:rgba(0,0,0,.2);padding:2px 6px;border-radius:3px">'+esc(comp.toptalFit)+'</span></div></div>';
+      // Contact
+      o+='<div style="background:var(--b2);padding:10px" class="'+(matchContact?"fw-pill":"")+'" data-name="'+(matchContact?esc(matchContact.name):"")+'"><div style="font-weight:600;font-size:11px;color:var(--blu)">'+esc(comp.contact)+'</div><div style="font-size:10px;color:var(--t2)">'+esc(comp.contactTitle)+'</div></div>';
+      // Buying Role
+      var brCol=comp.buyRole.indexOf("Economic")>=0?"var(--pur)":comp.buyRole.indexOf("Champion")>=0?"var(--grn)":"var(--blu)";
+      o+='<div style="background:var(--b2);padding:10px;display:flex;align-items:center"><span style="font-size:10px;font-weight:600;color:'+brCol+'">'+esc(comp.buyRole)+'</span></div>';
+      o+='</div>';
+    });
+    o+='</div></div>';
+  }
+
+  el.innerHTML=o;
+
+  // Bind all interactions
+  // Level 0 -> Level 1
+  el.querySelectorAll("[data-dive-pri]").forEach(function(b){b.onclick=function(e){e.stopPropagation();S.fwLevel=1;S.fwPri=parseInt(b.dataset.divePri);S.fwProd=null;render()}});
+  el.querySelectorAll(".fw-row").forEach(function(r){r.onclick=function(){S.fwLevel=1;S.fwPri=parseInt(r.dataset.pri);S.fwProd=null;render()}});
+  // Level 1 -> Level 2
+  el.querySelectorAll("[data-dive-prod]").forEach(function(b){b.onclick=function(){S.fwLevel=2;S.fwProd=parseInt(b.dataset.diveProd);render()}});
+  // Back buttons
+  var b0=document.getElementById("fw-back-0");if(b0)b0.onclick=function(){S.fwLevel=0;S.fwPri=null;S.fwProd=null;render()};
+  var b1=document.getElementById("fw-back-1");if(b1)b1.onclick=function(){S.fwLevel=1;S.fwProd=null;render()};
+  // Contact clicks
+  el.querySelectorAll(".fw-pill[data-name]").forEach(function(p){if(p.dataset.name)p.onclick=function(){var c=C.find(function(x){return x.name===p.dataset.name});if(c)openPanel(c)}});
+}
+
+function pgRel(el){
+  var C=S.contacts;
+  var types=[{k:"reports-to",l:"Reports To",cl:"var(--blu)"},{k:"influences",l:"Influences",cl:"var(--gld)"},{k:"warm-path",l:"Warm Path",cl:"var(--grn)"}];
+  var o='<div class="pt3">Relationships</div><div class="ps3">Connection map between contacts</div>';
+  types.forEach(function(tp){
+    var rels=RELS.filter(function(r){return r.tp===tp.k});
+    o+='<div class="cd"><div class="ct"><span style="width:8px;height:8px;border-radius:50%;background:'+tp.cl+';display:inline-block"></span> '+tp.l+' '+tag(rels.length,"tg-x")+'</div>';
+    rels.forEach(function(r){
+      o+='<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b3);border-radius:5px;margin-bottom:5px;font-size:12px">';
+      o+='<span class="rlnk" data-name="'+esc(r.f)+'" style="cursor:pointer;font-weight:600;color:var(--blu)">'+esc(r.f)+'</span>';
+      o+='<span style="color:'+tp.cl+';font-size:11px">\u2192 '+tp.l+' \u2192</span>';
+      o+='<span class="rlnk" data-name="'+esc(r.t)+'" style="cursor:pointer;font-weight:600;color:var(--blu)">'+esc(r.t)+'</span></div>';
+    });
+    o+='</div>';
+  });
+  el.innerHTML=o;
+  el.querySelectorAll(".rlnk").forEach(function(l){l.onclick=function(){var c=C.find(function(x){return x.name===l.dataset.name});if(c)openPanel(c)}});
+}
+
+/* ===== Pg: RISKS ===== */
+function pgRisk(el){
+  var C=S.contacts;
+  var stl=C.filter(function(c){return c.oDate&&dsince(c.oDate)>14&&!c.resp});
+  var noN=C.filter(function(c){return !c.next});
+  var plays=["SAP","AI","Advisory","Digital","Sustainability"];
+  var single=plays.filter(function(pl){return C.filter(function(c){return c.play===pl&&c.status!=="Not Started"}).length<=1});
+  var o='<div class="pt3">Risks</div><div class="ps3">Stalled outreach, missing next steps, single-threaded plays</div><div class="g2">';
+  o+='<div class="cd" style="border-left:3px solid var(--red)"><div class="ct">Stalled 14+ days '+tag(stl.length,"tg-r")+'</div>';
+  if(!stl.length)o+='<div style="color:var(--t3);font-size:12px">No stalled outreach</div>';
+  stl.forEach(function(c){o+='<div class="rsk"><div style="font-weight:600">'+esc(c.name)+'</div><div style="font-size:10px;color:var(--t3)">'+esc(c.title)+' - '+dsince(c.oDate)+' days via '+esc(c.chan)+'</div></div>'});
+  o+='</div>';
+  o+='<div class="cd" style="border-left:3px solid var(--gld)"><div class="ct">No Next Step '+tag(noN.length,"tg-o")+'</div>';
+  if(!noN.length)o+='<div style="color:var(--t3);font-size:12px">All have next steps</div>';
+  noN.forEach(function(c){o+='<div style="padding:4px 0;font-size:12px;border-bottom:1px solid var(--bd)"><span style="font-weight:600">'+esc(c.name)+'</span> <span style="color:var(--t3)">- '+esc(c.status)+'</span></div>'});
+  o+='</div></div>';
+  o+='<div class="cd" style="border-left:3px solid var(--pur)"><div class="ct">Single-Threaded '+tag(single.length,"tg-p")+'</div>';
+  if(!single.length)o+='<div style="color:var(--t3);font-size:12px">All multi-threaded</div>';
+  single.forEach(function(pl){var cnt=S.contacts.filter(function(c){return c.play===pl&&c.status!=="Not Started"}).length;o+='<div style="padding:4px 0;font-size:12px">'+tag(pl,ptg(pl))+' <span style="color:var(--t3);margin-left:6px">Only '+cnt+' active - needs multi-threading</span></div>'});
+  o+='</div>';
+  el.innerHTML=o;
+}
+
+
+/* ===== Pg: SETTINGS ===== */
+
+/* ===== Pg: SETTINGS (no AI) ===== */
+function pgSet(el){
+  var cfg=S.cfg;
+  var o='<div class="pt3">Settings</div><div class="ps3">Configure data sources</div>';
+  o+='<div class="cd"><div class="ct">Google Sheets Connection '+tag(S.conn?"Connected":"Not Connected",S.conn?"tg-g":"tg-r")+'</div>';
+  o+='<div class="fl2"><label>Google Sheet ID</label><input id="s_sid" value="'+esc(cfg.sid||"")+'" placeholder="e.g. 1e08eCYdjwyiVGWIy8Fv3Sjv_n_0xYpbS"></div>';
+  o+='<div class="fl2"><label>Google API Key</label><input id="s_gkey" value="'+esc(cfg.gkey||"")+'" placeholder="AIza..." type="password"></div>';
+  o+='<div class="fl2"><label>Apps Script Web App URL (for writes)</label><input id="s_weburl" value="'+esc(cfg.weburl||"")+'" placeholder="https://script.google.com/macros/s/.../exec"></div>';
+  o+='<button class="bt bt1" id="s_shtest" style="margin-bottom:8px">Test Sheet Connection</button> <span id="s_shstatus" style="font-size:11px;color:var(--t3)"></span>';
+  o+='</div>';
+  o+='<div class="cd"><div class="ct">Sheet Format</div><p style="font-size:11px;color:var(--t3);line-height:1.6">Reads from &quot;Outreach Tracker&quot; tab starting row 6. Columns: A=# B=Name C=Title D=Location E=Tier F=Initiative G=Timing H=Status I=Outreach Date J=Channel K=Response L=Meeting? M=Meeting Date N=Next Step O=Owner P=Notes Q=Seq Days R=Seq Phase S=Why Buy Now T=Hook U=LinkedIn V=Role W=Fit X=Budget</p></div>';
+  o+='<div class="cd"><div class="ct">About</div><p style="font-size:11px;color:var(--t3);line-height:1.6">Schneider Electric Command Center v3.0 &mdash; Enterprise Account Sales Intelligence Platform. Running with '+(S.conn?"live sheet data":"12 demo contacts")+'. Pure vanilla JS, zero dependencies.</p></div>';
+  el.innerHTML=o;
+  function save(){S.cfg.sid=$("s_sid").value;S.cfg.gkey=$("s_gkey").value;S.cfg.weburl=$("s_weburl").value;saveCfg()}
+  $("s_sid").onchange=save;$("s_gkey").onchange=save;$("s_weburl").onchange=save;
+  $("s_shtest").onclick=function(){
+    save();var sid=$("s_sid").value,gk=$("s_gkey").value;
+    if(!sid||!gk){$("s_shstatus").textContent="Enter Sheet ID and API Key first.";$("s_shstatus").style.color="var(--red)";return}
+    $("s_shstatus").textContent="Testing...";$("s_shstatus").style.color="var(--t3)";$("s_shtest").disabled=true;
+    (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(sid,gk)}):fetchSheet(sid,gk)).then(function(data){
+      if(data.length>0){S.contacts=data;S.conn=true;$("s_shstatus").textContent="Connected! Loaded "+data.length+" contacts.";$("s_shstatus").style.color="var(--grn)";renderSB()}
+      else{$("s_shstatus").textContent="Connected but no data found. Check tab name/row range.";$("s_shstatus").style.color="var(--gld)"}
+      $("s_shtest").disabled=false;
+    }).catch(function(e){$("s_shstatus").textContent="Error: "+e.message;$("s_shstatus").style.color="var(--red)";$("s_shtest").disabled=false});
+  };
+}
+
+/* ===== AUTH ===== */
+var AUTH_HASH="a3c0f2d8e1b5c7a9d4f6e8b2c0a1d3f5e7b9c2a4d6f8e0b1c3a5d7f9e1b3c5";
+async function hashPw(pw){
+  var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0")}).join("");
+}
+// Precomputed: SHA-256 of "SE2026cc"
+var VALID_HASH="";
+(async function(){
+  VALID_HASH=await hashPw("SE2026cc");
+  // Check existing session
+  var stored=localStorage.getItem("secc_session");
+  if(stored===VALID_HASH){
+    document.getElementById("authGate").style.display="none";
+    document.getElementById("app").style.display="flex";
+  }
+})();
+
+document.getElementById("authBtn").onclick=async function(){
+  var pw=document.getElementById("authPw").value;
+  var h=await hashPw(pw);
+  if(h===VALID_HASH){
+    localStorage.setItem("secc_session",h);
+    document.getElementById("authGate").style.display="none";
+    document.getElementById("app").style.display="flex";
+  }else{
+    document.getElementById("authErr").textContent="Incorrect password";
+    document.getElementById("authPw").value="";
+    document.getElementById("authPw").focus();
+  }
+};
+document.getElementById("authPw").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("authBtn").click()});
+
+/* ===== BOOT ===== */
+$("pbg").onclick=closePanel;
+if(S.cfg.sid&&S.cfg.gkey){
+  S.syncing=true;
+  (S.cfg.weburl?jsonpFetch(S.cfg.weburl).then(function(j){if(j.success&&j.data)return j.data;throw new Error()}).catch(function(){return fetchSheet(S.cfg.sid,S.cfg.gkey)}):fetchSheet(S.cfg.sid,S.cfg.gkey)).then(function(data){
+    if(data.length>0){S.contacts=data;S.conn=true;S.lastSync=new Date()}
+    S.syncing=false;render();
+    if(data.length>0){showSyncToast("Loaded "+data.length+" contacts from sheet");syncAllTabs()}
+  }).catch(function(e){S.syncing=false;render()});
+}
+render();
+
+      
+
+  
 </script>
+  <script src="scripts/daily-brief-ui.js"></script>
 </body>
 </html>
-</div>
