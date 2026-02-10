@@ -216,7 +216,7 @@ function updContact(id,fields){
   if(S.sel&&S.sel.id===id)S.sel=S.contacts.find(function(c){return c.id===id});
 }
 
-    function writeBack(id,fields){
+        function writeBack(id,fields){
       var url=S.cfg.weburl;if(!url)return;
       var c=S.contacts.find(function(x){return x.id===id});if(!c)return;
       var row=c.sheetRow;if(!row&&S.sheetData&&S.sheetData['Outreach Tracker']){var sd=S.sheetData['Outreach Tracker'];for(var ri=0;ri<sd.length;ri++){if(sd[ri]&&sd[ri][1]&&sd[ri][1].trim()===c.name.trim()){row=ri+1;break}}}if(!row){var idx=S.contacts.findIndex(function(x){return x.id===id});row=idx>=0?idx+6:id+5}
@@ -227,25 +227,51 @@ function updContact(id,fields){
       S.pendingWrites+=updates.length;renderSyncBtn();
       updates.forEach(function(u){
         var params="?action=update&sheet="+encodeURIComponent("Outreach Tracker")+"&row="+row+"&col="+encodeURIComponent(u.col)+"&value="+encodeURIComponent(u.val);
-        jsonpFetch(url+params).then(function(resp){
+        var writeUrl=url+params;
+        var cb='_wb_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+        window[cb]=function(resp){
+          delete window[cb];
           S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
           if(resp&&resp.success){showSyncToast("\u2713 Saved: "+Object.keys(fields).join(", "))}
-          else{showSyncToast("\u26A0 Write may not have saved")}
-        }).catch(function(){
-          fetch(url+params,{method:"GET",redirect:"follow"}).then(function(r){return r.json()}).then(function(j){
-            S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
-            if(j&&j.success){showSyncToast("\u2713 Saved: "+Object.keys(fields).join(", "))}
-            else{showSyncToast("\u26A0 Write may not have saved")}
-          }).catch(function(){
-            var img=new Image();img.src=url+params;
+          else{showSyncToast("\u26A0 Write response unclear")}
+        };
+        var s=document.createElement('script');
+        s.src=writeUrl+'&callback='+cb;
+        s.onerror=function(){
+          delete window[cb];
+          if(s.parentNode)s.parentNode.removeChild(s);
+          var f=document.createElement('iframe');
+          f.style.cssText='display:none;width:0;height:0';
+          f.src=writeUrl;
+          document.body.appendChild(f);
+          setTimeout(function(){
             S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
             showSyncToast("\u2713 Saved");
-          });
-        });
+            if(f.parentNode)f.parentNode.removeChild(f);
+          },5000);
+        };
+        document.body.appendChild(s);
+        setTimeout(function(){
+          if(window[cb]){
+            delete window[cb];
+            if(s.parentNode)s.parentNode.removeChild(s);
+            var f=document.createElement('iframe');
+            f.style.cssText='display:none;width:0;height:0';
+            f.src=writeUrl;
+            document.body.appendChild(f);
+            setTimeout(function(){
+              S.pendingWrites=Math.max(0,S.pendingWrites-1);renderSyncBtn();
+              showSyncToast("\u2713 Saved");
+              if(f.parentNode)f.parentNode.removeChild(f);
+            },5000);
+          }
+        },12000);
       });
     }
     function syncFromSheet(){
+
       if(S.syncing)return;
+      
       if(S.pendingWrites>0){showSyncToast("Waiting for "+S.pendingWrites+" write(s) to finish...");setTimeout(syncFromSheet,2000);return;}
       var sid=S.cfg.sid,gk=S.cfg.gkey;
       if(!sid||!gk)return;
