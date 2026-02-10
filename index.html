@@ -16,7 +16,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none}
 a{color:var(--blu);text-decoration:none}
 #app{display:flex;height:100vh}
 #sb{width:200px;min-width:200px;background:var(--b1);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow-y:auto}
-#mn{flex:1;overflow-y:auto;padding:20px 24px}
+#mn{flex:1;overflow-y:auto;padding:20px 24px;min-height:0}
 .la{padding:16px 12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px}
 .lt{font-weight:700;font-size:11px;color:var(--se);line-height:1.2}
 .ls{font-size:8px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase}
@@ -129,7 +129,7 @@ tr:hover td{background:var(--b3)}
 .fw-matrix>div{padding:8px 10px;background:var(--b2)}
 .fw-matrix .mh{background:var(--b3);font-weight:600;font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)}
 .fw-rel-line{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:12px;background:var(--b3);border-radius:5px;margin-bottom:4px}
-.fw-arrow{color:var(--t3);font-size:10px;flex-shrink:0}
+.fw-arrow{color:var(--t3);font-size:10px;flex-shrink:0} #gsearch-wrap{position:sticky;top:0;z-index:50;background:var(--b0);padding:8px 24px;border-bottom:1px solid var(--bd)} #gsearch-input{width:100%;padding:9px 14px 9px 34px;background:var(--b2);border:1px solid var(--bd);border-radius:8px;color:var(--t1);font-size:13px;outline:none;transition:border-color .15s} #gsearch-input:focus{border-color:var(--grn)} #gsearch-input::placeholder{color:var(--t3)} .gs-icon{position:absolute;left:34px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none} .gs-kbd{position:absolute;right:34px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--t3);background:var(--b3);border:1px solid var(--bd);border-radius:3px;padding:1px 5px;pointer-events:none;font-family:monospace} .gs-results{position:absolute;left:24px;right:24px;top:100%;background:var(--b1);border:1px solid var(--bd);border-top:none;border-radius:0 0 8px 8px;max-height:420px;overflow-y:auto;box-shadow:0 12px 32px rgba(0,0,0,.5);display:none} .gs-results.open{display:block} .gs-cat{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);padding:8px 14px 4px;font-weight:600} .gs-item{padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .1s;font-size:12px} .gs-item:hover,.gs-item.gs-active{background:var(--b3)} .gs-item .gs-name{font-weight:600} .gs-item .gs-sub{font-size:10px;color:var(--t3);margin-left:auto;white-space:nowrap} .gs-hl{background:rgba(61,220,132,.25);color:var(--grn);border-radius:2px;padding:0 1px} .gs-empty{padding:16px 14px;color:var(--t3);font-size:12px;text-align:center} .ais-box{margin-top:10px;padding:10px 12px;background:rgba(77,159,255,.05);border:1px solid rgba(77,159,255,.15);border-radius:6px} .ais-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--blu);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px} .ais-content{font-size:11px;color:var(--t1);line-height:1.6} .ais-content ul{margin:0;padding-left:16px;list-style:disc} .ais-content li{margin-bottom:3px} .ais-loading{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t3)} .ais-loading .ais-spinner{width:14px;height:14px;border:2px solid var(--bd);border-top-color:var(--blu);border-radius:50%;animation:ais-spin .7s linear infinite} @keyframes ais-spin{to{transform:rotate(360deg)}} .ais-retry{font-size:10px;padding:3px 10px;background:var(--b3);border:1px solid var(--bd);color:var(--t1);border-radius:4px;cursor:pointer;margin-top:6px} .ais-retry:hover{border-color:var(--blu)} .ais-ts{font-size:8px;color:var(--t3);margin-top:4px}
 </style>
 </head>
 <body>
@@ -147,7 +147,7 @@ tr:hover td{background:var(--b3)}
 </div>
 <div id="app" style="display:none">
   <div id="sb"></div>
-  <div id="mn"></div>
+  <div id="gsearch-wrap" style="position:relative"><span class="gs-icon">&#128269;</span><input id="gsearch-input" type="text" placeholder="Search contacts, updates, plays..." autocomplete="off"><span class="gs-kbd">/</span><div id="gs-results" class="gs-results"></div></div><div id="mn"></div>
   <div id="pbg" class="pbg"></div>
   <div id="pn" class="pn"></div>
 </div>
@@ -196,7 +196,7 @@ var RELS=[
 
 /* ===== STATE ===== */
 var DEFAULTS={sid:"1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY",gkey:"AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwIukfI4",weburl:"https://script.google.com/macros/s/AKfycbxr4q1cfHBBYnrJ-oBPJIdH8JeVtpbTHDNiIh2THs5EB54poXcuF76vb93WIGXeHos/exec"};
-var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,pendingWrites:0,lastSync:null,dirty:{},sheetData:{}};
+var S={tab:"dashboard",contacts:DC.slice(),sel:null,panel:false,cfg:{},conn:false,expanded:{},syncing:false,pendingWrites:0,lastSync:null,dirty:{},sheetData:{},gsQuery:"",gsActiveIdx:-1,aiSuggestions:{}};
 try{S.cfg=JSON.parse(localStorage.getItem("secfg4")||"{}")}catch(e){S.cfg={}}
 if(!S.cfg.sid)S.cfg.sid=DEFAULTS.sid;
 if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
@@ -205,7 +205,7 @@ if(!S.cfg.gkey)S.cfg.gkey=DEFAULTS.gkey;
 if(!S.cfg.weburl)S.cfg.weburl=DEFAULTS.weburl;
 
 function saveCfg(){localStorage.setItem("secfg4",JSON.stringify(S.cfg))}
-function jsonpFetch(url){return new Promise(function(resolve,reject){var cb='_secc_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);window[cb]=function(data){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);resolve(data)};var s=document.createElement('script');s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+cb;s.onerror=function(){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP failed'))};document.body.appendChild(s);setTimeout(function(){if(window[cb]){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP timeout'))}},15000)})} function setTab(t){S.tab=t;render()}
+function jsonpFetch(url){return new Promise(function(resolve,reject){var cb='_secc_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);window[cb]=function(data){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);resolve(data)};var s=document.createElement('script');s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+cb;s.onerror=function(){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP failed'))};document.body.appendChild(s);setTimeout(function(){if(window[cb]){delete window[cb];if(s&&s.parentNode)s.parentNode.removeChild(s);reject(new Error('JSONP timeout'))}},15000)})} function setTab(t){S.tab=t;clearGlobalSearch();render()}
 function openPanel(c){S.sel=c;S.panel=true;renderPanel();$("pbg").classList.add("sh");$("pn").classList.add("sh")}
 function closePanel(){S.panel=false;$("pbg").classList.remove("sh");$("pn").classList.remove("sh")}
 function updStatus(id,st){S.contacts=S.contacts.map(function(c){return c.id===id?Object.assign({},c,{status:st}):c});writeBack(id,{status:st});render()}
@@ -308,6 +308,119 @@ function fetchSheetTab(tabName){var sid=S.cfg.sid,gk=S.cfg.gkey;if(!sid||!gk)ret
 
 
 
+/* ===== FEATURE 1: GLOBAL SEARCH ===== */
+var _gsDebounceTimer=null;
+function gsDebounce(fn,ms){return function(){var args=arguments;clearTimeout(_gsDebounceTimer);_gsDebounceTimer=setTimeout(function(){fn.apply(null,args)},ms)}}
+function gsHighlight(text,query){if(!query)return esc(text);var escaped=esc(text);var re=new RegExp('('+query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');return escaped.replace(re,'<span class="gs-hl">$1</span>')}
+function getAIUpdatesForSearch(){
+return[
+{date:"Feb 7, 2026",type:"Job Posting",title:"15 new SAP S/4HANA roles posted on LinkedIn",detail:"Schneider posted 15 new SAP roles in the past week.",impact:"SAP"},
+{date:"Feb 5, 2026",type:"Earnings Signal",title:"Q4 2025 earnings: CEO doubles down on digital transformation",detail:"Peter Herweck stated in Q4 earnings call.",impact:"SAP"},
+{date:"Feb 4, 2026",type:"News",title:"Schneider announces expanded Azure AI partnership",detail:"Expanded partnership to accelerate AI adoption.",impact:"AI"},
+{date:"Feb 3, 2026",type:"New Hire",title:"New VP of Digital Workplace hired from Siemens",detail:"Marcus Weber hired as VP Digital Workplace.",impact:"SAP"},
+{date:"Jan 30, 2026",type:"YouTube",title:"Charise Le keynote: Building the Workforce of 2030",detail:"Keynote at Davos WEF side event.",impact:"Advisory"},
+{date:"Jan 28, 2026",type:"Testimonial",title:"Schneider India team posts about successful SAP EWM go-live",detail:"Successful EWM go-live across 12 DCs.",impact:"SAP"},
+{date:"Jan 25, 2026",type:"Job Posting",title:"3 CSRD/ESG Data Engineer roles posted",detail:"ESG data engineering roles posted.",impact:"Sustainability"},
+{date:"Jan 22, 2026",type:"News",title:"Schneider named #1 Most Sustainable Company for 3rd year",detail:"Corporate Knights 2026 ranking.",impact:"Sustainability"}
+];
+}
+function globalSearch(query){
+S.gsQuery=query;S.gsActiveIdx=-1;var results=[];
+if(!query||query.length<2){renderSearchResults([]);return}
+var q=query.toLowerCase();
+S.contacts.forEach(function(c){
+var fields=[c.name,c.title,c.init,c.play,c.tier,c.loc,c.status].join(' ').toLowerCase();
+if(fields.indexOf(q)>=0){results.push({cat:"Contacts",name:c.name,sub:c.title+' \u2022 '+c.play+' \u2022 '+c.status,action:function(){openPanel(c);clearGlobalSearch()}})}
+});
+var updates=getAIUpdatesForSearch();
+updates.forEach(function(u,i){
+var fields=[u.title,u.type,u.detail,u.impact,u.date].join(' ').toLowerCase();
+if(fields.indexOf(q)>=0){results.push({cat:"AI Updates",name:u.title,sub:u.type+' \u2022 '+u.date,action:function(){S.tab="aiupdates";clearGlobalSearch();render();setTimeout(function(){var items=document.querySelectorAll('.ai-item');if(items[i])items[i].scrollIntoView({behavior:'smooth',block:'center'})},150)}})}
+});
+["SAP","AI","Advisory","Digital","Sustainability"].forEach(function(pl){
+if(pl.toLowerCase().indexOf(q)>=0){var cnt=S.contacts.filter(function(c){return c.play===pl}).length;results.push({cat:"Plays",name:pl+' ('+cnt+' contacts)',sub:'Strategy play',action:function(){S.tab="stratmap";clearGlobalSearch();render()}})}
+});
+COMPS.forEach(function(c){
+if((c.n+' '+c.w+' '+c.s).toLowerCase().indexOf(q)>=0){results.push({cat:"Competitors",name:c.n,sub:c.w,action:function(){S.tab="competitive";clearGlobalSearch();render()}})}
+});
+renderSearchResults(results);
+}
+function renderSearchResults(results){
+var el=$("gs-results");if(!el)return;
+if(!results.length&&!S.gsQuery){el.classList.remove("open");return}
+if(!results.length&&S.gsQuery.length>=2){el.innerHTML='<div class="gs-empty">No results for "'+esc(S.gsQuery)+'"</div>';el.classList.add("open");return}
+if(!results.length){el.classList.remove("open");return}
+var cats={};results.forEach(function(r){if(!cats[r.cat])cats[r.cat]=[];cats[r.cat].push(r)});
+var o='',idx=0;
+Object.keys(cats).forEach(function(cat){
+o+='<div class="gs-cat">'+esc(cat)+' ('+cats[cat].length+')</div>';
+cats[cat].forEach(function(r){o+='<div class="gs-item'+(idx===S.gsActiveIdx?' gs-active':'')+'" data-gs-idx="'+idx+'"><span class="gs-name">'+gsHighlight(r.name,S.gsQuery)+'</span><span class="gs-sub">'+esc(r.sub)+'</span></div>';idx++})
+});
+el.innerHTML=o;el.classList.add("open");window._gsResults=results;
+el.querySelectorAll(".gs-item").forEach(function(item){item.onclick=function(){var i=parseInt(item.dataset.gsIdx);if(window._gsResults&&window._gsResults[i])window._gsResults[i].action()}});
+}
+function clearGlobalSearch(){S.gsQuery="";S.gsActiveIdx=-1;var inp=$("gsearch-input");if(inp)inp.value="";var el=$("gs-results");if(el){el.classList.remove("open");el.innerHTML=""}window._gsResults=null}
+function initGlobalSearch(){
+var inp=$("gsearch-input");if(!inp)return;
+var debouncedSearch=gsDebounce(globalSearch,250);
+inp.addEventListener("input",function(){debouncedSearch(inp.value)});
+inp.addEventListener("keydown",function(e){
+var results=window._gsResults||[];
+if(e.key==="ArrowDown"){e.preventDefault();S.gsActiveIdx=Math.min(S.gsActiveIdx+1,results.length-1);renderSearchResults(results)}
+else if(e.key==="ArrowUp"){e.preventDefault();S.gsActiveIdx=Math.max(S.gsActiveIdx-1,-1);renderSearchResults(results)}
+else if(e.key==="Enter"&&S.gsActiveIdx>=0&&results[S.gsActiveIdx]){e.preventDefault();results[S.gsActiveIdx].action()}
+else if(e.key==="Escape"){clearGlobalSearch();inp.blur()}
+});
+document.addEventListener("keydown",function(e){
+if(e.key==="/"&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA"&&document.activeElement.tagName!=="SELECT"){e.preventDefault();inp.focus()}
+if(e.key==="Escape"&&document.activeElement===inp){clearGlobalSearch();inp.blur()}
+});
+}
+
+/* ===== FEATURE 2: AI SUGGESTION ENGINE ===== */
+function aiSuggestionKey(u){return(u.date+'|'+u.title).replace(/\s+/g,'_').substring(0,80)}
+function generateAISuggestion(update,forceRegenerate){
+var key=aiSuggestionKey(update);
+if(!forceRegenerate&&S.aiSuggestions[key]&&S.aiSuggestions[key].status==="success"){renderAISuggestionUI(key);return}
+S.aiSuggestions[key]={status:"loading",content:null,lastUpdated:null};
+renderAISuggestionUI(key);
+setTimeout(function(){generateLocalSuggestion(update,key)},300+Math.random()*400);
+}
+function generateLocalSuggestion(update,key){
+var bullets=[];
+var impactContacts=S.contacts.filter(function(c){return c.play===update.impact});
+var notStarted=impactContacts.filter(function(c){return c.status==="Not Started"});
+var inPlay=impactContacts.filter(function(c){return c.status!=="Not Started"});
+if(update.type==="Job Posting"){
+if(notStarted.length>0)bullets.push("Initiate outreach to "+notStarted[0].name+" ("+notStarted[0].title+") \u2014 reference these open roles as proof of hiring urgency");
+bullets.push("Map the posted job requirements to 2-3 specific Toptal talent profiles to demonstrate immediate fit");
+if(inPlay.length>0)bullets.push("Share these postings with "+inPlay[0].name+" as ammunition for their team");
+}else if(update.type==="Earnings Signal"){
+bullets.push("Extract 2-3 direct CEO/CFO quotes and embed them in your next outreach messages");
+if(impactContacts.length>0)bullets.push("Schedule follow-ups with "+impactContacts.slice(0,2).map(function(c){return c.name}).join(" and ")+" using earnings context");
+bullets.push("Prepare a one-page cost comparison showing Toptal vs Big 4 pricing");
+}else if(update.type==="News"){
+bullets.push("Research how this announcement creates new talent needs within the "+update.impact+" play");
+if(inPlay.length>0)bullets.push("Forward this news to "+inPlay[0].name+" with a brief note connecting it to your conversation");
+else if(notStarted.length>0)bullets.push("Use this as a timely outreach hook to "+notStarted[0].name);
+}else if(update.type==="New Hire"){
+bullets.push("Add this person to the contact tracker and research their LinkedIn for mutual connections");
+bullets.push("Draft a welcome outreach within their first 30 days");
+if(inPlay.length>0)bullets.push("Ask "+inPlay[0].name+" for an introduction to this new hire");
+}else if(update.type==="YouTube"||update.type==="Testimonial"){
+bullets.push("Reference this content directly in your next outreach to show you follow their work");
+if(impactContacts.length>0)bullets.push("Schedule a follow-up with "+impactContacts[0].name+" using key themes as talking points");
+bullets.push("Save this as social proof for future pitches in the "+update.impact+" play");
+}else{
+bullets.push("Evaluate how this development affects the "+update.impact+" play and update strategy");
+if(impactContacts.length>0)bullets.push("Brief "+impactContacts[0].name+" on this update during your next touchpoint");
+}
+bullets=bullets.slice(0,3);
+if(!bullets.length)bullets.push("Review this update for relevance to active outreach campaigns");
+var content=bullets.join('\n');
+S.aiSuggestions[key]={status:"success",content:content,lastUpdated:new Date().toISOString()};
+renderAISuggestionUI(key);
+}
 /* ===== SIDEBAR + RENDER ===== */
 var NAV=[
 {s:"COMMAND",i:[{id:"dashboard",l:"Dashboard"},{id:"strategy",l:"\uD83C\uDFAF Our Strategy"},{id:"aiupdates",l:"\uD83E\uDD16 AI Updates"},{id:"thisweek",l:"This Week"},{id:"pipeline",l:"Pipeline"},{id:"contacts",l:"Contacts"}]},
@@ -764,6 +877,8 @@ function pgAIUpdates(el){
       o+='<div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--grn);font-weight:600;margin-bottom:4px">\uD83E\uDD16 AI RECOMMENDED ACTION</div>';
       o+='<div style="font-size:11px;color:var(--t1);line-height:1.6">'+esc(u.suggestion)+'</div></div>';
     }
+        var _aisKey=aiSuggestionKey(u);var _aisDomId='ais-'+_aisKey.replace(/[^a-zA-Z0-9]/g,'_');
+    o+='<div id="'+_aisDomId+'" class="ais-slot"></div>';
     o+='</div></div>';
   });
 
@@ -833,15 +948,22 @@ function pgAIUpdates(el){
     };
   });
 
-  // Expand/collapse
+  // Expand/collapse + AI suggestion trigger
   el.querySelectorAll(".ai-expand").forEach(function(b){
     b.onclick=function(){
       var d=document.getElementById("ai-d-"+b.dataset.idx);
       var open=d.style.display!=="none";
       d.style.display=open?"none":"block";
       b.textContent=open?"\u25BC Detail":"\u25B2 Close";
+            if(!open){
+        var idx=parseInt(b.dataset.idx);
+        var update=updates[idx];
+        if(update){var key=aiSuggestionKey(update);if(!S.aiSuggestions[key]||S.aiSuggestions[key].status!=="success"){generateAISuggestion(update)}else{renderAISuggestionUI(key)}}
+      }
     };
   });
+    // Retry handler (delegated)
+  el.addEventListener("click",function(e){if(e.target&&e.target.classList.contains("ais-retry")){var key=e.target.dataset.aisKey;if(key){var update=updates.find(function(u){return aiSuggestionKey(u)===key});if(update)generateAISuggestion(update,true)}}});
 }
 
 function pgWeek(el){
@@ -1685,6 +1807,7 @@ if(S.cfg.sid&&S.cfg.gkey){
   }).catch(function(e){S.syncing=false;render()});
 }
 render();
+  initGlobalSearch();
 
       
 
