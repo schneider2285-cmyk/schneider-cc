@@ -88,7 +88,7 @@ td{padding:8px 12px;border-bottom:1px solid var(--bd);font-size:12px;color:var(-
 <div id="app"></div>
 <script>
 // ===== STATE =====
-var S={screen:'login',tab:'dashboard',contacts:[],conn:false,syncing:false,lastSync:null,search:'',searchResults:[],searchOpen:false,searchIdx:0,detailId:null,filterTier:'',filterStatus:'',filterInit:'',filterText:'',aiLoading:false,aiOutput:'',expandedPlays:{},
+var S={screen:'app',tab:'dashboard',contacts:[],conn:false,syncing:false,lastSync:null,search:'',searchResults:[],searchOpen:false,searchIdx:0,detailId:null,filterTier:'',filterStatus:'',filterInit:'',filterText:'',aiLoading:false,aiOutput:'',expandedPlays:{},
 sheetId:localStorage.getItem('cc_sheetId')||'1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY',
 gApiKey:localStorage.getItem('cc_gApiKey')||'AIzaSyBRhvT-n29LefoR6OyYxq43BlCzwIukfI4',
 claudeKey:localStorage.getItem('cc_claudeKey')||'',
@@ -541,6 +541,9 @@ if(S.searchOpen&&!e.target.closest('.gs-bar')&&!e.target.closest('.gs-res')){S.s
 
 // ===== INIT =====
 render();
+// Auto-fetch from Google Sheet on load
+if(S.gApiKey&&S.sheetId){fetchSheet(function(rows){if(rows.length)S.contacts=rows;render()})}
+
 </script>
 </body>
 </html>
