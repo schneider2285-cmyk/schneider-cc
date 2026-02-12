@@ -92,7 +92,7 @@ var S={screen:'app',tab:'dashboard',contacts:[],conn:false,syncing:false,lastSyn
 sheetId:localStorage.getItem('cc_sheetId')||'1LP0iNBVIXhoXp1mGugD5sz5hVplonnFFm52OiAE_-eY',
 gApiKey:localStorage.getItem('cc_gApiKey')||'AIzaSyDpgRXwsgR5W8kDTgvE9vVEkyjXwu9JFDo',
 claudeKey:localStorage.getItem('cc_claudeKey')||'',
-webAppUrl:localStorage.getItem('cc_webAppUrl')||''};
+webAppUrl:localStorage.getItem('cc_webAppUrl')||'https://script.google.com/macros/s/AKfycbyInDeun8ehHpAbiUpP8nieVpGm9U6mHDctawa57Ks7nNpQb9r7oB-wIrwui1gV5HqIsg/exec'};
 
 var DEMO=[
 {id:1,name:"Charise Le",title:"SVP, Chief Human Resources Officer",location:"Dallas, TX",tier:"Tier 0",initiative:"SE Advisory",timing:"Immediate",status:"Engaged",outreachDate:"2025-01-15",channel:"LinkedIn",response:"Yes",meeting:"Yes",meetingDate:"2025-02-01",nextStep:"Follow-up on workforce transformation proposal",owner:"Matt",notes:"Key champion. Endorsed Toptal to ExCom.",seqDays:"1",seqPhase:"Touch 3",whyBuyNow:"Building SE Advisory from scratch — needs 200+ consultants by 2026",hook:"Your workforce transformation at scale aligns with what we've done for Siemens & ABB",linkedin:"https://linkedin.com/in/charisele",buyingRole:"Champion",fit:"10",budgetSignal:"$500M+ consulting buildout announced"},
@@ -181,7 +181,20 @@ S.aiLoading=false;cb((data.content&&data.content[0])?data.content[0].text:'Error
 }).catch(function(e){S.aiLoading=false;cb('Error: '+e.message)});
 }
 
+function writeBack(row,fields,cb){
+if(!S.webAppUrl){if(cb)cb(false);return}
+fetch(S.webAppUrl,{method:'POST',headers:{'Content-Type':'text/plain'},
+body:JSON.stringify({action:'updateRow',row:row+5,fields:fields})
+}).then(function(r){return r.json()}).then(function(d){if(cb)cb(d.success)}).catch(function(e){console.error('Write-back:',e);if(cb)cb(false)})}
+
+function addContact(vals,cb){
+if(!S.webAppUrl){if(cb)cb(false);return}
+fetch(S.webAppUrl,{method:'POST',headers:{'Content-Type':'text/plain'},
+body:JSON.stringify({action:'addContact',values:vals})
+}).then(function(r){return r.json()}).then(function(d){if(cb)cb(d.success)}).catch(function(e){console.error('Add contact:',e);if(cb)cb(false)})}
+
 function doSearch(q){
+
 if(!q){S.searchResults=[];return}var ql=q.toLowerCase();var r=[];
 gc().forEach(function(c){if((c.name+' '+c.title+' '+c.initiative+' '+c.tier).toLowerCase().indexOf(ql)>=0)r.push({type:'contact',name:c.name,meta:c.title+' · '+c.tier,action:function(){S.tab='contacts';S.detailId=c.id;S.searchOpen=false;S.search='';render()}})});
 PLAYS.forEach(function(p){if(p.name.toLowerCase().indexOf(ql)>=0)r.push({type:'play',name:p.name,meta:p.desc,action:function(){S.tab='stratmap';S.expandedPlays[p.id]=true;S.searchOpen=false;S.search='';render()}})});
@@ -429,7 +442,12 @@ h+='<div class="dp-f"><label>Why They Buy Now</label><div class="dv">'+eh(c.whyB
 h+='<div class="dp-f"><label>Outreach Hook</label><div class="dv" style="color:var(--grn)">'+eh(c.hook)+'</div></div>';
 h+='<div class="dp-f"><label>Budget Signal</label><div class="dv">'+eh(c.budgetSignal)+'</div></div>';
 h+='<div class="dp-f"><label>Next Step</label><div class="dv">'+eh(c.nextStep)+'</div></div>';
-h+='<div class="dp-f"><label>Notes</label><div class="dv">'+eh(c.notes)+'</div></div>';
+h+='<div class="dp-f"><label>Status</label><select id="dp-status" style="width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);color:var(--t1)">';
+['Not Started','Researching','Outreach Sent','Responded','Meeting Set','Engaged','Stalled','Nurture','Closed Won'].forEach(function(s){h+='<option value="'+s+'"'+(c.status===s?' selected':'')+'>'+s+'</option>'});
+h+='</select></div>';
+h+='<div class="dp-f"><label>Next Step</label><input id="dp-next" value="'+eh(c.nextStep)+'" style="width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);color:var(--t1)"></div>';
+h+='<div class="dp-f"><label>Notes</label><textarea id="dp-notes" rows="3" style="width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);color:var(--t1);resize:vertical">'+eh(c.notes)+'</textarea></div>';
+h+='<button class="ai-btn" id="dp-save" style="width:100%;justify-content:center;margin-bottom:8px">💾 Save Changes to Sheet</button>';
 h+='<div class="dp-f"><label>Sequence</label><div class="dv">Day '+eh(c.seqDays)+' · '+eh(c.seqPhase)+'</div></div>';
 h+='<button class="ai-btn" id="dp-meetprep" style="width:100%;justify-content:center;margin-top:8px">✎ Generate Meeting Brief</button>';
 h+='</div>';return h}
@@ -511,6 +529,25 @@ if(aiGo)aiGo.onclick=function(){
 var q=document.getElementById('ai-q');if(!q||!q.value.trim())return;
 aiCall('You are a sales intelligence analyst for Toptal working on the Schneider Electric account. Here are the current contacts and their details: '+contactSummary()+'. Strategic plays: SE Advisory, AI/ML, Motivair/Cooling, Digital/EcoStruxure, Executive Engagement. Answer this question: '+q.value,function(text){
 var el=document.getElementById('ai-out');if(el){el.style.display='block';el.textContent=text}})};
+
+// Detail panel save to Sheet
+var dpSave=document.getElementById('dp-save');
+if(dpSave)dpSave.onclick=function(){
+var c=gc().find(function(x){return x.id===S.detailId});if(!c)return;
+var newStatus=document.getElementById('dp-status').value;
+var newNext=document.getElementById('dp-next').value;
+var newNotes=document.getElementById('dp-notes').value;
+var fields={};
+if(newStatus!==c.status)fields.H=newStatus;
+if(newNext!==c.nextStep)fields.N=newNext;
+if(newNotes!==c.notes)fields.P=newNotes;
+if(!Object.keys(fields).length){alert('No changes to save');return}
+dpSave.disabled=true;dpSave.textContent='Saving...';
+writeBack(c.id,fields,function(ok){
+dpSave.disabled=false;dpSave.textContent='💾 Save Changes to Sheet';
+if(ok){c.status=newStatus;c.nextStep=newNext;c.notes=newNotes;alert('✓ Saved to Sheet');render()}
+else{alert('Save failed — check Apps Script deployment')}
+})};
 
 // Detail panel meeting prep
 var dpMeet=document.getElementById('dp-meetprep');
