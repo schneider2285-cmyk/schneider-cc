@@ -145,6 +145,33 @@ var RELS=[
 {from:"Gwenaelle Avice-Huet",type:"Adjacent to →",to:"SE Advisory (sustainability consulting)"}
 ];
 
+var OE_BASE='https://outreach-engine-dun.vercel.app';
+var OE_TENANT='f47ac10b-58cc-4372-a567-0e02b2c3d479';
+var OE_ACCOUNT='a1b2c3d4-1111-4000-8000-000000000001';
+var OE_DATA={prospects:[],loaded:false,loading:false};
+
+function fetchOE(cb){
+if(OE_DATA.loading)return;
+OE_DATA.loading=true;
+fetch(OE_BASE+'/api/prospects?account_id='+OE_ACCOUNT).then(function(r){return r.json()}).then(function(data){
+var prospects=data.prospects||data||[];
+if(Array.isArray(prospects)){OE_DATA.prospects=prospects;OE_DATA.loaded=true}
+OE_DATA.loading=false;if(cb)cb()
+}).catch(function(e){console.error('OE fetch:',e);OE_DATA.loading=false;if(cb)cb()})}
+
+function getOEProspect(name){
+if(!name||!OE_DATA.prospects.length)return null;
+var nl=name.toLowerCase().trim();
+return OE_DATA.prospects.find(function(p){return(p.full_name||'').toLowerCase().trim()===nl})||null}
+
+function fetchOEDetail(prospectId,cb){
+fetch(OE_BASE+'/api/prospects/'+prospectId).then(function(r){return r.json()}).then(function(d){cb(d)}).catch(function(e){console.error('OE detail:',e);cb(null)})}
+
+function oeStatusBadge(status){
+if(!status)return'';
+var colors={'new':'var(--t3)','researching':'var(--pur)','researched':'var(--blu)','drafted':'var(--grn)'};
+return'<span class="badge" style="background:'+(colors[status]||'var(--t3)')+'22;color:'+(colors[status]||'var(--t3)')+'">OE: '+eh(status)+'</span>'}
+
 var NAV=[
 {s:"COMMAND",items:[{id:"dashboard",icon:"◉",l:"Dashboard"},{id:"thisweek",icon:"◷",l:"This Week"},{id:"pipeline",icon:"▦",l:"Pipeline"},{id:"contacts",icon:"◎",l:"Contacts"}]},
 {s:"STRATEGY",items:[{id:"orgchart",icon:"⊞",l:"Org Chart"},{id:"stratmap",icon:"◆",l:"Strategy Map"},{id:"winthemes",icon:"⚑",l:"Win Themes"},{id:"competitive",icon:"⚔",l:"Competitive"}]},
@@ -221,7 +248,7 @@ h+='</div>';
 // Priority Queue
 h+='<div class="card"><h3>🎯 Priority Queue — Contact Today</h3>';
 var pri=cc.filter(function(c){return c.tier==='Tier 0'||c.tier==='Tier 1'}).sort(function(a,b){return(parseInt(a.seqDays)||999)-(parseInt(b.seqDays)||999)}).slice(0,5);
-pri.forEach(function(c){h+='<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--bd)">'+bdg(c.tier,tc(c.tier))+'<div style="flex:1"><div style="font-weight:600;cursor:pointer" data-detail="'+c.id+'">'+eh(c.name)+'</div><div style="font-size:11px;color:var(--t3)">'+eh(c.title)+'</div></div>'+bdg(c.status,sc(c.status))+'<div style="font-size:11px;color:var(--t2);text-align:right;min-width:120px">'+eh((c.nextStep||'').substring(0,50))+'</div></div>'});
+pri.forEach(function(c){var oe=getOEProspect(c.name);h+='<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--bd)">'+bdg(c.tier,tc(c.tier))+'<div style="flex:1"><div style="font-weight:600;cursor:pointer" data-detail="'+c.id+'">'+eh(c.name)+'</div><div style="font-size:11px;color:var(--t3)">'+eh(c.title)+'</div></div>'+bdg(c.status,sc(c.status))+(oe?oeStatusBadge(oe.status):'')+(oe&&oe.draft_count?'<span class="badge" style="background:var(--grn3);color:var(--grn)">'+oe.draft_count+' drafts</span>':'')+'<div style="font-size:11px;color:var(--t2);text-align:right;min-width:120px">'+eh((c.nextStep||'').substring(0,50))+'</div></div>'});
 if(!pri.length)h+='<div style="color:var(--t3);padding:12px">No priority contacts</div>';
 h+='</div>';
 // Funnel
@@ -274,8 +301,8 @@ h+='<select id="f-status"><option value="">All Statuses</option>';
 h+='</select><select id="f-init"><option value="">All Initiatives</option>';
 ['Advisory','AI','Motivair','Digital','EcoStruxure'].forEach(function(i){h+='<option value="'+i+'"'+(S.filterInit===i?' selected':'')+'>'+i+'</option>'});
 h+='</select></div>';
-h+='<div style="overflow-x:auto"><table><thead><tr><th>Name</th><th>Title</th><th>Tier</th><th>Initiative</th><th>Status</th><th>Timing</th><th>Role</th><th>Fit</th></tr></thead><tbody>';
-filtered.forEach(function(c){h+='<tr class="clk" data-detail="'+c.id+'"><td style="font-weight:600;color:var(--t1)">'+eh(c.name)+'</td><td>'+eh(c.title)+'</td><td>'+bdg(c.tier,tc(c.tier))+'</td><td>'+bdg(c.initiative,ic(c.initiative))+'</td><td>'+bdg(c.status,sc(c.status))+'</td><td style="color:'+(c.timing==='Immediate'?'var(--red)':'var(--t2)')+'">'+eh(c.timing)+'</td><td>'+eh(c.buyingRole)+'</td><td style="color:var(--grn);font-weight:700">'+eh(c.fit)+'</td></tr>'});
+h+='<div style="overflow-x:auto"><table><thead><tr><th>Name</th><th>Title</th><th>Tier</th><th>Initiative</th><th>Status</th><th>OE</th><th>Timing</th><th>Role</th><th>Fit</th></tr></thead><tbody>';
+filtered.forEach(function(c){var oe=getOEProspect(c.name);h+='<tr class="clk" data-detail="'+c.id+'"><td style="font-weight:600;color:var(--t1)">'+eh(c.name)+'</td><td>'+eh(c.title)+'</td><td>'+bdg(c.tier,tc(c.tier))+'</td><td>'+bdg(c.initiative,ic(c.initiative))+'</td><td>'+bdg(c.status,sc(c.status))+'</td><td>'+(oe?oeStatusBadge(oe.status)+(oe.draft_count?' <span style="font-size:10px;color:var(--grn)">'+oe.draft_count+'✉</span>':''):'<span style="font-size:10px;color:var(--t3)">—</span>')+'</td><td style="color:'+(c.timing==='Immediate'?'var(--red)':'var(--t2)')+'">'+eh(c.timing)+'</td><td>'+eh(c.buyingRole)+'</td><td style="color:var(--grn);font-weight:700">'+eh(c.fit)+'</td></tr>'});
 h+='</tbody></table></div>';return h}
 
 function pgOrg(){
@@ -441,17 +468,34 @@ h+='<div class="dp-f"><label>Toptal Fit Score</label><div class="dv" style="colo
 h+='<div class="dp-f"><label>Why They Buy Now</label><div class="dv">'+eh(c.whyBuyNow)+'</div></div>';
 h+='<div class="dp-f"><label>Outreach Hook</label><div class="dv" style="color:var(--grn)">'+eh(c.hook)+'</div></div>';
 h+='<div class="dp-f"><label>Budget Signal</label><div class="dv">'+eh(c.budgetSignal)+'</div></div>';
-h+='<div class="dp-f"><label>Next Step</label><div class="dv">'+eh(c.nextStep)+'</div></div>';
+
+// === OE INTEGRATION SECTION ===
+var oe=getOEProspect(c.name);
+h+='<div style="border-top:1px solid var(--bd);margin:16px 0;padding-top:16px">';
+h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:var(--blu)">⚡ OUTREACH ENGINE</div>'+(oe?oeStatusBadge(oe.status):'<span style="font-size:10px;color:var(--t3)">Not in OE</span>')+'</div>';
+if(oe){
+h+='<a href="'+OE_BASE+'/prospects/'+oe.id+'" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;background:var(--blu);color:#000;border:none;border-radius:var(--radius);font-weight:700;font-size:12px;cursor:pointer;margin-bottom:8px;text-decoration:none">↗ Open in Outreach Engine</a>';
+}else{
+h+='<div style="font-size:11px;color:var(--t3);margin-bottom:8px">Contact not yet in OE. <a href="'+OE_BASE+'/accounts/'+OE_ACCOUNT+'" target="_blank" style="color:var(--blu)">Add in OE →</a></div>';
+}
+h+='<div id="dp-oe-detail" style="margin-bottom:8px">'+(oe?'<div style="text-align:center;padding:8px"><span class="spinner"></span> Loading OE data...</div>':'')+'</div>';
+h+='<button class="ai-btn" id="dp-draft" style="width:100%;justify-content:center;background:var(--blu)">⚡ Generate Quick Draft</button>';
+h+='<div id="dp-drafts" style="display:none;margin-top:8px"></div>';
+h+='</div>';
+
+// === SHEET WRITE-BACK SECTION ===
+h+='<div style="border-top:1px solid var(--bd);margin:16px 0;padding-top:16px">';
+h+='<div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:12px">SHEET WRITE-BACK</div>';
 h+='<div class="dp-f"><label>Status</label><select id="dp-status" style="width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);color:var(--t1)">';
 ['Not Started','Researching','Outreach Sent','Responded','Meeting Set','Engaged','Stalled','Nurture','Closed Won'].forEach(function(s){h+='<option value="'+s+'"'+(c.status===s?' selected':'')+'>'+s+'</option>'});
 h+='</select></div>';
 h+='<div class="dp-f"><label>Next Step</label><input id="dp-next" value="'+eh(c.nextStep)+'" style="width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);color:var(--t1)"></div>';
 h+='<div class="dp-f"><label>Notes</label><textarea id="dp-notes" rows="3" style="width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);color:var(--t1);resize:vertical">'+eh(c.notes)+'</textarea></div>';
-h+='<button class="ai-btn" id="dp-save" style="width:100%;justify-content:center;margin-bottom:8px">💾 Save Changes to Sheet</button>';
+h+='<button class="ai-btn" id="dp-save" style="width:100%;justify-content:center">💾 Save Changes to Sheet</button>';
+h+='</div>';
+
 h+='<div class="dp-f"><label>Sequence</label><div class="dv">Day '+eh(c.seqDays)+' · '+eh(c.seqPhase)+'</div></div>';
 h+='<button class="ai-btn" id="dp-meetprep" style="width:100%;justify-content:center;margin-top:8px">✎ Generate Meeting Brief</button>';
-h+='<button class="ai-btn" id="dp-draft" style="width:100%;justify-content:center;margin-top:8px;background:var(--blu)">⚡ Draft Outreach via Engine</button>';
-h+='<div id="dp-drafts" style="display:none;margin-top:12px"></div>';
 h+='</div>';return h}
 
 function renderPage(){
@@ -551,53 +595,77 @@ if(ok){c.status=newStatus;c.nextStep=newNext;c.notes=newNotes;alert('✓ Saved t
 else{alert('Save failed — check Apps Script deployment')}
 })};
 
-// Detail panel draft outreach via Outreach Engine
+// Load OE detail data for current contact
+(function(){
+var c=gc().find(function(x){return x.id===S.detailId});if(!c)return;
+var oe=getOEProspect(c.name);if(!oe)return;
+var oeDiv=document.getElementById('dp-oe-detail');if(!oeDiv)return;
+fetchOEDetail(oe.id,function(data){
+if(!data){oeDiv.innerHTML='<div style="font-size:11px;color:var(--t3)">Could not load OE data</div>';return}
+var h='';
+// Research status
+var runs=data.research_runs||[];
+if(runs.length){
+var latest=runs[runs.length-1];
+h+='<div style="padding:8px 12px;background:var(--pur2);border-radius:var(--radius);margin-bottom:8px;font-size:11px"><strong style="color:var(--pur)">Research:</strong> <span style="color:var(--t2)">'+(latest.tier||'standard')+' tier · '+(latest.status||'complete')+'</span></div>';
+}
+// Drafts
+var drafts=data.drafts||[];
+if(drafts.length){
+h+='<div style="font-size:10px;font-weight:700;color:var(--t3);margin-bottom:6px">DRAFTS ('+drafts.length+')</div>';
+drafts.forEach(function(d){
+var empathy=d.judge_feedback;
+var passed=d.claims_audit_passed;
+var passIcon=passed?'<span style="color:var(--grn)">✓ Pass</span>':'<span style="color:var(--red)">✗ Fail</span>';
+var scores='';
+if(d.open_score||d.read_score||d.reply_score){scores=' · O:'+d.open_score+' R:'+d.read_score+' Re:'+d.reply_score}
+h+='<div style="padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);margin-bottom:6px;font-size:11px">';
+h+='<div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--t1);font-weight:600">'+(d.subject||d.hook_type||'Draft '+d.variant_number)+'</span><span class="badge" style="background:var(--blu2);color:var(--blu)">'+(d.channel||'email')+'</span></div>';
+h+='<div style="margin-top:4px;color:var(--t3)">Empathy: '+passIcon+scores+'</div>';
+if(d.angle)h+='<div style="margin-top:2px;color:var(--t3);font-size:10px">Angle: '+eh(d.angle)+'</div>';
+h+='</div>'});
+}
+// Outcomes
+var outcomes=data.outcomes||[];
+if(outcomes.length){
+h+='<div style="font-size:10px;font-weight:700;color:var(--t3);margin:8px 0 6px">OUTCOMES</div>';
+outcomes.forEach(function(o){
+var oColors={'Positive':'var(--grn)','Neutral':'var(--gld)','Objection':'var(--red)','No Reply':'var(--t3)','Referral':'var(--blu)','Not Relevant':'var(--t3)'};
+h+='<div style="padding:6px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);margin-bottom:4px;font-size:11px;display:flex;gap:8px"><span style="color:'+(oColors[o.type]||'var(--t3)')+'">'+eh(o.type||'')+'</span><span style="color:var(--t3)">'+eh(o.notes||'')+'</span></div>'});
+}
+if(!h)h='<div style="font-size:11px;color:var(--t3)">No research or drafts yet. Open in OE to get started.</div>';
+oeDiv.innerHTML=h;
+})})();
+
+// Draft outreach via OE Quick Draft API
 var dpDraft=document.getElementById('dp-draft');
 if(dpDraft)dpDraft.onclick=function(){
 var c=gc().find(function(x){return x.id===S.detailId});if(!c)return;
 dpDraft.disabled=true;dpDraft.textContent='Generating drafts...';
 var draftsDiv=document.getElementById('dp-drafts');
-if(draftsDiv)draftsDiv.style.display='block';
-if(draftsDiv)draftsDiv.innerHTML='<div style="text-align:center;padding:16px"><span class="spinner"></span> Calling Outreach Engine...</div>';
-
-var payload={
-channel:'linkedin',
-prospect_name:c.name,
-company:'Schneider Electric',
-prospect_title:c.title,
+if(draftsDiv){draftsDiv.style.display='block';draftsDiv.innerHTML='<div style="text-align:center;padding:16px"><span class="spinner"></span> Calling Outreach Engine...</div>';}
+var payload={channel:'linkedin',prospect_name:c.name,company:'Schneider Electric',prospect_title:c.title,
 seniority:c.tier==='Tier 0'||c.tier==='Tier 1'?'C-Suite / SVP':'VP / Director',
 verified_triggers:[c.initiative,c.timing,c.whyBuyNow].filter(Boolean),
 role_pain_hypothesis:c.hook||c.whyBuyNow||'Talent acquisition bottleneck in '+c.initiative,
 your_proof_points:['Top 3% global talent network','60% faster time-to-fill vs traditional staffing','Enterprise clients: Siemens, ABB, GE, Honeywell'],
 role_types_you_cover:['Strategy Consultants','ML Engineers','Software Engineers','Change Management','Program Managers'],
-signature_name:'Matt',
-linkedin_tone:'consultative',
-additional_context:'Initiative: '+c.initiative+'. Budget Signal: '+c.budgetSignal+'. Buying Role: '+c.buyingRole+'. Tier: '+c.tier
-};
-
-fetch('https://outreach-engine-dun.vercel.app/api/quick-draft',{
-method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+signature_name:'Matt',linkedin_tone:'consultative',
+additional_context:'Initiative: '+c.initiative+'. Budget Signal: '+c.budgetSignal+'. Buying Role: '+c.buyingRole+'. Tier: '+c.tier};
+fetch(OE_BASE+'/api/quick-draft',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
 }).then(function(r){return r.json()}).then(function(data){
-dpDraft.disabled=false;dpDraft.textContent='⚡ Draft Outreach via Engine';
-if(!draftsDiv)return;
-var h='';
-if(data.drafts&&data.drafts.length){
-data.drafts.forEach(function(d,i){
+dpDraft.disabled=false;dpDraft.textContent='⚡ Generate Quick Draft';
+if(!draftsDiv)return;var h='';
+if(data.drafts&&data.drafts.length){data.drafts.forEach(function(d,i){
 h+='<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);padding:14px;margin-bottom:10px">';
 h+='<div style="font-size:10px;font-weight:700;color:var(--blu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Draft '+(i+1)+(d.label?' — '+eh(d.label):'')+'</div>';
-h+='<div style="font-size:12px;color:var(--t1);white-space:pre-wrap;line-height:1.6">'+eh(d.body||d.text||d.content||JSON.stringify(d))+'</div>';
-h+='<button onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent=\'✓ Copied\';setTimeout(function(){}.bind(this),1500)" style="margin-top:8px;padding:4px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:4px;color:var(--t2);cursor:pointer;font-size:10px">Copy</button>';
-h+='</div>'});
-}else if(data.error){
-h='<div style="color:var(--red);padding:12px;background:var(--red2);border-radius:var(--radius)">Error: '+eh(data.error)+'</div>';
-}else{
-h='<div class="ai-out">'+eh(JSON.stringify(data,null,2))+'</div>';
-}
+h+='<div style="font-size:12px;color:var(--t1);white-space:pre-wrap;line-height:1.6" id="draft-text-'+i+'">'+eh(d.body||d.text||d.content||JSON.stringify(d))+'</div>';
+h+='<button onclick="var t=document.getElementById(\'draft-text-'+i+'\').textContent;navigator.clipboard.writeText(t);this.textContent=\'✓ Copied\'" style="margin-top:8px;padding:4px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:4px;color:var(--t2);cursor:pointer;font-size:10px">Copy</button>';
+h+='</div>'})}else if(data.error){h='<div style="color:var(--red);padding:12px;background:var(--red2);border-radius:var(--radius)">Error: '+eh(data.error)+'</div>'
+}else{h='<div class="ai-out">'+eh(JSON.stringify(data,null,2))+'</div>'}
 draftsDiv.innerHTML=h;
-}).catch(function(e){
-dpDraft.disabled=false;dpDraft.textContent='⚡ Draft Outreach via Engine';
-if(draftsDiv)draftsDiv.innerHTML='<div style="color:var(--red);padding:12px;background:var(--red2);border-radius:var(--radius)">Connection error: '+eh(e.message)+'</div>';
-})};
+}).catch(function(e){dpDraft.disabled=false;dpDraft.textContent='⚡ Generate Quick Draft';
+if(draftsDiv)draftsDiv.innerHTML='<div style="color:var(--red);padding:12px;background:var(--red2);border-radius:var(--radius)">Connection error: '+eh(e.message)+'</div>'})};
 
 // Detail panel meeting prep
 var dpMeet=document.getElementById('dp-meetprep');
@@ -629,7 +697,11 @@ if(S.searchOpen&&!e.target.closest('.gs-bar')&&!e.target.closest('.gs-res')){S.s
 // ===== INIT =====
 render();
 // Auto-fetch from Google Sheet on load
-if(S.gApiKey&&S.sheetId){fetchSheet(function(rows){if(rows.length)S.contacts=rows;render()})}
+if(S.gApiKey&&S.sheetId){fetchSheet(function(rows){if(rows.length)S.contacts=rows;render();
+// After Sheet loads, fetch OE data overlay
+fetchOE(function(){render()})})}
+// Also fetch OE data even in demo mode
+else{fetchOE(function(){render()})}
 
 </script>
 </body>
