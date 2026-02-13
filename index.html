@@ -450,6 +450,8 @@ h+='<div class="dp-f"><label>Notes</label><textarea id="dp-notes" rows="3" style
 h+='<button class="ai-btn" id="dp-save" style="width:100%;justify-content:center;margin-bottom:8px">💾 Save Changes to Sheet</button>';
 h+='<div class="dp-f"><label>Sequence</label><div class="dv">Day '+eh(c.seqDays)+' · '+eh(c.seqPhase)+'</div></div>';
 h+='<button class="ai-btn" id="dp-meetprep" style="width:100%;justify-content:center;margin-top:8px">✎ Generate Meeting Brief</button>';
+h+='<button class="ai-btn" id="dp-draft" style="width:100%;justify-content:center;margin-top:8px;background:var(--blu)">⚡ Draft Outreach via Engine</button>';
+h+='<div id="dp-drafts" style="display:none;margin-top:12px"></div>';
 h+='</div>';return h}
 
 function renderPage(){
@@ -547,6 +549,54 @@ writeBack(c.id,fields,function(ok){
 dpSave.disabled=false;dpSave.textContent='💾 Save Changes to Sheet';
 if(ok){c.status=newStatus;c.nextStep=newNext;c.notes=newNotes;alert('✓ Saved to Sheet');render()}
 else{alert('Save failed — check Apps Script deployment')}
+})};
+
+// Detail panel draft outreach via Outreach Engine
+var dpDraft=document.getElementById('dp-draft');
+if(dpDraft)dpDraft.onclick=function(){
+var c=gc().find(function(x){return x.id===S.detailId});if(!c)return;
+dpDraft.disabled=true;dpDraft.textContent='Generating drafts...';
+var draftsDiv=document.getElementById('dp-drafts');
+if(draftsDiv)draftsDiv.style.display='block';
+if(draftsDiv)draftsDiv.innerHTML='<div style="text-align:center;padding:16px"><span class="spinner"></span> Calling Outreach Engine...</div>';
+
+var payload={
+channel:'linkedin',
+prospect_name:c.name,
+company:'Schneider Electric',
+prospect_title:c.title,
+seniority:c.tier==='Tier 0'||c.tier==='Tier 1'?'C-Suite / SVP':'VP / Director',
+verified_triggers:[c.initiative,c.timing,c.whyBuyNow].filter(Boolean),
+role_pain_hypothesis:c.hook||c.whyBuyNow||'Talent acquisition bottleneck in '+c.initiative,
+your_proof_points:['Top 3% global talent network','60% faster time-to-fill vs traditional staffing','Enterprise clients: Siemens, ABB, GE, Honeywell'],
+role_types_you_cover:['Strategy Consultants','ML Engineers','Software Engineers','Change Management','Program Managers'],
+signature_name:'Matt',
+linkedin_tone:'consultative',
+additional_context:'Initiative: '+c.initiative+'. Budget Signal: '+c.budgetSignal+'. Buying Role: '+c.buyingRole+'. Tier: '+c.tier
+};
+
+fetch('https://outreach-engine-dun.vercel.app/api/quick-draft',{
+method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+}).then(function(r){return r.json()}).then(function(data){
+dpDraft.disabled=false;dpDraft.textContent='⚡ Draft Outreach via Engine';
+if(!draftsDiv)return;
+var h='';
+if(data.drafts&&data.drafts.length){
+data.drafts.forEach(function(d,i){
+h+='<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--radius);padding:14px;margin-bottom:10px">';
+h+='<div style="font-size:10px;font-weight:700;color:var(--blu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Draft '+(i+1)+(d.label?' — '+eh(d.label):'')+'</div>';
+h+='<div style="font-size:12px;color:var(--t1);white-space:pre-wrap;line-height:1.6">'+eh(d.body||d.text||d.content||JSON.stringify(d))+'</div>';
+h+='<button onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent=\'✓ Copied\';setTimeout(function(){}.bind(this),1500)" style="margin-top:8px;padding:4px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:4px;color:var(--t2);cursor:pointer;font-size:10px">Copy</button>';
+h+='</div>'});
+}else if(data.error){
+h='<div style="color:var(--red);padding:12px;background:var(--red2);border-radius:var(--radius)">Error: '+eh(data.error)+'</div>';
+}else{
+h='<div class="ai-out">'+eh(JSON.stringify(data,null,2))+'</div>';
+}
+draftsDiv.innerHTML=h;
+}).catch(function(e){
+dpDraft.disabled=false;dpDraft.textContent='⚡ Draft Outreach via Engine';
+if(draftsDiv)draftsDiv.innerHTML='<div style="color:var(--red);padding:12px;background:var(--red2);border-radius:var(--radius)">Connection error: '+eh(e.message)+'</div>';
 })};
 
 // Detail panel meeting prep
