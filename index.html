@@ -708,5 +708,104 @@ fetchOE(function(){render()})})}
 else{fetchOE(function(){render()})}
 
 </script>
+  <script>
+// === STRATEGY MAP V2: Enhanced drillable strategy map ===
+// Override parseUnifiedData with improved parser
+parseUnifiedData=function(rows){
+var priorities=[],cur=null;
+for(var i=0;i<rows.length;i++){
+var r=rows[i];if(!r||!r.length)continue;
+var j=r.join(' ');
+if(j.match(/Priority #\d/)&&r[1]&&r[1].indexOf('Priority #')===0&&!r[4]){
+var pn=j.match(/Priority #(\d+)/);if(!pn)continue;
+cur={id:'p'+pn[1],num:parseInt(pn[1]),name:r[1].replace(/^Priority #\d+:\s*/,''),whyNow:'',owner:'',readiness:'',fitScore:'',compRisk:'',nextAction:'',initiatives:[],extraContacts:''};
+priorities.push(cur);continue}
+if(cur&&r[1]&&r[1]==='Priority #'+cur.num&&r[2]){
+cur.whyNow=(r[2]||'').replace(/\n/g,' ').substring(0,300);
+cur.owner=(r[3]||'').split('\n')[0];
+cur.readiness=(r[14]||'');cur.fitScore=(r[15]||'');cur.compRisk=(r[16]||'');cur.nextAction=(r[17]||'')}
+if(cur&&(r[4]||r[11])){
+if(!r[4]&&r[11]&&r[11].indexOf('NEW ')===0){cur.extraContacts=r[11];continue}
+var init={product:(r[4]||'').replace(/\n/g,' '),budget:(r[5]||'').replace(/\n/g,' '),timeline:(r[6]||'').replace(/\n/g,' '),team:(r[7]||'').replace(/\n/g,' '),type:r[8]||'',vendors:(r[9]||'').replace(/\n/g,' '),fit:(r[10]||'').replace(/\n/g,' '),contact:r[11]||'',title:r[12]||'',role:r[13]||'',linkedin:r[14]||''};
+if(init.product||init.contact)cur.initiatives.push(init)}}
+return priorities};
+// Override pgStrat with enhanced drillable version
+pgStrat=function(){
+if(!S.ufData&&!S.ufLoading){fetchUnifiedFramework(function(){render()});return '<div style="text-align:center;padding:60px"><span class="spinner"></span><div style="margin-top:12px;color:var(--t3)">Loading Strategy Map...</div></div>'}
+if(S.ufLoading)return '<div style="text-align:center;padding:60px"><span class="spinner"></span><div style="margin-top:12px;color:var(--t3)">Loading...</div></div>';
+var d=S.ufData||[],cc=gc();
+var h='<h1>Strategy Map</h1><div class="sub">Unified strategy — '+d.length+' priorities, '+PLAYS.length+' plays, '+cc.length+' contacts</div>';
+h+='<div style="background:linear-gradient(135deg,rgba(61,204,74,.08),rgba(74,158,255,.08));border:1px solid rgba(61,204,74,.2);border-radius:var(--radius2);padding:16px 20px;margin-bottom:20px">';
+h+='<div style="display:flex;align-items:center;justify-content:space-between"><div>';
+h+='<div style="font-size:16px;font-weight:800;color:var(--grn)">◆ TOPTAL STRATEGIC ACCOUNT FRAMEWORK</div>';
+h+='<div style="font-size:11px;color:var(--t3);margin-top:4px">Drillable strategy map with objectives, initiatives, KPIs, owners, timelines & dependencies</div></div>';
+h+='<button class="ai-btn" id="sm-refresh" style="background:var(--bg3);color:var(--t2);border:1px solid var(--bd)">↻ Refresh</button></div>';
+var ti=0,tc2=0;d.forEach(function(p){ti+=p.initiatives.length;p.initiatives.forEach(function(i){if(i.contact)tc2++})});
+var ac=cc.filter(function(c){return c.status!=="Not Started"}).length,cp=cc.length?Math.round(ac/cc.length*100):0;
+h+='<div class="kpi-row" style="margin-top:16px">';
+h+='<div class="kpi"><div class="kl">Priorities</div><div class="kv" style="color:var(--grn)">'+d.length+'</div><div class="ks">Strategic workstreams</div></div>';
+h+='<div class="kpi"><div class="kl">Initiatives</div><div class="kv" style="color:var(--blu)">'+ti+'</div><div class="ks">Products & programs</div></div>';
+h+='<div class="kpi"><div class="kl">Contacts</div><div class="kv" style="color:var(--pur)">'+tc2+'</div><div class="ks">Mapped stakeholders</div></div>';
+h+='<div class="kpi"><div class="kl">Coverage</div><div class="kv" style="color:var(--cyan)">'+cp+'%</div><div class="ks">Active outreach</div></div>';
+h+='</div></div>';
+var colors=['var(--grn)','var(--blu)','var(--pur)','var(--gld)','var(--cyan)','var(--red)','var(--grn)','var(--blu)'];
+d.forEach(function(p){
+var exp=S.ufExpanded[p.id],pc=colors[p.num%colors.length]||'var(--grn)';
+h+='<div class="play-card'+(exp?' exp':'')+'" data-ufp="'+p.id+'" style="margin-bottom:12px">';
+h+='<div class="play-h"><div style="flex:1">';
+h+='<h3 style="color:'+pc+';font-size:15px">Priority #'+p.num+': '+eh(p.name)+'</h3>';
+if(p.whyNow)h+='<div style="font-size:11px;color:var(--t3);margin-top:4px;max-width:700px">'+eh(p.whyNow.substring(0,200))+'</div>';
+h+='</div><div style="display:flex;align-items:center;gap:12px;flex-shrink:0">';
+if(p.readiness)h+='<span class="badge" style="background:'+(p.readiness.indexOf('Hot')>=0?'var(--red2)':'var(--gld2)')+';color:'+(p.readiness.indexOf('Hot')>=0?'var(--red)':'var(--gld)')+'">'+eh(p.readiness)+'</span>';
+if(p.fitScore)h+='<span style="font-size:11px;color:var(--grn)">Fit: '+eh(p.fitScore)+'</span>';
+h+='<span style="font-size:12px;font-weight:600;color:'+pc+'">'+p.initiatives.length+' initiatives</span>';
+h+='<span class="pa">▼</span></div></div>';
+h+='<div class="play-b">';
+if(p.owner){h+='<div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap">';
+h+='<div style="padding:10px 14px;background:var(--bg);border-radius:var(--radius);flex:1;min-width:200px"><span style="font-size:10px;color:var(--t3);text-transform:uppercase;display:block;margin-bottom:4px">EXEC OWNER</span><div style="font-size:13px;color:var(--t1);font-weight:600">'+eh(p.owner)+'</div></div>';
+if(p.compRisk)h+='<div style="padding:10px 14px;background:var(--bg);border-radius:var(--radius);flex:1;min-width:150px"><span style="font-size:10px;color:var(--t3);text-transform:uppercase;display:block;margin-bottom:4px">COMP RISK</span><div style="font-size:13px;color:var(--gld);font-weight:600">'+eh(p.compRisk)+'</div></div>';
+if(p.nextAction)h+='<div style="padding:10px 14px;background:var(--bg);border-radius:var(--radius);flex:2;min-width:200px"><span style="font-size:10px;color:var(--t3);text-transform:uppercase;display:block;margin-bottom:4px">NEXT ACTION</span><div style="font-size:12px;color:var(--grn)">'+eh(p.nextAction)+'</div></div>';
+h+='</div>'}
+h+='<div style="overflow-x:auto"><table><thead><tr><th>Initiative</th><th>Budget Signal</th><th>Timeline</th><th>Team</th><th>Toptal Fit</th><th>Contact</th><th>Title</th><th>Role</th></tr></thead><tbody>';
+p.initiatives.forEach(function(it){
+var uc=it.timeline&&(it.timeline.indexOf('VERY')>=0||it.timeline.indexOf('CRITICAL')>=0)?'var(--red)':it.timeline&&it.timeline.indexOf('HIGH')>=0?'var(--gld)':'var(--t2)';
+var fc=it.fit&&it.fit.indexOf('VERY HIGH')>=0?'var(--grn)':it.fit&&it.fit.indexOf('HIGH')>=0?'var(--grn)':'var(--t2)';
+h+='<tr><td style="color:var(--t1);font-weight:500;max-width:220px">'+eh(it.product)+'</td>';
+h+='<td style="font-size:11px;max-width:160px">'+eh(it.budget)+'</td>';
+h+='<td style="color:'+uc+';font-size:11px">'+eh(it.timeline)+'</td>';
+h+='<td style="font-size:11px;max-width:140px">'+eh(it.team)+'</td>';
+h+='<td style="color:'+fc+';font-size:11px;font-weight:600">'+eh(it.fit)+'</td>';
+h+='<td style="font-weight:600;color:var(--t1)">'+eh(it.contact)+'</td>';
+h+='<td style="font-size:11px">'+eh(it.title)+'</td>';
+h+='<td style="font-size:11px">'+eh(it.role)+'</td></tr>'});
+h+='</tbody></table></div>';
+if(p.extraContacts)h+='<div style="margin-top:12px;padding:10px 14px;background:var(--blu2);border:1px solid rgba(74,158,255,.2);border-radius:var(--radius);font-size:11px;color:var(--blu)"><strong>Additional Contacts:</strong> '+eh(p.extraContacts)+'</div>';
+h+='</div></div>'});
+// Strategic Plays Coverage
+h+='<div class="card" style="margin-top:24px"><h3>⚔ Strategic Plays Coverage</h3><div class="sub" style="margin-bottom:16px">5 plays mapped to priorities and contacts</div>';
+PLAYS.forEach(function(p){
+var pcc=gc().filter(function(c){var k=p.id==="advisory"?"advisory":p.id==="ai"?"ai":p.id==="cooling"?"motivair":p.id==="digital"?"digital":"";return k&&c.initiative.toLowerCase().indexOf(k)>=0});
+var cov=pcc.length?Math.min(100,Math.round(pcc.filter(function(c){return c.status!=="Not Started"}).length/pcc.length*100)):0;
+h+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)">';
+h+='<div style="width:200px;font-weight:600;color:'+p.color+';font-size:12px">'+eh(p.name)+'</div>';
+h+='<div style="flex:1"><div class="cov-bar"><div class="fill" style="width:'+cov+'%;background:'+p.color+'"></div></div></div>';
+h+='<div style="width:50px;text-align:right;font-size:12px;font-weight:600;color:'+p.color+'">'+pcc.length+'</div>';
+h+='<div style="width:50px;text-align:right;font-size:11px;color:var(--t3)">'+cov+'%</div></div>'});
+h+='</div>';
+return h};
+// Override bindShell to add Strategy Map bindings
+var _origBind=bindShell;
+bindShell=function(){
+_origBind();
+var smR=document.getElementById('sm-refresh');
+if(smR)smR.onclick=function(){S.ufData=null;render()};
+document.querySelectorAll('[data-ufp]').forEach(function(el){
+var ph=el.querySelector('.play-h');
+if(ph)ph.onclick=function(){var pid=el.getAttribute('data-ufp');S.ufExpanded[pid]=!S.ufExpanded[pid];render()}});
+};
+// Re-render to apply overrides
+if(S.screen==='app'&&S.ufData){S.ufData=null;}
+render();
+</script>
 </body>
 </html>
