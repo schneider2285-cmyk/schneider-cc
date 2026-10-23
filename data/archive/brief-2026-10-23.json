@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-23",
+  "generated_at": "2026-10-23T17:33:31.617Z",
+  "account": "Schneider Electric",
+  "sections": [
+    {
+      "id": "news",
+      "label": "Company News & Announcements",
+      "icon": "news",
+      "content": "Error fetching this section: API error 401: {\"error\":{\"message\":\"Invalid API key provided. You can find your API key at https://console.perplexity.ai.\",\"type\":\"invalid_api_key\",\"code\":401}}\n",
+      "citations": [],
+      "tokens": 0
+    },
+    {
+      "id": "financial",
+      "label": "Financial & Earnings Signals",
+      "icon": "financial",
+      "content": "Error fetching this section: API error 401: {\"error\":{\"message\":\"Invalid API key provided. You can find your API key at https://console.perplexity.ai.\",\"type\":\"invalid_api_key\",\"code\":401}}\n",
+      "citations": [],
+      "tokens": 0
+    },
+    {
+      "id": "leadership",
+      "label": "Leadership & Org Changes",
+      "icon": "leadership",
+      "content": "Error fetching this section: API error 401: {\"error\":{\"message\":\"Invalid API key provided. You can find your API key at https://console.perplexity.ai.\",\"type\":\"invalid_api_key\",\"code\":401}}\n",
+      "citations": [],
+      "tokens": 0
+    },
+    {
+      "id": "hiring",
+      "label": "Hiring & Job Signals",
+      "icon": "hiring",
+      "content": "Error fetching this section: API error 401: {\"error\":{\"message\":\"Invalid API key provided. You can find your API key at https://console.perplexity.ai.\",\"type\":\"invalid_api_key\",\"code\":401}}\n",
+      "citations": [],
+      "tokens": 0
+    },
+    {
+      "id": "strategic",
+      "label": "Strategic Initiatives & Partnerships",
+      "icon": "strategic",
+      "content": "Error fetching this section: API error 401: {\"error\":{\"message\":\"Invalid API key provided. You can find your API key at https://console.perplexity.ai.\",\"type\":\"invalid_api_key\",\"code\":401}}\n",
+      "citations": [],
+      "tokens": 0
+    },
+    {
+      "id": "social",
+      "label": "Executive Social & Public Posts",
+      "icon": "social",
+      "content": "Error fetching this section: API error 401: {\"error\":{\"message\":\"Invalid API key provided. You can find your API key at https://console.perplexity.ai.\",\"type\":\"invalid_api_key\",\"code\":401}}\n",
+      "citations": [],
+      "tokens": 0
+    },
+    {
+      "id": "competitive",
+      "label": "Competitive & Industry Intel",
+      "icon": "competitive",
+      "content": "Error fetching this section: API error 401: {\"error\":{\"message\":\"Invalid API key provided. You can find your API key at https://console.perplexity.ai.\",\"type\":\"invalid_api_key\",\"code\":401}}\n",
+      "citations": [],
+      "tokens": 0
+    }
+  ],
+  "meta": {
+    "total_tokens": 0,
+    "model": "sonar",
+    "search_context": "low",
+    "query_count": 7
+  }
+}
